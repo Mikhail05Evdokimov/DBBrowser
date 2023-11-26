@@ -1,4 +1,3 @@
-import app.backend.LocalStorage;
 import io.qt.core.QDir;
 import io.qt.core.QStringListModel;
 import io.qt.gui.QFileSystemModel;
@@ -25,6 +24,7 @@ public class TreeMenu extends QTreeView {
         this.setMinimumWidth(300);
         model.setRootPath(QDir.currentPath());
         this.doubleClicked.connect(this, "treeClicked()");
+        //this.doubleClicked.connect(root, "treeClicked()");
 
         List<String> stringList = new ArrayList<>();
         stringList.add("first");
@@ -37,10 +37,10 @@ public class TreeMenu extends QTreeView {
 
     void treeClicked() throws SQLException {
         System.out.println(model.filePath(this.currentIndex()));
-        String query = root.edit.toPlainText();
+        //String query = root.edit.toPlainText();
 
-        LocalStorage.setQuery(query);
-        LocalStorage.execQuery();
+        //LocalStorage.setQuery(query);
+        //LocalStorage.execQuery();
         //root.output.setText(query);
         //System.out.println(model1.data(this.currentIndex()));
     }

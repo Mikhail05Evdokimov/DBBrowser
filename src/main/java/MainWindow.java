@@ -14,8 +14,8 @@ import java.util.Objects;
  */
 public class MainWindow extends QWidget {
 
-    public MainWindow( ) throws IOException {
-        setWindowTitle( "Simple demo" );
+    public MainWindow() throws IOException {
+        setWindowTitle( "DB browser" );
         QPixmap pixmap = new QPixmap();
         pixmap.loadFromData(Objects.requireNonNull(this.getClass().getResourceAsStream("looool.png")).readAllBytes());
         QIcon icon = new QIcon();
@@ -28,12 +28,13 @@ public class MainWindow extends QWidget {
     // Текстовое поле, от куда будем брать текст для вывода в консоль
     final QTextEdit edit = new QTextEdit();
     QLabel label = new QLabel("", this);
-    QMenu popMenu = new QMenu("DropDown", this);
+    QMenu popMenu = new QMenu("DropDown", this);//вот эту шляпу в отдельный класс-конструктор вынести
     QTextEdit output = new QTextEdit();
+    MenuController menuController = new MenuController(this);
 
     private void initControls() throws IOException {
 
-        MenuController menuController = new MenuController(this);
+
         // Создаём контейнер для виджетов
         QLayout layout = new QGridLayout( this );
         QToolBar bigBar = new QToolBar();
@@ -137,4 +138,5 @@ public class MainWindow extends QWidget {
         layout.addWidget(bar);
 
     }
+
 }

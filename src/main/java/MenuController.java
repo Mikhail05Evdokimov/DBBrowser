@@ -4,8 +4,6 @@ import io.qt.widgets.QCheckBox;
 import io.qt.widgets.QMessageBox;
 import app.widgets.dialogs.CheckBoxChecker;
 
-import static java.lang.Thread.sleep;
-
 
 public class MenuController {
     private static MainWindow root;
