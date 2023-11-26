@@ -15,11 +15,14 @@ import org.sqlite.JDBC;
  */
 public class SqlConnector {
 
+    private static SqlConnector instance = null;
+    private final Connection connection;
+
     /**
      * Создаёт новое соединение с бд
      * @param filePath - путь к файлу БД
      * @return - объект соединения
-     * @throws SQLException - если файл не является базой данных
+     * @throws SQLException - если файл не является базой данных (fake)
      */
     public Connection getNewConnection(String filePath) throws SQLException {
         //String url = "jdbc:sqlite:C:\\Users\\its\\Desktop\\Project\\TestDB.db";
@@ -27,16 +30,13 @@ public class SqlConnector {
         return DriverManager.getConnection(url);
     }
 
-    private static SqlConnector instance = null;
-    private final Connection connection;
-
     /**
      * Возвращает объект драйвера для работы с БД.
      * @param filePath - путь к файлу БД
      * @throws SQLException в случае ошибки
      */
     public static synchronized SqlConnector getInstance(String filePath) throws SQLException {
-        if (instance == null)
+        if (instance == null || instance.connection == null)
             instance = new SqlConnector(filePath);
         return instance;
     }
