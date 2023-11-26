@@ -29,9 +29,9 @@ public class FileDialog extends QFileDialog {
         //dbThread.start();
         LocalStorage.setFilePath(this.selectedFiles());
 
-        sleep(1500); //имитация думания при подключении к БД, чтобы юзеру жизнь мёдом не казалась
+        sleep(1000); //имитация думания при подключении к БД, чтобы юзеру жизнь мёдом не казалась
         System.out.println("i'm alive " + Thread.currentThread().getName());
-        root.output.setText("Successful connection with " + LocalStorage.getFilePath());
+        //root.output.setText("Successful connection with " + LocalStorage.getFilePath());
 
         //System.out.println(this.selectedFiles());
     }

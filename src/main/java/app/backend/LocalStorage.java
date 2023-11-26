@@ -26,6 +26,10 @@ public class LocalStorage {
         LocalStorage.output = output;
     }
 
+    public static void setOutputText(String text) {
+        output.setText(text);
+    }
+
     /**
      * сохраняет текущий текст запроса
      * что в данный момент реально не используется, но нужно в дальнейшем для нормальной
@@ -62,7 +66,7 @@ public class LocalStorage {
      */
     public static void setFilePath(List<String> filePath) throws SQLException {
         LocalStorage.filePath = filePath;
-        dbHandler = SqlConnector.getInstance(getFilePath());
+        LocalStorage.dbHandler = SqlConnector.getInstance(getFilePath());
     }
 
     /**

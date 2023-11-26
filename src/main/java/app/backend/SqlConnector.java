@@ -49,8 +49,23 @@ public class SqlConnector {
         // Регистрируем драйвер, с которым будем работать
         // в нашем случае Sqlite
         DriverManager.registerDriver(new JDBC());
-        // Выполняем подключение к базе данных
-        this.connection = getNewConnection(filePath);
+        if (filePath.endsWith(".db")) {
+            Connection connectTry = getNewConnection(filePath);
+            if (connectTry.isValid(1)) {
+                // Выполняем подключение к базе данных
+                LocalStorage.setOutputText("Successful connection");
+                this.connection = connectTry;
+            }
+            else {
+                LocalStorage.setOutputText("Failed to connect");
+                this.connection = null;
+            }
+        }
+        else {
+            LocalStorage.setOutputText("ERROR: Chosen file is not a database file");
+            this.connection = null;
+        }
+
     }
 
     /**
@@ -110,7 +125,6 @@ public class SqlConnector {
                 result.add(currentRecord);
             }
         } catch (SQLException e) {
-            //throw new SQLException(e + "Incorrect sql query!");
             result.add("Wrong SQL query!");
         }
         return result;
