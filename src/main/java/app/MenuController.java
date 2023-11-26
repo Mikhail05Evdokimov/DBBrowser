@@ -1,54 +1,42 @@
+package app;
+
+import app.backend.LocalStorage;
+import app.widgets.dialogs.CheckBoxChecker;
 import app.widgets.dialogs.CustomCheckBoxDialog;
+import app.widgets.dialogs.FileDialog;
 import io.qt.gui.QCursor;
 import io.qt.widgets.QCheckBox;
 import io.qt.widgets.QMessageBox;
-import app.widgets.dialogs.CheckBoxChecker;
 
+import java.sql.SQLException;
 
 public class MenuController {
-    private static MainWindow root;
 
-    public MenuController(MainWindow root) {
-        MenuController.root = root;
+    private final MainWindow root;
+
+    public MenuController(MainWindow mainWindow) {
+        root = mainWindow;
     }
 
-    void act1() {
-        root.label.setText(" DON'T TOUCH ME!!!");
-        root.label.show();
-    }
-
-    void rightClick() {
-        root.popMenu.popup(QCursor.pos());
-    }
-
-    void on_button1_clicked()
-    {
+    void run_clicked() throws SQLException {
         if (root.edit.toPlainText().isEmpty()) {
             root.label.setText(" Empty text box. Write something.");
         }
         else {
             root.label.setText(" Your query done");
-            //LocalStorage.setQuery(root.edit.toPlainText());
-
-            //System.out.println( root.edit.toPlainText() );
-            //if (root.edit.toPlainText().equals("select * from table")) {
-            //    root.output.setText("1.   data_1\n2.   data_2\n3.   data_3");
-            //}
+            LocalStorage.setQuery(root.edit.toPlainText());
+            LocalStorage.execQuery();
         }
-        root.label.show();
         root.edit.clear();
     }
 
-    void on_button2_clicked()
-    {
-        root.label.clear();
-        root.edit.clear();
+    void act1() {
+        root.label.setText(" DON'T TOUCH ME!!!");
     }
 
-    void callTextBox()
-    {
+    void callTextBox() {
         QMessageBox.StandardButton reply =
-            QMessageBox.question(root.window(), "Tile", "Cringe text box",
+            QMessageBox.question(root, "Tile", "Cringe text box",
                 new QMessageBox.StandardButtons(QMessageBox.StandardButton.Yes, QMessageBox.StandardButton.No));
         if (reply == QMessageBox.StandardButton.Yes) {
             System.out.println("User said Yes");
@@ -58,6 +46,13 @@ public class MenuController {
         }
     }
 
+    void callCustomCheckBox() {
+        CustomCheckBoxDialog messageBox = new CustomCheckBoxDialog(root);
+        root.setEnabled(false);
+        messageBox.open();
+    }
+
+    //Вот эта штука на фоне моей кастомной вообще юзлес, наверное уберём её.
     void callDefaultCheckBox() {
         QMessageBox messageBox = new QMessageBox();
         messageBox.setText("Cringe CheckBox");
@@ -65,7 +60,7 @@ public class MenuController {
         QCheckBox checkBox1 = new QCheckBox();
         checkBox1.setText("Point1");
         messageBox.setCheckBox(checkBox1);
-        messageBox.setStandardButtons(QMessageBox.StandardButton.Abort, QMessageBox.StandardButton.Apply);
+        messageBox.setStandardButtons(QMessageBox.StandardButton.Apply, QMessageBox.StandardButton.Abort);
         CheckBoxChecker check1 = new CheckBoxChecker();
         checkBox1.stateChanged.connect(check1, "inverse()");
 
@@ -80,17 +75,19 @@ public class MenuController {
         }
     }
 
-    void callCustomCheckBox()
-    {
-        CustomCheckBoxDialog messageBox = new CustomCheckBoxDialog(root);
-        //root.setEnabled(false);
-        messageBox.open();
-
+    void clear_label_clicked() {
+        root.label.clear();
+        root.edit.clear();
     }
 
-    void selectFileButtonClicked() throws InterruptedException {
+    void rightClick() {
+        root.popMenu.popup(QCursor.pos());
+    }
+
+    void selectFileButtonClicked() {
         FileDialog dialog = new FileDialog(root);
-
     }
+
+
 
 }

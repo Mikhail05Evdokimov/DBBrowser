@@ -1,10 +1,12 @@
+package app;
+
 import app.backend.LocalStorage;
+import app.widgets.TreeMenu;
 import io.qt.core.Qt;
 import io.qt.gui.*;
 import io.qt.widgets.*;
 
 import java.io.IOException;
-import java.util.Objects;
 
 /**
  * Класс главного окна, инициализирует все компоненты, вид окошка и всё такое.
@@ -14,22 +16,20 @@ import java.util.Objects;
  */
 public class MainWindow extends QWidget {
 
-    public MainWindow() throws IOException {
+    public MainWindow(QIcon newIcon) throws IOException {
         setWindowTitle( "DB browser" );
-        QPixmap pixmap = new QPixmap();
-        pixmap.loadFromData(Objects.requireNonNull(this.getClass().getResourceAsStream("looool.png")).readAllBytes());
-        QIcon icon = new QIcon();
-        icon.addPixmap(pixmap);
-        setWindowIcon(icon);
+
+        setWindowIcon(newIcon);
         LocalStorage.setOutput(output);
         initControls();
     }
 
     // Текстовое поле, от куда будем брать текст для вывода в консоль
-    final QTextEdit edit = new QTextEdit();
-    QLabel label = new QLabel("", this);
-    QMenu popMenu = new QMenu("DropDown", this);//вот эту шляпу в отдельный класс-конструктор вынести
-    QTextEdit output = new QTextEdit();
+    public final QTextEdit edit = new QTextEdit();
+    public QLabel label = new QLabel("", this);
+    public QMenu popMenu = new QMenu("DropDown", this);//вот эту шляпу в отдельный класс-конструктор вынести огда пэкэджи заработают
+    public QTextEdit output = new QTextEdit();
+    //app.MenuController menuController = new app.MenuController();
     MenuController menuController = new MenuController(this);
 
     private void initControls() throws IOException {
@@ -42,7 +42,7 @@ public class MainWindow extends QWidget {
         QToolBar rightBar = new QToolBar();
         rightBar.setOrientation(Qt.Orientation.Vertical);
 
-        TreeMenu treeViewMenu = new TreeMenu(this);
+        TreeMenu treeViewMenu = new TreeMenu();
         bigBar.addWidget(treeViewMenu);
 
         output.setReadOnly(true);
@@ -66,13 +66,10 @@ public class MainWindow extends QWidget {
         layout.addWidget(bigBar);
 
         //Просто кнопка.
-        QPushButton sendMessage = new QPushButton( "Send message" );
+        QPushButton sendMessage = new QPushButton( "Run query" );
 
         sendMessage.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu);
         QAction act1 = new QAction("act1");
-        QPixmap pixmap = new QPixmap();
-        pixmap.loadFromData(Objects.requireNonNull(this.getClass().getResourceAsStream("looool.png")).readAllBytes());
-        act1.setIcon(new QIcon(pixmap));
         act1.triggered.connect(menuController, "act1()");
         popMenu.addAction(act1);
         popMenu.addSeparator();
@@ -82,28 +79,17 @@ public class MainWindow extends QWidget {
         QAction callCustomCheckBox = new QAction("callCustomCheckBox");
         callCustomCheckBox.triggered.connect(menuController, "callCustomCheckBox()");
         popMenu.addAction(callCustomCheckBox);
-        //QAction callDefaultCheckBox = new QAction("callDefaultCheckBox");
-        //callDefaultCheckBox.triggered.connect(menuController, "callDefaultCheckBox()");
-        //popMenu.addAction(callDefaultCheckBox);
+        QAction callDefaultCheckBox = new QAction("callDefaultCheckBox");
+        callDefaultCheckBox.triggered.connect(menuController, "callDefaultCheckBox()");
+        popMenu.addAction(callDefaultCheckBox);
 
         QPushButton hideButton = new QPushButton( "Clear text" );
         QPalette pal = new QPalette();
         pal.setColor(QPalette.ColorRole.ButtonText, new QColor(254, 20, 20));
         hideButton.setPalette(pal);
 
-        //QMdiSubWindow subWindow = new QMdiSubWindow();
-        //subWindow.setWindowTitle("SuBOne");
-        //subWindow.setWidget(new QPushButton( "None text" ));
-        //subWindow.setKeyboardPageStep(2);
-        //subWindow.show();
-
-        //QMdiArea area = new QMdiArea();
-        //area.setActiveSubWindow(subWindow);
-        //area.setAutoFillBackground(true);
-        //area.show();
-
-        sendMessage.clicked.connect( menuController, "on_button1_clicked()" );
-        hideButton.clicked.connect(menuController, "on_button2_clicked()" );
+        sendMessage.clicked.connect(menuController, "run_clicked()" );
+        hideButton.clicked.connect(menuController, "clear_label_clicked()" );
         sendMessage.customContextMenuRequested.connect(menuController, "rightClick()");
 
         rightBar.addWidget(hideButton);
@@ -112,14 +98,14 @@ public class MainWindow extends QWidget {
         rightBar.addWidget( sendMessage );
 
         QToolBar bar = new QToolBar();
-        QPushButton selectFileButton = new QPushButton("selectFile");
+        QPushButton selectFileButton = new QPushButton("Connect to DB");
         selectFileButton.clicked.connect(menuController, "selectFileButtonClicked()");
         bar.addSeparator();
         bar.addWidget(selectFileButton);
         bar.addSeparator();
         bar.setOrientation(Qt.Orientation.Horizontal);
         QLabel l = new QLabel("---------");
-        QPushButton b1 = new QPushButton("omg");
+        QPushButton b1 = new QPushButton("PopUp menu");
         b1.setMenu(popMenu);
         bar.addWidget(l);
         bar.addSeparator();
@@ -128,7 +114,7 @@ public class MainWindow extends QWidget {
 
         bigBar.addWidget(rightBar);
         //bigBar.addWidget(splitter1);
-        bigBar.addSeparator();
+        //bigBar.addSeparator();
         //bigBar.addWidget(splitter2);
         //bigBar.addWidget(output);
         //layout.addWidget(bigBar);

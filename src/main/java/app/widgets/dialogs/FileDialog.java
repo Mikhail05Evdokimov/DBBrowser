@@ -1,3 +1,6 @@
+package app.widgets.dialogs;
+
+import app.MainWindow;
 import app.backend.LocalStorage;
 import io.qt.core.QDir;
 import io.qt.widgets.QFileDialog;
@@ -30,10 +33,6 @@ public class FileDialog extends QFileDialog {
         LocalStorage.setFilePath(this.selectedFiles());
 
         sleep(1000); //имитация думания при подключении к БД, чтобы юзеру жизнь мёдом не казалась
-        System.out.println("i'm alive " + Thread.currentThread().getName());
-        //root.output.setText("Successful connection with " + LocalStorage.getFilePath());
-
-        //System.out.println(this.selectedFiles());
     }
 
 }
