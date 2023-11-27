@@ -13,7 +13,7 @@ public class IconLoader {
      */
     public QIcon loadIcon() throws IOException {
         QPixmap pixmap = new QPixmap();
-        pixmap.loadFromData(Objects.requireNonNull(this.getClass().getResourceAsStream("looool.png")).readAllBytes());
+        pixmap.loadFromData(Objects.requireNonNull(this.getClass().getResourceAsStream("icon.png")).readAllBytes());
         QIcon icon = new QIcon();
         icon.addPixmap(pixmap);
         return icon;
