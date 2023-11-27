@@ -10,10 +10,12 @@ public class IconLoader {
      * Хз почему так, но теперь иконки загружаем через этот класс.
      * Можно подумать над параметризацией конструктора, или
      * захардкодить методы, которые возвращают разные иконки для разных нужд.
+     * -
+     * Logo icon by Igor Zhuravskiy
      */
     public QIcon loadIcon() throws IOException {
         QPixmap pixmap = new QPixmap();
-        pixmap.loadFromData(Objects.requireNonNull(this.getClass().getResourceAsStream("icon.png")).readAllBytes());
+        pixmap.loadFromData(Objects.requireNonNull(this.getClass().getResourceAsStream("icon.ico")).readAllBytes());
         QIcon icon = new QIcon();
         icon.addPixmap(pixmap);
         return icon;
