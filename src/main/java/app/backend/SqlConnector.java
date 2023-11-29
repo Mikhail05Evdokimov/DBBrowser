@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 
+import app.backend.table.Row;
+import app.backend.table.Table;
+import io.qt.widgets.QTableView;
 import org.sqlite.JDBC;
 
 /**
@@ -104,30 +107,48 @@ public class SqlConnector {
      * метод, исполняющий GET запрос
      * @param query - содержимое зароса
      * @return - результат запроса в виде списка строк. Каждая строка - одна запись таблицы
-     * @throws SQLException - в случае некоррктного запроса возвращает строку "Wrong SQL query!"
      */
 
-    public List<String> execQuery(String query) throws SQLException {
-        List<String> result = new ArrayList<>();
+    public Table execQuery(String query) {
+        Table resultTable;
         try (Statement statement = this.connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(query);
+
+            List<String> columnNames = new ArrayList<>();
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnsNumber = metaData.getColumnCount();
-            while (resultSet.next()) {
-                String currentRecord = "";
-                for (int i = 1; i <= columnsNumber; i++) {
-                    currentRecord = currentRecord.concat(metaData.getColumnName(i) + ": ");
-                    //if (Objects.equals(metaData.getColumnTypeName(i), "TEXT")) {
-                        currentRecord = currentRecord.concat(resultSet.getString(i) + " | ");
-                    //}
 
-                }
-                result.add(currentRecord);
+            for (int i = 1; i <= columnsNumber; i++) {
+                columnNames.add(metaData.getColumnName(i));
             }
+
+            List<Row> rowList = new ArrayList<>();
+
+            while (resultSet.next()) {
+                List<String> currentRow = new ArrayList<>();
+                for (int i = 1; i <= columnsNumber; i++) {
+                    currentRow.add(resultSet.getString(i));
+                }
+                rowList.add(new Row(currentRow));
+            }
+
+            resultTable = new Table(columnNames, rowList);
+
         } catch (SQLException e) {
-            result.add("Wrong SQL query!");
+            return null;
         }
-        return result;
+        return resultTable;
+    }
+
+    public List<String> getSchema() throws SQLException {
+        DatabaseMetaData dbmd = this.connection.getMetaData();
+        ResultSet rs = dbmd.getTables(null, null, null, null);
+        List<String> resultList = new ArrayList<>();
+        while(rs.next()) {
+            resultList.add(rs.getString("TABLE_NAME"));
+        }
+
+        return resultList;
     }
 
 }

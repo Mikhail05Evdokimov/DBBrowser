@@ -1,6 +1,7 @@
 package app;
 
 import app.backend.LocalStorage;
+import app.backend.table.Table;
 import app.widgets.dialogs.CheckBoxChecker;
 import app.widgets.dialogs.CustomCheckBoxDialog;
 import app.widgets.dialogs.FileDialog;
@@ -23,11 +24,22 @@ public class MenuController {
             root.label.setText(" Empty text box. Write something.");
         }
         else {
-            root.label.setText(" Your query done");
-            LocalStorage.setQuery(root.edit.toPlainText());
-            LocalStorage.execQuery();
+            if (LocalStorage.getFilePath() == null) {
+                root.label.setText("No connection to database");
+            }
+            else {
+                LocalStorage.setQuery(root.edit.toPlainText());
+                Table resultTable = LocalStorage.execQuery();
+                if (resultTable == null) {
+                    root.label.setText("Wrong SQL query");
+                }
+                else {
+                    root.tableView.setTable(resultTable);
+                    root.label.setText(" Your query done");
+                }
+            }
         }
-        root.edit.clear();
+        //root.edit.clear();
     }
 
     void act1() {
@@ -75,7 +87,7 @@ public class MenuController {
         }
     }
 
-    void clear_label_clicked() {
+    void clear_button_clicked() {
         root.label.clear();
         root.edit.clear();
     }
@@ -88,6 +100,8 @@ public class MenuController {
         FileDialog dialog = new FileDialog(root);
     }
 
-
+    void showSchema() throws SQLException {
+        root.treeViewMenu.setTreeModel(LocalStorage.showSchema());
+    }
 
 }

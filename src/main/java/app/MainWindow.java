@@ -1,12 +1,15 @@
 package app;
 
 import app.backend.LocalStorage;
+import app.widgets.TableView;
 import app.widgets.TreeMenu;
-import io.qt.core.Qt;
+import io.qt.core.*;
 import io.qt.gui.*;
 import io.qt.widgets.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс главного окна, инициализирует все компоненты, вид окошка и всё такое.
@@ -28,12 +31,13 @@ public class MainWindow extends QWidget {
     public final QTextEdit edit = new QTextEdit();
     public QLabel label = new QLabel("", this);
     public QMenu popMenu = new QMenu("DropDown", this);//вот эту шляпу в отдельный класс-конструктор вынести огда пэкэджи заработают
-    public QTextEdit output = new QTextEdit();
-    //app.MenuController menuController = new app.MenuController();
+    //public QTextEdit output = new QTextEdit();
+    public QLabel output = new QLabel();
     MenuController menuController = new MenuController(this);
+    TableView tableView = new TableView();
+    TreeMenu treeViewMenu = new TreeMenu();
 
     private void initControls() throws IOException {
-
 
         // Создаём контейнер для виджетов
         QLayout layout = new QGridLayout( this );
@@ -42,10 +46,11 @@ public class MainWindow extends QWidget {
         QToolBar rightBar = new QToolBar();
         rightBar.setOrientation(Qt.Orientation.Vertical);
 
-        TreeMenu treeViewMenu = new TreeMenu();
         bigBar.addWidget(treeViewMenu);
 
-        output.setReadOnly(true);
+        //bigBar.addWidget(tableView);
+
+        //output.setReadOnly(true);
         output.setText("Your query results will be here");
 
         QSplitter splitter1 = new QSplitter();
@@ -82,6 +87,9 @@ public class MainWindow extends QWidget {
         QAction callDefaultCheckBox = new QAction("callDefaultCheckBox");
         callDefaultCheckBox.triggered.connect(menuController, "callDefaultCheckBox()");
         popMenu.addAction(callDefaultCheckBox);
+        QAction showSchema = new QAction("showSchema");
+        showSchema.triggered.connect(menuController, "showSchema()");
+        popMenu.addAction(showSchema);
 
         QPushButton hideButton = new QPushButton( "Clear text" );
         QPalette pal = new QPalette();
@@ -89,7 +97,7 @@ public class MainWindow extends QWidget {
         hideButton.setPalette(pal);
 
         sendMessage.clicked.connect(menuController, "run_clicked()" );
-        hideButton.clicked.connect(menuController, "clear_label_clicked()" );
+        hideButton.clicked.connect(menuController, "clear_button_clicked()" );
         sendMessage.customContextMenuRequested.connect(menuController, "rightClick()");
 
         rightBar.addWidget(hideButton);
@@ -119,6 +127,7 @@ public class MainWindow extends QWidget {
         //bigBar.addWidget(output);
         //layout.addWidget(bigBar);
         layout.addWidget(output);
+        layout.addWidget(tableView);
         QSpacerItem midSpacer = new QSpacerItem(10, 10);
         layout.addItem(midSpacer);
         layout.addWidget(bar);

@@ -20,7 +20,8 @@ public class FileDialog extends QFileDialog {
 
     public FileDialog(MainWindow root) {
         FileDialog.root = root;
-        QDir dir = new QDir("src/main/resources");
+        //QDir dir = new QDir("src/main/resources");
+        QDir dir = new QDir("C:\\Users\\its\\Desktop\\Project");
         this.setDirectory(dir);
         this.fileSelected.connect(this, "fileSelected()");
         this.open();
@@ -32,7 +33,7 @@ public class FileDialog extends QFileDialog {
         //dbThread.start();
         LocalStorage.setFilePath(this.selectedFiles());
 
-        sleep(1000); //имитация думания при подключении к БД, чтобы юзеру жизнь мёдом не казалась
+        sleep(900); //имитация думания при подключении к БД, чтобы юзеру жизнь мёдом не казалась
     }
 
 }

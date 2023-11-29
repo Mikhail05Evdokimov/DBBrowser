@@ -17,24 +17,26 @@ import java.util.List;
 public class TreeMenu extends QTreeView {
 
     QFileSystemModel model = new QFileSystemModel();
-    QStringListModel model1 = new QStringListModel();
+    QStringListModel dbModel;
 
     public TreeMenu() {
         this.setMinimumWidth(300);
         model.setRootPath(QDir.currentPath());
         this.doubleClicked.connect(this, "treeClicked()");
 
-        List<String> stringList = new ArrayList<>();
-        stringList.add("first");
-        stringList.add("second");
-        model1.setStringList(stringList);
         this.setModel(model);
 
         //this.setModel(model1);
     }
 
+    public void setTreeModel(List<String> stringList) {
+        dbModel = new QStringListModel();
+        dbModel.setStringList(stringList);
+        this.setModel(dbModel);
+    }
+
     void treeClicked() {
-        System.out.println(model.filePath(this.currentIndex()));
+        //System.out.println(model.filePath(this.currentIndex()));
         //String query = root.edit.toPlainText();
         //LocalStorage.setQuery(query);
         //LocalStorage.execQuery();

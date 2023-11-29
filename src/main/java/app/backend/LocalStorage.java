@@ -1,8 +1,14 @@
 package app.backend;
 
+import app.backend.table.Row;
+import app.backend.table.Table;
+import io.qt.widgets.QLabel;
 import io.qt.widgets.QTextEdit;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +20,7 @@ public class LocalStorage {
 
     private static List<String> filePath;
     private static SqlConnector dbHandler;
-    private static QTextEdit output;
+    private static QLabel output;
     private static String query;
 
     /**
@@ -22,7 +28,7 @@ public class LocalStorage {
      * Вызывается в момент инициализации главной страницы.
      * @param output - текстовое поле для вывода результатов в UI.
      */
-    public static void setOutput(QTextEdit output) {
+    public static void setOutput(QLabel output) {
         LocalStorage.output = output;
     }
 
@@ -46,12 +52,14 @@ public class LocalStorage {
      * @throws SQLException - при некорректном запросе в результат
      * запишется сообщение об ошибке.
      */
-    public static void execQuery() throws SQLException {
-        String finalText = "";
-        for (String i : dbHandler.execQuery(query)) {
-            finalText = finalText.concat(i + "\n");
-        }
-        output.setText(finalText);
+    public static Table execQuery() throws SQLException {
+
+        return dbHandler.execQuery(query);
+    }
+
+    public static List<String> showSchema() throws SQLException {
+        return dbHandler.getSchema();
+
     }
 
     /**
@@ -74,6 +82,9 @@ public class LocalStorage {
      * @return - первая строка в списке - путь к выбранной бд
      */
     public static String getFilePath() {
+        if (LocalStorage.filePath == null) {
+            return null;
+        }
         return LocalStorage.filePath.get(0);
     }
 
