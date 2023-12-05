@@ -1,14 +1,9 @@
 package app.backend;
 
-import app.backend.table.Row;
 import app.backend.table.Table;
 import io.qt.widgets.QLabel;
-import io.qt.widgets.QTextEdit;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,9 +52,11 @@ public class LocalStorage {
         return dbHandler.execQuery(query);
     }
 
+    /**
+     * Получить схему БД
+     */
     public static List<String> showSchema() throws SQLException {
         return dbHandler.getSchema();
-
     }
 
     /**
@@ -72,7 +69,7 @@ public class LocalStorage {
      *                 надо потом обработчик ошибок навесить, чтобы он писал юзеру
      *                 что именно не так.
      */
-    public static void setFilePath(List<String> filePath) throws SQLException {
+    public static void createConnection(List<String> filePath) throws SQLException {
         LocalStorage.filePath = filePath;
         LocalStorage.dbHandler = SqlConnector.getInstance(getFilePath());
     }
@@ -86,6 +83,11 @@ public class LocalStorage {
             return null;
         }
         return LocalStorage.filePath.get(0);
+    }
+
+    public static void closeConnection() {
+        LocalStorage.dbHandler.closeConnection();
+        output.setText("Connection closed");
     }
 
 }

@@ -112,10 +112,11 @@ public class MainWindow extends QWidget {
         bar.addWidget(selectFileButton);
         bar.addSeparator();
         bar.setOrientation(Qt.Orientation.Horizontal);
-        QLabel l = new QLabel("---------");
+        QPushButton closeConnectionButton = new QPushButton("Close connection");
+        closeConnectionButton.clicked.connect(menuController, "closeConnectionButtonClicked()");
         QPushButton b1 = new QPushButton("PopUp menu");
         b1.setMenu(popMenu);
-        bar.addWidget(l);
+        bar.addWidget(closeConnectionButton);
         bar.addSeparator();
         bar.addWidget(b1);
         bar.addSeparator();

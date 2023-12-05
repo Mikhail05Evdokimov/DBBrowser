@@ -23,9 +23,7 @@ public class TreeMenu extends QTreeView {
         this.setMinimumWidth(300);
         model.setRootPath(QDir.currentPath());
         this.doubleClicked.connect(this, "treeClicked()");
-
         this.setModel(model);
-
         //this.setModel(model1);
     }
 

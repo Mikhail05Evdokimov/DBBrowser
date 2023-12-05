@@ -27,13 +27,13 @@ public class FileDialog extends QFileDialog {
         this.open();
     }
 
-    void fileSelected() throws SQLException, InterruptedException, IOException {
+    void fileSelected() throws SQLException, InterruptedException {
         System.out.println(selectedFiles());
         //DBThread dbThread = new DBThread(selectedFiles());
         //dbThread.start();
-        LocalStorage.setFilePath(this.selectedFiles());
+        LocalStorage.createConnection(this.selectedFiles());
 
-        sleep(900); //имитация думания при подключении к БД, чтобы юзеру жизнь мёдом не казалась
+        sleep(800); //имитация думания при подключении к БД, чтобы юзеру жизнь мёдом не казалась
     }
 
 }

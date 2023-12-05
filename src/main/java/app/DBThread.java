@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class DBThread extends Thread{
 
-    //private static SqlConnector dbHandler;
+
     private final List<String> selectedFiles;
 
     public DBThread(List<String> selectedFiles) {
@@ -22,7 +22,7 @@ public class DBThread extends Thread{
     public void run(){
         //dbHandler = SqlConnector.getInstance(getFilePath());
         try {
-            LocalStorage.setFilePath(this.selectedFiles);
+            LocalStorage.createConnection(this.selectedFiles);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

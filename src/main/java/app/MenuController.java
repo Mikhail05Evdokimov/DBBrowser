@@ -97,11 +97,15 @@ public class MenuController {
     }
 
     void selectFileButtonClicked() {
-        FileDialog dialog = new FileDialog(root);
+        new FileDialog(root);
     }
 
     void showSchema() throws SQLException {
         root.treeViewMenu.setTreeModel(LocalStorage.showSchema());
+    }
+
+    void closeConnectionButtonClicked() {
+        LocalStorage.closeConnection();
     }
 
 }

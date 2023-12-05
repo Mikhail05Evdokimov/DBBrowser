@@ -27,8 +27,7 @@ public class SqlConnector {
      * @return - объект соединения
      * @throws SQLException - если файл не является базой данных (fake)
      */
-    public Connection getNewConnection(String filePath) throws SQLException {
-        //String url = "jdbc:sqlite:C:\\Users\\its\\Desktop\\Project\\TestDB.db";
+    private Connection getNewConnection(String filePath) throws SQLException {
         String url = "jdbc:sqlite:" + filePath;
         return DriverManager.getConnection(url);
     }
@@ -39,7 +38,7 @@ public class SqlConnector {
      * @throws SQLException в случае ошибки
      */
     public static synchronized SqlConnector getInstance(String filePath) throws SQLException {
-        if (instance == null || instance.connection == null)
+        if (instance == null || instance.connection == null || instance.connection.isClosed())
             instance = new SqlConnector(filePath);
         return instance;
     }
@@ -149,6 +148,14 @@ public class SqlConnector {
         }
 
         return resultList;
+    }
+
+    public void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
