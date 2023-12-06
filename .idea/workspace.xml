@@ -9,8 +9,7 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/app/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/MainWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/MenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/MenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/LocalStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/LocalStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/SqlConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/SqlConnector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/FileDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/FileDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/TreeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/TreeMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

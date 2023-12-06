@@ -16,15 +16,18 @@ import java.util.List;
  */
 public class TreeMenu extends QTreeView {
 
-    QFileSystemModel model = new QFileSystemModel();
-    QStringListModel dbModel;
+    private QStringListModel dbModel;
+    private final QFileSystemModel model;
+    public final Signal0 signal0 = new Signal0();
 
     public TreeMenu() {
         this.setMinimumWidth(300);
+        model = new QFileSystemModel();
         model.setRootPath(QDir.currentPath());
         this.doubleClicked.connect(this, "treeClicked()");
         this.setModel(model);
         //this.setModel(model1);
+        connect(this, "signal0", this, "helloWorld()");
     }
 
     public void setTreeModel(List<String> stringList) {
@@ -34,12 +37,22 @@ public class TreeMenu extends QTreeView {
     }
 
     void treeClicked() {
-        //System.out.println(model.filePath(this.currentIndex()));
+        System.out.println(model.filePath(this.currentIndex()));
+        signal0.emit();
         //String query = root.edit.toPlainText();
         //LocalStorage.setQuery(query);
         //LocalStorage.execQuery();
         //root.output.setText(query);
         //System.out.println(model1.data(this.currentIndex()));
+    }
+
+    void helloWorld() {
+        dbModel = new QStringListModel();
+        List<String> list = new ArrayList<>();
+        list.add("SJJJJJJJ");
+        dbModel.setStringList(list);
+        this.setModel(dbModel);
+        System.out.println("HELLO");
     }
 
 }

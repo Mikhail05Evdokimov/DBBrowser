@@ -1,6 +1,8 @@
 package app.backend;
 
+import app.MenuController;
 import app.backend.table.Table;
+import io.qt.core.QObject;
 import io.qt.widgets.QLabel;
 
 import java.sql.SQLException;
@@ -17,6 +19,8 @@ public class LocalStorage {
     private static SqlConnector dbHandler;
     private static QLabel output;
     private static String query;
+    private static MenuController menuController;
+    private static Signaller signaller;
 
     /**
      * Костыль, который передаёт ссылку на объект UI для вывода результатов.
@@ -25,6 +29,11 @@ public class LocalStorage {
      */
     public static void setOutput(QLabel output) {
         LocalStorage.output = output;
+    }
+
+    public static void setMenuController(MenuController controller) {
+        LocalStorage.menuController = controller;
+        signaller = new Signaller(controller);
     }
 
     public static void setOutputText(String text) {
@@ -72,6 +81,8 @@ public class LocalStorage {
     public static void createConnection(List<String> filePath) throws SQLException {
         LocalStorage.filePath = filePath;
         LocalStorage.dbHandler = SqlConnector.getInstance(getFilePath());
+        //signal to tree
+        signaller.emitSignalToTree();
     }
 
     /**

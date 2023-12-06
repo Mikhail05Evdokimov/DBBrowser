@@ -5,13 +5,14 @@ import app.backend.table.Table;
 import app.widgets.dialogs.CheckBoxChecker;
 import app.widgets.dialogs.CustomCheckBoxDialog;
 import app.widgets.dialogs.FileDialog;
+import io.qt.core.QObject;
 import io.qt.gui.QCursor;
 import io.qt.widgets.QCheckBox;
 import io.qt.widgets.QMessageBox;
 
 import java.sql.SQLException;
 
-public class MenuController {
+public class MenuController extends QObject {
 
     private final MainWindow root;
 

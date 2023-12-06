@@ -21,9 +21,9 @@ public class MainWindow extends QWidget {
 
     public MainWindow(QIcon newIcon) throws IOException {
         setWindowTitle( "DB browser" );
-
         setWindowIcon(newIcon);
         LocalStorage.setOutput(output);
+        LocalStorage.setMenuController(menuController);
         initControls();
     }
 
@@ -31,7 +31,6 @@ public class MainWindow extends QWidget {
     public final QTextEdit edit = new QTextEdit();
     public QLabel label = new QLabel("", this);
     public QMenu popMenu = new QMenu("DropDown", this);//вот эту шляпу в отдельный класс-конструктор вынести огда пэкэджи заработают
-    //public QTextEdit output = new QTextEdit();
     public QLabel output = new QLabel();
     MenuController menuController = new MenuController(this);
     TableView tableView = new TableView();
