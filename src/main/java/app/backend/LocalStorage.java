@@ -82,7 +82,7 @@ public class LocalStorage {
         LocalStorage.filePath = filePath;
         LocalStorage.dbHandler = SqlConnector.getInstance(getFilePath());
         //signal to tree
-        signaller.emitSignalToTree();
+        signaller.emitSignalToTree(TreeSignals.SHOW);
     }
 
     /**
@@ -99,6 +99,7 @@ public class LocalStorage {
     public static void closeConnection() {
         LocalStorage.dbHandler.closeConnection();
         output.setText("Connection closed");
+        signaller.emitSignalToTree(TreeSignals.HIDE);
     }
 
 }

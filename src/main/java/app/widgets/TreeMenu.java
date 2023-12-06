@@ -36,6 +36,10 @@ public class TreeMenu extends QTreeView {
         this.setModel(dbModel);
     }
 
+    public void setFileModel() {
+        this.setModel(model);
+    }
+
     void treeClicked() {
         System.out.println(model.filePath(this.currentIndex()));
         signal0.emit();

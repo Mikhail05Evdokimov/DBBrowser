@@ -105,6 +105,10 @@ public class MenuController extends QObject {
         root.treeViewMenu.setTreeModel(LocalStorage.showSchema());
     }
 
+    void showFiles() {
+        root.treeViewMenu.setFileModel();
+    }
+
     void closeConnectionButtonClicked() {
         LocalStorage.closeConnection();
     }
