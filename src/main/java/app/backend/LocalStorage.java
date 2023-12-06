@@ -97,9 +97,11 @@ public class LocalStorage {
     }
 
     public static void closeConnection() {
-        LocalStorage.dbHandler.closeConnection();
-        output.setText("Connection closed");
-        signaller.emitSignalToTree(TreeSignals.HIDE);
+        if(LocalStorage.dbHandler != null) {
+            LocalStorage.dbHandler.closeConnection();
+            output.setText("Connection closed");
+            signaller.emitSignalToTree(TreeSignals.HIDE);
+        }
     }
 
 }

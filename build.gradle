@@ -35,7 +35,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     implementation group: 'io.qtjambi', name: 'qtjambi', version: '6.6.0'
-    implementation files('C:\\Users\\its\\Desktop\\software\\qtjambi-native-windows-x64-6.6.0.jar')
+    implementation files('build/libs/qtjambi-native-windows-x64-6.6.0.jar')
     implementation 'org.postgresql:postgresql:42.6.0'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.42.0.0'
 
