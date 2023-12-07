@@ -73,34 +73,8 @@ public class SqlConnector {
     /**
      * https://alekseygulynin.ru/rabota-s-sqlite-v-java/
      * Здесь ещё примеры для delete и patch апросов.
-     * getAllProducts не используется, так как сделан под конкретные данные, но в качестве образца сойдёт.
-     * Соответственно класс Category тоже потом надо будет удалить.
      */
 
-    public List<Category> getAllProducts() {
-
-        // Statement используется для того, чтобы выполнить sql-запрос
-        try (Statement statement = this.connection.createStatement()) {
-            // В данный список будем загружать наши продукты, полученные из БД
-            List<Category> products = new ArrayList<>();
-            // В resultSet будет храниться результат нашего запроса,
-            // который выполняется командой statement.executeQuery()
-            ResultSet resultSet = statement.executeQuery("SELECT category_id, category_name, category_weight FROM category");
-            // Проходимся по нашему resultSet и заносим данные в products
-            while (resultSet.next()) {
-                products.add(new Category(resultSet.getInt("category_id"),
-                    resultSet.getString("category_name"),
-                    resultSet.getString("category_weight")));
-            }
-            // Возвращаем наш список
-            return products;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Если произошла ошибка - возвращаем пустую коллекцию
-            return Collections.emptyList();
-        }
-    }
 
     /**
      * метод, исполняющий GET запрос

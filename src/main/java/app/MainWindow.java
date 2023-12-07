@@ -70,9 +70,9 @@ public class MainWindow extends QWidget {
         layout.addWidget(bigBar);
 
         //Просто кнопка.
-        QPushButton sendMessage = new QPushButton( "Run query" );
+        QPushButton runQuery = new QPushButton( "Run query" );
 
-        sendMessage.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu);
+        runQuery.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu);
         QAction act1 = new QAction("act1");
         act1.triggered.connect(menuController, "act1()");
         popMenu.addAction(act1);
@@ -95,14 +95,14 @@ public class MainWindow extends QWidget {
         pal.setColor(QPalette.ColorRole.ButtonText, new QColor(254, 20, 20));
         hideButton.setPalette(pal);
 
-        sendMessage.clicked.connect(menuController, "run_clicked()" );
+        runQuery.clicked.connect(menuController, "run_clicked()" );
         hideButton.clicked.connect(menuController, "clear_button_clicked()" );
-        sendMessage.customContextMenuRequested.connect(menuController, "rightClick()");
+        runQuery.customContextMenuRequested.connect(menuController, "rightClick()");
 
         rightBar.addWidget(hideButton);
         rightBar.addWidget( edit );
         rightBar.addWidget(label);
-        rightBar.addWidget( sendMessage );
+        rightBar.addWidget( runQuery );
 
         QToolBar bar = new QToolBar();
         QPushButton selectFileButton = new QPushButton("Connect to DB");
