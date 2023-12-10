@@ -8,6 +8,8 @@ import io.qt.widgets.QLabel;
 import java.sql.SQLException;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Костыльный слой для работы базой данных и вывода результатов в UI.
  * Обходит проблему асинхронности, модульности и тд.
@@ -15,7 +17,7 @@ import java.util.List;
  */
 public class LocalStorage {
 
-    private static List<String> filePath;
+    private static String filePath;
     private static SqlConnector dbHandler;
     private static QLabel output;
     private static String query;
@@ -78,7 +80,7 @@ public class LocalStorage {
      *                 надо потом обработчик ошибок навесить, чтобы он писал юзеру
      *                 что именно не так.
      */
-    public static void createConnection(List<String> filePath) throws SQLException {
+    public static void createConnection(String filePath) throws SQLException {
         LocalStorage.filePath = filePath;
         LocalStorage.dbHandler = SqlConnector.getInstance(getFilePath());
         //signal to tree
@@ -90,10 +92,7 @@ public class LocalStorage {
      * @return - первая строка в списке - путь к выбранной бд
      */
     public static String getFilePath() {
-        if (LocalStorage.filePath == null) {
-            return null;
-        }
-        return LocalStorage.filePath.get(0);
+        return LocalStorage.filePath;
     }
 
     public static void closeConnection() {
@@ -102,6 +101,15 @@ public class LocalStorage {
             output.setText("Connection closed");
             signaller.emitSignalToTree(TreeSignals.HIDE);
         }
+    }
+
+    public static void reconnectToDB() throws SQLException, InterruptedException {
+        LocalStorage.dbHandler.closeConnection();
+        signaller.emitSignalToTree(TreeSignals.HIDE);
+        LocalStorage.dbHandler = SqlConnector.getInstance(getFilePath());
+        sleep(500);
+        signaller.emitSignalToTree(TreeSignals.SHOW);
+        output.setText("Successful reconnection");
     }
 
 }

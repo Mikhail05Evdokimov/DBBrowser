@@ -3,13 +3,13 @@ package app;
 import app.backend.LocalStorage;
 import app.widgets.TableView;
 import app.widgets.TreeMenu;
+import app.widgets.dialogs.StartDialog;
 import io.qt.core.*;
 import io.qt.gui.*;
 import io.qt.widgets.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * Класс главного окна, инициализирует все компоненты, вид окошка и всё такое.
@@ -25,6 +25,7 @@ public class MainWindow extends QWidget {
         LocalStorage.setOutput(output);
         LocalStorage.setMenuController(menuController);
         initControls();
+        this.show();
     }
 
     // Текстовое поле, от куда будем брать текст для вывода в консоль
@@ -36,7 +37,7 @@ public class MainWindow extends QWidget {
     TableView tableView = new TableView();
     TreeMenu treeViewMenu = new TreeMenu();
 
-    private void initControls() throws IOException {
+    private void initControls() {
 
         // Создаём контейнер для виджетов
         QLayout layout = new QGridLayout( this );
@@ -104,21 +105,25 @@ public class MainWindow extends QWidget {
         rightBar.addWidget(label);
         rightBar.addWidget( runQuery );
 
-        QToolBar bar = new QToolBar();
+        QToolBar bottomButtonsBar = new QToolBar();
         QPushButton selectFileButton = new QPushButton("Connect to DB");
         selectFileButton.clicked.connect(menuController, "selectFileButtonClicked()");
-        bar.addSeparator();
-        bar.addWidget(selectFileButton);
-        bar.addSeparator();
-        bar.setOrientation(Qt.Orientation.Horizontal);
+        bottomButtonsBar.addSeparator();
+        bottomButtonsBar.addWidget(selectFileButton);
+        bottomButtonsBar.addSeparator();
+        bottomButtonsBar.setOrientation(Qt.Orientation.Horizontal);
         QPushButton closeConnectionButton = new QPushButton("Close connection");
         closeConnectionButton.clicked.connect(menuController, "closeConnectionButtonClicked()");
         QPushButton b1 = new QPushButton("PopUp menu");
         b1.setMenu(popMenu);
-        bar.addWidget(closeConnectionButton);
-        bar.addSeparator();
-        bar.addWidget(b1);
-        bar.addSeparator();
+        bottomButtonsBar.addWidget(closeConnectionButton);
+        bottomButtonsBar.addSeparator();
+        QPushButton reconnectToDBButton = new QPushButton("Reconnect to DB");
+        reconnectToDBButton.clicked.connect(menuController, "reconnectToDBClicked()");
+        bottomButtonsBar.addWidget(reconnectToDBButton);
+        bottomButtonsBar.addSeparator();
+        bottomButtonsBar.addWidget(b1);
+        bottomButtonsBar.addSeparator();
 
         bigBar.addWidget(rightBar);
         //bigBar.addWidget(splitter1);
@@ -130,7 +135,7 @@ public class MainWindow extends QWidget {
         layout.addWidget(tableView);
         QSpacerItem midSpacer = new QSpacerItem(10, 10);
         layout.addItem(midSpacer);
-        layout.addWidget(bar);
+        layout.addWidget(bottomButtonsBar);
 
     }
 

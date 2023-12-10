@@ -5,6 +5,7 @@ import app.backend.table.Table;
 import app.widgets.dialogs.CheckBoxChecker;
 import app.widgets.dialogs.CustomCheckBoxDialog;
 import app.widgets.dialogs.FileDialog;
+import app.widgets.dialogs.StartDialog;
 import io.qt.core.QObject;
 import io.qt.gui.QCursor;
 import io.qt.widgets.QCheckBox;
@@ -98,7 +99,9 @@ public class MenuController extends QObject {
     }
 
     void selectFileButtonClicked() {
-        new FileDialog(root);
+        new StartDialog(root.windowIcon());
+        root.close();
+        //new FileDialog(root);
     }
 
     void showSchema() throws SQLException {
@@ -111,6 +114,10 @@ public class MenuController extends QObject {
 
     void closeConnectionButtonClicked() {
         LocalStorage.closeConnection();
+    }
+
+    void reconnectToDBClicked() throws SQLException, InterruptedException {
+        LocalStorage.reconnectToDB();
     }
 
 }

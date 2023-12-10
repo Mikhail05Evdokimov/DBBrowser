@@ -1,15 +1,12 @@
 package app.backend;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-
 import app.backend.table.Row;
 import app.backend.table.Table;
-import io.qt.widgets.QTableView;
 import org.sqlite.JDBC;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Класс драйвера для работы с БД
@@ -125,10 +122,12 @@ public class SqlConnector {
     }
 
     public void closeConnection() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

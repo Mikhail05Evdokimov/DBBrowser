@@ -1,4 +1,5 @@
 import app.MainWindow;
+import app.widgets.dialogs.StartDialog;
 import io.qt.widgets.QApplication;
 import io.qt.widgets.QWidget;
 
@@ -17,9 +18,10 @@ public class Main {
         QApplication app = QApplication.initialize(args);
 
         IconLoader iconLoader = new IconLoader();
-        QWidget window = new MainWindow(iconLoader.loadIcon());
+        StartDialog startDialog = new StartDialog(iconLoader.loadIcon());
+        //QWidget window = new MainWindow(iconLoader.loadIcon());
 
-        window.show();
+        //window.show();
 
         QApplication.exec();
 
