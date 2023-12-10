@@ -1,5 +1,6 @@
 package app.widgets;
 
+import app.backend.LocalStorage;
 import io.qt.core.*;
 import io.qt.gui.QFileSystemModel;
 import io.qt.gui.QStandardItem;
@@ -7,8 +8,11 @@ import io.qt.gui.QStandardItemModel;
 import io.qt.widgets.QLabel;
 import io.qt.widgets.QTreeView;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Класс для представления файлов/БД в виде дерева
@@ -18,7 +22,7 @@ import java.util.List;
  */
 public class TreeMenu extends QTreeView {
 
-    private QStringListModel dbModel;
+    private QStandardItemModel dbModel;
     private final QFileSystemModel fileModel;
     private final QStandardItemModel treeStringListModel;
     public final Signal0 signal0 = new Signal0();
@@ -27,7 +31,7 @@ public class TreeMenu extends QTreeView {
         this.setMinimumWidth(300);
         fileModel = new QFileSystemModel();
         fileModel.setRootPath(QDir.currentPath());
-
+        dbModel = new QStandardItemModel();
         //this.doubleClicked.connect(this, "treeClicked()");
         //this.setModel(model);
 
@@ -50,12 +54,18 @@ public class TreeMenu extends QTreeView {
         rootItem.appendRow(item2);
         this.setModel(treeStringListModel);
 
-        connect(this, "signal0", this, "helloWorld()");
+        //connect(this, "signal0", this, "helloWorld()");
     }
 
     public void setTreeModel(List<String> stringList) {
-        dbModel = new QStringListModel();
-        dbModel.setStringList(stringList);
+        dbModel = new QStandardItemModel();
+        QStandardItem invisibleRootItem = dbModel.invisibleRootItem();
+        assert invisibleRootItem != null;
+        for (String i : stringList) {
+            QStandardItem item = new QStandardItem(i);
+            item.setChild(0, new QStandardItem());
+            invisibleRootItem.appendRow(item);
+        }
         this.setModel(dbModel);
         this.doubleClicked.connect(this, "treeClicked()");
     }
@@ -72,24 +82,22 @@ public class TreeMenu extends QTreeView {
         //System.out.println(model1.data(this.currentIndex()));
     }
 
-    void helloWorld() {
-        dbModel = new QStringListModel();
-        List<String> list = new ArrayList<>();
-        list.add("SJJJJJJJ");
-        dbModel.setStringList(list);
-        this.setModel(dbModel);
-        System.out.println("HELLO");
-    }
 
     // Закрыть список детей
     void collapse1(QModelIndex index) {
-        System.out.println(treeStringListModel.data(index) + " Collapsed " );
+        System.out.println(dbModel.data(index) + " Collapsed" );
     }
 
     // Открыть список детей
-    void expanded1(QModelIndex index) {
-        System.out.println(treeStringListModel.data(index) + " Expanded " );
-        //this.setCurrentIndex(this.expanded);
+    void expanded1(QModelIndex index) throws SQLException {
+        List<String> children = LocalStorage.getChildren(dbModel.data(index).toString());
+        int i = 0;
+        for (String child : children) {
+            Objects.requireNonNull(Objects.requireNonNull(dbModel.invisibleRootItem()).child(index.row())).setChild(i, new QStandardItem(child));
+            i++;
+        }
+        System.out.println(dbModel.data(index) + " Expanded" );
+
     }
 
 }

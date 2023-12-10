@@ -131,4 +131,11 @@ public class SqlConnector {
         }
     }
 
+    public List<String> getChildren(String name) throws SQLException {
+        var tables = this.connection.getMetaData().getTables(null, null ,null, null);
+        Table result = execQuery("select * from " + name);
+        return result.getMetaData().getColumnNames();
+        //System.out.println(tables.getMetaData().getCatalogName(0));
+    }
+
 }

@@ -112,4 +112,8 @@ public class LocalStorage {
         output.setText("Successful reconnection");
     }
 
+    public static List<String> getChildren(String name) throws SQLException {
+        return LocalStorage.dbHandler.getChildren(name);
+    }
+
 }
