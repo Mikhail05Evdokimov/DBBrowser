@@ -3,11 +3,10 @@ import io.qt.widgets.QApplication;
 import io.qt.widgets.QWidget;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class Main {
 
-    public static void main( String[] args ) throws IOException, SQLException {
+    public static void main( String[] args ) throws IOException {
 
         // Создаём Qt приложение, что бы инициализировать библиотеку
         // и графическую подсистему.
