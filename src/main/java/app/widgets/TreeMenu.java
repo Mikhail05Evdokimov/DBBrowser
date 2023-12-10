@@ -1,17 +1,14 @@
 package app.widgets;
 
 import app.backend.LocalStorage;
-import io.qt.core.*;
-import io.qt.gui.QFileSystemModel;
-import io.qt.gui.QStandardItem;
-import io.qt.gui.QStandardItemModel;
-import io.qt.widgets.QLabel;
+import io.qt.core.QDir;
+import io.qt.core.QModelIndex;
+import io.qt.gui.*;
 import io.qt.widgets.QTreeView;
 
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -57,13 +54,14 @@ public class TreeMenu extends QTreeView {
         //connect(this, "signal0", this, "helloWorld()");
     }
 
-    public void setTreeModel(List<String> stringList) {
+    public void setTreeModel(List<String> stringList) throws IOException {
         dbModel = new QStandardItemModel();
         QStandardItem invisibleRootItem = dbModel.invisibleRootItem();
         assert invisibleRootItem != null;
         for (String i : stringList) {
             QStandardItem item = new QStandardItem(i);
             item.setChild(0, new QStandardItem());
+            item.setIcon(loadIcon());
             invisibleRootItem.appendRow(item);
         }
         this.setModel(dbModel);
@@ -72,6 +70,15 @@ public class TreeMenu extends QTreeView {
 
     public void setFileModel() {
         this.setModel(fileModel);
+    }
+
+    public QIcon loadIcon() throws IOException {
+        QPixmap pixmap = new QPixmap();
+
+        pixmap.loadFromData(Objects.requireNonNull(this.getClass().getResourceAsStream("../../looool.png")).readAllBytes());
+        QIcon icon = new QIcon();
+        icon.addPixmap(pixmap);
+        return icon;
     }
 
     void treeClicked() {

@@ -11,6 +11,7 @@ import io.qt.gui.QCursor;
 import io.qt.widgets.QCheckBox;
 import io.qt.widgets.QMessageBox;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class MenuController extends QObject {
@@ -104,7 +105,7 @@ public class MenuController extends QObject {
         //new FileDialog(root);
     }
 
-    void showSchema() throws SQLException {
+    void showSchema() throws SQLException, IOException {
         root.treeViewMenu.setTreeModel(LocalStorage.showSchema());
     }
 
