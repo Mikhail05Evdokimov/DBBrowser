@@ -21,10 +21,9 @@ public class TreeMenu extends QTreeView {
 
     private QStandardItemModel dbModel;
     private final QFileSystemModel fileModel;
-    private final QStandardItemModel treeStringListModel;
     public final Signal0 signal0 = new Signal0();
 
-    public TreeMenu() {
+    public TreeMenu() { //////////// При измеении имени чего-либо в TreeView пусть оно записвает изменения в локальное отображение базы
         this.setMinimumWidth(300);
         fileModel = new QFileSystemModel();
         fileModel.setRootPath(QDir.currentPath());
@@ -32,24 +31,8 @@ public class TreeMenu extends QTreeView {
         //this.doubleClicked.connect(this, "treeClicked()");
         //this.setModel(model);
 
-        treeStringListModel = new QStandardItemModel();
-        QStandardItem rootItem = treeStringListModel.invisibleRootItem();
-        QStandardItem item1 = new QStandardItem("Hello");
-        QStandardItem item2 = new QStandardItem("World");
-        QStandardItem child1 = new QStandardItem("child1");
-        QStandardItem child2 = new QStandardItem("child2");
-        QStandardItem child0 = new QStandardItem("child0");
-        QStandardItem child10 = new QStandardItem("child10");
-        item2.setChild(0, child1);
-        item2.setChild(1, child2);
-        item1.setChild(0, child0);
-        child1.setChild(0, child10);
         this.collapsed.connect(this, "collapse1(QModelIndex)");
         this.expanded.connect(this, "expanded1(QModelIndex)");
-        assert rootItem != null;
-        rootItem.appendRow(item1);
-        rootItem.appendRow(item2);
-        this.setModel(treeStringListModel);
 
         //connect(this, "signal0", this, "helloWorld()");
     }
@@ -64,8 +47,12 @@ public class TreeMenu extends QTreeView {
             item.setIcon(loadIcon());
             invisibleRootItem.appendRow(item);
         }
+        dbModel.dataChanged.connect(this, "renamingInTree(QModelIndex)");
+        //dbModel.itemChanged.connect(this, "itemChanged()");
         this.setModel(dbModel);
         this.doubleClicked.connect(this, "treeClicked()");
+
+
     }
 
     public void setFileModel() {
@@ -74,7 +61,6 @@ public class TreeMenu extends QTreeView {
 
     public QIcon loadIcon() throws IOException {
         QPixmap pixmap = new QPixmap();
-
         pixmap.loadFromData(Objects.requireNonNull(this.getClass().getResourceAsStream("../../looool.png")).readAllBytes());
         QIcon icon = new QIcon();
         icon.addPixmap(pixmap);
@@ -88,6 +74,15 @@ public class TreeMenu extends QTreeView {
         //System.out.println(this.currentIndex().row());
         //System.out.println(model1.data(this.currentIndex()));
     }
+
+    void itemChanged() {
+        System.out.println("iteeeemm!");
+    }
+
+    void renamingInTree(QModelIndex index) {
+        //System.out.println(this.currentIndex());
+        System.out.println("new name: " + dbModel.data(index));
+        }
 
 
     // Закрыть список детей
