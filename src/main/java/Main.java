@@ -1,7 +1,6 @@
-import app.MainWindow;
+import app.IconLoader;
 import app.widgets.dialogs.StartDialog;
 import io.qt.widgets.QApplication;
-import io.qt.widgets.QWidget;
 
 import java.io.IOException;
 
@@ -18,7 +17,7 @@ public class Main {
         QApplication app = QApplication.initialize(args);
 
         IconLoader iconLoader = new IconLoader();
-        StartDialog startDialog = new StartDialog(iconLoader.loadIcon());
+        StartDialog startDialog = new StartDialog(iconLoader.loadIcon("../icon.ico"));
         //QWidget window = new MainWindow(iconLoader.loadIcon());
 
         //window.show();

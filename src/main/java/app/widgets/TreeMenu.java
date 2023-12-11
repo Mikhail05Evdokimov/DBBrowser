@@ -1,5 +1,6 @@
 package app.widgets;
 
+import app.IconLoader;
 import app.backend.LocalStorage;
 import io.qt.core.QDir;
 import io.qt.core.QModelIndex;
@@ -52,7 +53,6 @@ public class TreeMenu extends QTreeView {
         this.setModel(dbModel);
         this.doubleClicked.connect(this, "treeClicked()");
 
-
     }
 
     public void setFileModel() {
@@ -60,11 +60,7 @@ public class TreeMenu extends QTreeView {
     }
 
     public QIcon loadIcon() throws IOException {
-        QPixmap pixmap = new QPixmap();
-        pixmap.loadFromData(Objects.requireNonNull(this.getClass().getResourceAsStream("../../looool.png")).readAllBytes());
-        QIcon icon = new QIcon();
-        icon.addPixmap(pixmap);
-        return icon;
+        return new IconLoader().loadIcon("../table.png");
     }
 
     void treeClicked() {

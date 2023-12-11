@@ -1,3 +1,5 @@
+package app;
+
 import io.qt.gui.QIcon;
 import io.qt.gui.QPixmap;
 
@@ -13,9 +15,9 @@ public class IconLoader {
      * -
      * Logo icon by Igor Zhuravskiy
      */
-    public QIcon loadIcon() throws IOException {
+    public QIcon loadIcon(String name) throws IOException {
         QPixmap pixmap = new QPixmap();
-        pixmap.loadFromData(Objects.requireNonNull(this.getClass().getResourceAsStream("icon.ico")).readAllBytes());
+        pixmap.loadFromData(Objects.requireNonNull(this.getClass().getResourceAsStream(name)).readAllBytes());
         QIcon icon = new QIcon();
         icon.addPixmap(pixmap);
         return icon;
