@@ -138,4 +138,16 @@ public class SqlConnector {
         //System.out.println(tables.getMetaData().getCatalogName(0));
     }
 
+    public List<String> getDBName() {
+        List<String> result = new ArrayList<>();
+        try {
+            result.add(this.connection.getMetaData().getDatabaseProductName());
+            result.add(this.connection.getMetaData().getDatabaseProductVersion());
+            return result;
+            //return this.connection.getCatalog();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

@@ -12,6 +12,7 @@ import io.qt.widgets.QMessageBox;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class MenuController extends QObject {
 
@@ -119,6 +120,13 @@ public class MenuController extends QObject {
 
     void reconnectToDBClicked() throws SQLException, InterruptedException {
         LocalStorage.reconnectToDB();
+    }
+
+    void showDBInfo() {
+        List<String> list = LocalStorage.getDBName();
+        String type = list.get(0);
+        String ver = list.get(1);
+        root.dbInfo.setText("DB type: " + type + " (v. " + ver + ")");
     }
 
 }

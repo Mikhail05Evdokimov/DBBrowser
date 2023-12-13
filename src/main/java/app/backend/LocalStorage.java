@@ -85,6 +85,7 @@ public class LocalStorage {
         LocalStorage.dbHandler = SqlConnector.getInstance(getFilePath());
         //signal to tree
         signaller.emitSignalToTree(TreeSignals.SHOW);
+        signaller.emitSignalToDBInfo();
     }
 
     /**
@@ -114,6 +115,10 @@ public class LocalStorage {
 
     public static List<String> getChildren(String name) throws SQLException {
         return LocalStorage.dbHandler.getChildren(name);
+    }
+
+    public static List<String> getDBName() {
+        return LocalStorage.dbHandler.getDBName();
     }
 
 }
