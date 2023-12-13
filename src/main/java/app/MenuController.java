@@ -4,7 +4,6 @@ import app.backend.LocalStorage;
 import app.backend.table.Table;
 import app.widgets.dialogs.CheckBoxChecker;
 import app.widgets.dialogs.CustomCheckBoxDialog;
-import app.widgets.dialogs.FileDialog;
 import app.widgets.dialogs.StartDialog;
 import io.qt.core.QObject;
 import io.qt.gui.QCursor;
@@ -99,7 +98,8 @@ public class MenuController extends QObject {
         root.popMenu.popup(QCursor.pos());
     }
 
-    void selectFileButtonClicked() {
+    void connectToDBButtonClicked() {
+        LocalStorage.closeConnection();
         new StartDialog(root.windowIcon());
         root.close();
         //new FileDialog(root);

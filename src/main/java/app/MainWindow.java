@@ -53,14 +53,24 @@ public class MainWindow extends QWidget {
         //output.setReadOnly(true);
         output.setText("Your query results will be here");
 
+        QSizePolicy fixedSizePolicy = new QSizePolicy();
+        fixedSizePolicy.setVerticalPolicy(QSizePolicy.Policy.Expanding);
+        fixedSizePolicy.setHorizontalPolicy(QSizePolicy.Policy.Fixed);
+
         QSplitter splitter1 = new QSplitter();
         splitter1.setFixedSize(10, 10);
-        QSplitter splitter2 = new QSplitter();
-        splitter2.setFixedSize(7, 7);
+        splitter1.setSizePolicy(fixedSizePolicy);
         bigBar.addWidget(splitter1);
-        bigBar.addSeparator();
-        bigBar.addWidget(splitter2);
 
+        QSizePolicy expandingSizePolicy = new QSizePolicy();
+        expandingSizePolicy.setHorizontalPolicy(QSizePolicy.Policy.Expanding);
+        expandingSizePolicy.setVerticalPolicy(QSizePolicy.Policy.Expanding);
+
+        rightBar.setSizePolicy(expandingSizePolicy);
+
+        treeViewMenu.setSizePolicy(fixedSizePolicy);
+
+        bigBar.setSizePolicy(expandingSizePolicy);
        // QTabWidget tabWidget = new QTabWidget();
         //bigBar.addWidget(output);
         //tabWidget.addTab(bigBar, "bigBar");
@@ -68,7 +78,7 @@ public class MainWindow extends QWidget {
         //tabWidget.addTab(output, "output");
 
         //layout.addWidget(tabWidget);
-        layout.addWidget(bigBar);
+
 
         //Просто кнопка.
         QPushButton runQuery = new QPushButton( "Run query" );
@@ -101,13 +111,17 @@ public class MainWindow extends QWidget {
         runQuery.customContextMenuRequested.connect(menuController, "rightClick()");
 
         rightBar.addWidget(hideButton);
+        rightBar.setMinimumWidth(300);
+        edit.setMinimumWidth(300);
         rightBar.addWidget( edit );
         rightBar.addWidget(label);
         rightBar.addWidget( runQuery );
+        rightBar.addWidget(output);
+        rightBar.addWidget(tableView);
 
         QToolBar bottomButtonsBar = new QToolBar();
         QPushButton selectFileButton = new QPushButton("Connect to DB");
-        selectFileButton.clicked.connect(menuController, "selectFileButtonClicked()");
+        selectFileButton.clicked.connect(menuController, "connectToDBButtonClicked()");
         bottomButtonsBar.addSeparator();
         bottomButtonsBar.addWidget(selectFileButton);
         bottomButtonsBar.addSeparator();
@@ -131,10 +145,28 @@ public class MainWindow extends QWidget {
         //bigBar.addWidget(splitter2);
         //bigBar.addWidget(output);
         //layout.addWidget(bigBar);
-        layout.addWidget(output);
-        layout.addWidget(tableView);
+        QTabWidget tabWidget = new QTabWidget();
+
+        QToolBar mainTab = new QToolBar();
+        mainTab.setOrientation(Qt.Orientation.Vertical);
+        mainTab.addWidget(new QLabel("Hello world"));
+        tabWidget.addTab(mainTab, "MainTab");
+
+        QToolBar sqlTab = new QToolBar();
+        sqlTab.setOrientation(Qt.Orientation.Vertical);
+        sqlTab.addWidget(bigBar);
+        //sqlTab.addWidget(output);
+        //sqlTab.addWidget(tableView);
+        tabWidget.addTab(sqlTab, "SQL");
+
+        //layout.addWidget(bigBar);
+        //layout.addWidget(output);
+        //layout.addWidget(tableView);
+        tabWidget.sizePolicy().setVerticalPolicy(QSizePolicy.Policy.Expanding);
+        layout.addWidget(tabWidget);
         QSpacerItem midSpacer = new QSpacerItem(10, 10);
-        layout.addItem(midSpacer);
+        midSpacer.sizePolicy().setVerticalPolicy(QSizePolicy.Policy.Fixed);
+        //layout.addItem(midSpacer);
         layout.addWidget(bottomButtonsBar);
 
     }
