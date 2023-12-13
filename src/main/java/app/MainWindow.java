@@ -3,9 +3,11 @@ package app;
 import app.backend.LocalStorage;
 import app.widgets.TableView;
 import app.widgets.TreeMenu;
-import app.widgets.dialogs.StartDialog;
-import io.qt.core.*;
-import io.qt.gui.*;
+import io.qt.core.Qt;
+import io.qt.gui.QAction;
+import io.qt.gui.QColor;
+import io.qt.gui.QIcon;
+import io.qt.gui.QPalette;
 import io.qt.widgets.*;
 
 import java.io.IOException;
@@ -55,7 +57,6 @@ public class MainWindow extends QWidget {
         //barPallet.setColor(QPalette.ColorRole.Text, QColor.fromRgb(250, 250, 250));
         bigBar.setPalette(barPallet);
 
-
         //bigBar.addWidget(tableView);
 
         //output.setReadOnly(true);
@@ -79,14 +80,6 @@ public class MainWindow extends QWidget {
         treeViewMenu.setSizePolicy(fixedSizePolicy);
 
         bigBar.setSizePolicy(expandingSizePolicy);
-       // QTabWidget tabWidget = new QTabWidget();
-        //bigBar.addWidget(output);
-        //tabWidget.addTab(bigBar, "bigBar");
-
-        //tabWidget.addTab(output, "output");
-
-        //layout.addWidget(tabWidget);
-
 
         //Просто кнопка.
         QPushButton runQuery = new QPushButton( "Run query" );
@@ -148,9 +141,6 @@ public class MainWindow extends QWidget {
         bottomButtonsBar.addSeparator();
 
         bigBar.addWidget(rightBar);
-        //bigBar.addWidget(splitter1);
-        //bigBar.addSeparator();
-        //bigBar.addWidget(splitter2);
         //bigBar.addWidget(output);
         //layout.addWidget(bigBar);
         QTabWidget tabWidget = new QTabWidget();
@@ -180,9 +170,6 @@ public class MainWindow extends QWidget {
         veryBigBar.addWidget(treeViewMenu);
         veryBigBar.addWidget(tabWidget);
 
-        //layout.addWidget(bigBar);
-        //layout.addWidget(output);
-        //layout.addWidget(tableView);
         layout.addWidget(bottomButtonsBar);
         tabWidget.sizePolicy().setVerticalPolicy(QSizePolicy.Policy.Expanding);
         veryBigBar.setSizePolicy(expandingSizePolicy);
