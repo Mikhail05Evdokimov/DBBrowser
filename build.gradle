@@ -15,6 +15,7 @@ dependencies {
     implementation files('libs/qtjambi-native-windows-x64-6.6.0.jar')
     implementation 'io.qtjambi:qtjambi:6.6.0'
     implementation 'org.xerial:sqlite-jdbc:3.44.1.0'
+    implementation 'org.postgresql:postgresql:42.6.0'
 }
 
 test {
