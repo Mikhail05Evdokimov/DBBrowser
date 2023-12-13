@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'org.example'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = 'Main'
+}
+
+task copyQtJambiLibs(type: Copy) {
+    into("$buildDir/libs")
+    from { configurations.runtimeClasspath.findAll { it.name.endsWith('.jar') } }
+}
+
+jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    dependsOn copyQtJambiLibs
+    manifest {
+        attributes 'Main-Class': application.mainClass
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation group: 'io.qtjambi', name: 'qtjambi', version: '6.6.0'
+    implementation files('build/libs/qtjambi-native-windows-x64-6.6.0.jar')
+    implementation 'org.postgresql:postgresql:42.6.0'
+    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.42.0.0'
+
+}
+/*
+task qtJambi {
+    def QT_BUILD_DIR = "C:\\Qt\\Tools\\sdktool"
+    def nativeLib = hasProperty('nativeLib')
+            ? 'qtjambi4.dll' : 'libqtjambi4.jnilib'
+    doLast {
+        copy {
+            from "${QT_BUILD_DIR}/bin"
+            include nativeLib
+            into "${buildDir}/libs"
+        }
+    }
+}*/
+
+test {
+    useJUnitPlatform()
+}
