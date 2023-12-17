@@ -16,7 +16,11 @@ public class Database {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public List<Schema> getSchemaList() {
+        return schemaList;
+    }
+
+    public void setSchemaList(List<Schema> schemaList) {
+        this.schemaList = schemaList;
     }
 }

@@ -10,18 +10,18 @@ public class ConnectionStorage {
         this.connectionList = new ArrayList<>();
     }
 
-    public List<Connection> getConnectionList() {
-        return connectionList;
+    public List<String> getConnectionList() {
+        return connectionList.stream().map(Connection::getName).toList();
     }
 
-    public Connection getConnection(ConnectionInfo info){
+    public Connection getConnection(String connectionName){
         return connectionList.stream()
-                .filter(element -> element.getConnectionInfo() == info)
+                .filter(element -> element.getName().equals(connectionName))
                 .findFirst().orElse(null);
     }
 
-    public void removeConnection(ConnectionInfo info){
-        connectionList.removeIf(x -> x.getConnectionInfo() == info);
+    public void removeConnection(String connectionName){
+        connectionList.removeIf(x -> x.getName().equals(connectionName));
     }
 
     public void addConnectionToStorage(Connection connection){
