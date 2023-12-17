@@ -5,6 +5,7 @@ import ru.nsu.dbb.entities.Column;
 import ru.nsu.dbb.entities.Connection;
 import ru.nsu.dbb.entities.ConnectionInfo;
 import ru.nsu.dbb.entities.ConnectionStorage;
+import ru.nsu.dbb.entities.DataTable;
 import ru.nsu.dbb.entities.Database;
 import ru.nsu.dbb.entities.ForeignKey;
 import ru.nsu.dbb.entities.Index;
@@ -14,14 +15,13 @@ import ru.nsu.dbb.entities.Session;
 import ru.nsu.dbb.entities.Table;
 import ru.nsu.dbb.entities.View;
 
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Test {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         ConnectionStorage connectionStorage = new ConnectionStorage();
 
         Map<String, String> info = new HashMap<>();
@@ -31,6 +31,11 @@ public class Test {
         connectionStorage.addConnectionToStorage(new Connection("sqlite", connectionInfo));
 
         Connection connection = connectionStorage.getConnection("sqlite"); // click on corresponding tab
+
+        connection.disconnect();
+        System.out.println(connection.isConnected());
+        connection.connect();
+        System.out.println(connection.isConnected());
 
         connection.setViews(); // click on corresponding tab
 
@@ -47,11 +52,46 @@ public class Test {
         connection.setIndexes(); // click on corresponding tab
         connection.setTables(); // click on corresponding tab
 
+        DataTable dataTable = connection.getDataFromTable("artists");
+
+        System.out.println(dataTable.getMessage());
+        System.out.println(dataTable.getColumnNames());
+        for (List<String> row : dataTable.getRows()) {
+            for (int i = 0; i < dataTable.getColumnNames().size(); i++) {
+                System.out.print(row.get(i) + " ");
+            }
+            System.out.println();
+        }
+
+        dataTable.getMoreRows(20);
+
+        System.out.println(dataTable.getMessage());
+        System.out.println(dataTable.getColumnNames());
+        for (List<String> row : dataTable.getRows()) {
+            for (int i = 0; i < dataTable.getColumnNames().size(); i++) {
+                System.out.print(row.get(i) + " ");
+            }
+            System.out.println();
+        }
+
         Table table = schema.getTable(schema.getTableList().get(0));
         connection.setForeignKeysFor(table.getName());
         connection.setKeysFor(table.getName());
         connection.setColumnsFor(table.getName());
         connection.setIndexesFor(table.getName());
+
+        dataTable = connection.insertData("artists", new ArrayList<>(List.of("6", "newName", "1")));
+        connection.saveChanges();
+
+        connection.deleteData("artists", 5);
+        connection.saveChanges();
+
+        connection.updateData("artists", 5, new ArrayList<>(List.of(1, 2)), new ArrayList<>(List.of("new1", "12")));
+        connection.saveChanges();
+
+//        for (String s : dataTable.getRows().get(5)) {
+//            System.out.println(s);
+//        }
 
         // Таким образом мы получили схему всей бд, как брать конкретные элементы описано выше
     }

@@ -1,11 +1,9 @@
 package ru.nsu.dbb.entities;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Connection {
+    private static int DEFAULT_ROWS_TO_GET = 100;
     private String name;
     private boolean isConnected;
     private ConnectionInfo connectionInfo;
@@ -69,6 +67,10 @@ public class Connection {
         }
     }
 
+    public boolean isConnected() {
+        return isConnected;
+    }
+
     public String getName() {
         return name;
     }
@@ -99,14 +101,27 @@ public class Connection {
         this.schema = new Schema("schema");
     }
 
-    // Вместо этого надо сделать изменить удалить добавить данные в таблицу
-    public PreparedStatement getPreparedStatement(String sql) {
-        return session.getPreparedStatement(sql);
+    public DataTable getDataFromTable(String tableName) {
+        DataTable dataTable = session.getDataFromTable(tableName, DEFAULT_ROWS_TO_GET);
+        schema.getTable(tableName).setDataTable(dataTable);
+        return dataTable;
     }
 
-    // а тут сразу исполнить результат и получить данные
-    public Statement getStatement() {
-        return session.getStatement();
+    public DataTable insertData(String tableName, List<String> newValues) {
+        session.insertData(tableName, newValues, schema.getTable(tableName).getDataTable().getColumnNames());
+        return getDataFromTable(tableName);
+    }
+
+    public DataTable deleteData(String tableName, int index) {
+        DataTable dataTable = schema.getTable(tableName).getDataTable();
+        session.deleteData(tableName, dataTable, index);
+        return getDataFromTable(tableName);
+    }
+
+    public DataTable updateData(String tableName, int rowNumber, List<Integer> columnNumbers, List<String> values) {
+        DataTable dataTable = schema.getTable(tableName).getDataTable();
+        session.updateData(tableName, dataTable, rowNumber, columnNumbers, values);
+        return getDataFromTable(tableName);
     }
 
     public void updateSaveStatement(String sql) {

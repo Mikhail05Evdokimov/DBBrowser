@@ -9,10 +9,19 @@ public class Table {
     private List<Index> indexList;
     private List<Key> keyList;
     private List<ForeignKey> foreignKeyList;
+    private DataTable dataTable;
 
     public Table(String name, String definition) {
         this.name = name;
         this.definition = definition;
+    }
+
+    public DataTable getDataTable() {
+        return dataTable;
+    }
+
+    public void setDataTable(DataTable dataTable) {
+        this.dataTable = dataTable;
     }
 
     public String getName() {

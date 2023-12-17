@@ -27,4 +27,8 @@ public class ConnectionStorage {
     public void addConnectionToStorage(Connection connection){
         connectionList.add(connection);
     }
+
+    public void disconnectAll() {
+        connectionList.forEach(Connection::disconnect);
+    }
 }

@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class Session {
     }
 
     // Statements functions
-    // Это использовать для заранне подготовленных запросов
+    // Это использовать для заранне подготовленных запросов (колонки и таблицы должны быть определены)
     public PreparedStatement getPreparedStatement(String sql) {
         try {
             switch (connectionInfo.getConnectionType()) {
@@ -126,6 +127,104 @@ public class Session {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public DataTable getDataFromTable(String tableName, int rowsToGet) {
+        try {
+            String sql = "SELECT * FROM " + tableName;
+            Statement statement = getStatement();
+            List<List<String>> rows = new ArrayList<>();
+            List<String> columnNames = new ArrayList<>();
+            int rowsGot = 0;
+
+            long startTime = System.currentTimeMillis();
+            ResultSet rs = statement.executeQuery(sql);
+            ResultSetMetaData resultSetMetaData = rs.getMetaData();
+            int columnsNumber = resultSetMetaData.getColumnCount();
+            for (int i = 1; i <= columnsNumber; i++) {
+                columnNames.add(resultSetMetaData.getColumnName(i));
+            }
+            while (rowsGot < rowsToGet && rs.next()) {
+                rowsGot++;
+                List<String> row = new ArrayList<>();
+                for (int i = 1; i <= columnsNumber; i++) {
+                    row.add(rs.getString(i));
+                }
+                rows.add(row);
+            }
+            long executionTime = System.currentTimeMillis() - startTime;
+            String message = "Rows: " + rowsGot + ", Time: " + executionTime + " millis";
+            return new DataTable(columnNames, rows, message, rs);
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't execute query for some reasons...");
+        }
+    }
+
+    public void insertData(String tableName, List<String> newValues, List<String> columnNames) {
+        String columns = columnNames.stream().reduce("", (x, y) -> x + ", " + y).substring(2);
+        String values = newValues.stream().reduce("", (x, y) ->  x + "\'"  + ", " + "\'" + y ).substring(3) + "\'";
+        String sql = "INSERT INTO " + tableName + " (" + columns + ") " + "VALUES (" + values + ");";
+        Statement statement = getStatement();
+        try {
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't insert data");
+        }
+    }
+
+    public void deleteData(String tableName, DataTable dataTable, int index) {
+        List<Key> keys = getKeys(tableName);
+        List<String> keyColumns = new ArrayList<>();
+        for (Key k : keys) {
+            keyColumns.addAll(k.getColumns());
+        }
+        List<String> allColumns = dataTable.getColumnNames();
+
+        String actualKey = allColumns.stream().filter(keyColumns::contains).findFirst().orElse(null);
+        int colIndex = allColumns.indexOf(actualKey);
+        String id = dataTable.getRows().get(index).get(colIndex);
+
+        String sql = "DELETE FROM " + tableName + " WHERE " + actualKey + " = " + "\'" + id + "\'" + ";";
+        Statement statement = getStatement();
+        try {
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't delete data");
+        }
+
+        dataTable.deleteRow(index);
+    }
+
+    public void updateData(String tableName, DataTable dataTable, int rowNumber, List<Integer> columnNumbers, List<String> values) {
+        List<Key> keys = getKeys(tableName);
+        List<String> keyColumns = new ArrayList<>();
+        for (Key k : keys) {
+            keyColumns.addAll(k.getColumns());
+        }
+        List<String> allColumns = dataTable.getColumnNames();
+
+        String actualKey = allColumns.stream().filter(keyColumns::contains).findFirst().orElse(null);
+        int colIndex = allColumns.indexOf(actualKey);
+        String id = dataTable.getRows().get(rowNumber).get(colIndex);
+
+        String sql = "UPDATE " + tableName + " SET ";
+        for (int col : columnNumbers) {
+            sql += allColumns.get(col) + " = ?, ";
+        }
+        sql = sql.substring(0, sql.length() - 2) + " WHERE " + actualKey + " = " + "\'" + id + "\'" + ";";
+
+        PreparedStatement preparedStatement = getPreparedStatement(sql);
+        try {
+            for (int i = 0; i < values.size(); i++) {
+                preparedStatement.setString(i + 1, values.get(i));
+            }
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        dataTable.changeRow(rowNumber, columnNumbers, values);
     }
 
     public void updateSaveStatement(String sql) {
@@ -293,7 +392,7 @@ public class Session {
     public List<ForeignKey> getForeignKeys(String tableName) {
         try {
             List<ForeignKey> foreignKeyList = new ArrayList<>();
-            ResultSet rs = meta.getImportedKeys(null, null ,tableName);
+            ResultSet rs = meta.getImportedKeys(null, null, tableName);
             int index = 0;
             int previousKeySeq = 1;
 
