@@ -4,7 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="43a42705-edaa-4f70-93b7-3f013d610055" name="Changes" comment="" />
+    <list default="true" id="43a42705-edaa-4f70-93b7-3f013d610055" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/NewLocalStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/NewLocalStorage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/Column.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/Column.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/ConnectionInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/ConnectionInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/ConnectionStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/ConnectionStorage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/DataTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/DataTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/ForeignKey.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/ForeignKey.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/Index.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/Index.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/Key.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/Key.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/ResultDataTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/ResultDataTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/Schema.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/Schema.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/Session.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/Session.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/Table.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/Table.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/View.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

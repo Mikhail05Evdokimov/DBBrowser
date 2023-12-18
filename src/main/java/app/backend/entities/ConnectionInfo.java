@@ -1,4 +1,4 @@
-package ru.nsu.dbb.entities;
+package app.backend.entities;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;

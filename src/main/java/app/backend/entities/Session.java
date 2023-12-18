@@ -1,4 +1,4 @@
-package ru.nsu.dbb.entities;
+package app.backend.entities;
 
 import org.postgresql.ds.PGSimpleDataSource;
 import org.sqlite.SQLiteDataSource;

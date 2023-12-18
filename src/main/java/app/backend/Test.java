@@ -1,19 +1,6 @@
-package ru.nsu.dbb;
+package app.backend;
 
-import io.qt.widgets.*;
-import ru.nsu.dbb.entities.Column;
-import ru.nsu.dbb.entities.Connection;
-import ru.nsu.dbb.entities.ConnectionInfo;
-import ru.nsu.dbb.entities.ConnectionStorage;
-import ru.nsu.dbb.entities.DataTable;
-import ru.nsu.dbb.entities.Database;
-import ru.nsu.dbb.entities.ForeignKey;
-import ru.nsu.dbb.entities.Index;
-import ru.nsu.dbb.entities.Key;
-import ru.nsu.dbb.entities.Schema;
-import ru.nsu.dbb.entities.Session;
-import ru.nsu.dbb.entities.Table;
-import ru.nsu.dbb.entities.View;
+import app.backend.entities.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
