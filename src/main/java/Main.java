@@ -1,6 +1,7 @@
 import app.IconLoader;
 import app.MainWindow;
 import app.widgets.dialogs.StartDialog;
+import fak.MyMain;
 import io.qt.widgets.QApplication;
 import io.qt.widgets.QWidget;
 
@@ -27,6 +28,7 @@ public class Main {
         QApplication.exec();
 
         QApplication.shutdown();
+
     }
 }
 

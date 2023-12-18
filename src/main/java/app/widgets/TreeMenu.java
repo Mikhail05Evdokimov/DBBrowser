@@ -4,6 +4,7 @@ import app.IconLoader;
 import app.backend.LocalStorage;
 import io.qt.core.QDir;
 import io.qt.core.QModelIndex;
+import io.qt.core.Qt;
 import io.qt.gui.*;
 import io.qt.widgets.QTreeView;
 
@@ -44,11 +45,12 @@ public class TreeMenu extends QTreeView {
         assert invisibleRootItem != null;
         for (String i : stringList) {
             QStandardItem item = new QStandardItem(i);
+            item.setEditable(false);
             item.setChild(0, new QStandardItem());
             item.setIcon(loadIcon());
             invisibleRootItem.appendRow(item);
         }
-        dbModel.dataChanged.connect(this, "renamingInTree(QModelIndex)");
+        //dbModel.dataChanged.connect(this, "renamingInTree(QModelIndex)");
         //dbModel.itemChanged.connect(this, "itemChanged()");
         this.setModel(dbModel);
         this.doubleClicked.connect(this, "treeClicked()");
@@ -77,8 +79,11 @@ public class TreeMenu extends QTreeView {
 
     void renamingInTree(QModelIndex index) {
         //System.out.println(this.currentIndex());
+
         System.out.println("new name: " + dbModel.data(index));
         }
+
+
 
 
     // Закрыть список детей
@@ -91,7 +96,9 @@ public class TreeMenu extends QTreeView {
         List<String> children = LocalStorage.getChildren(dbModel.data(index).toString());
         int i = 0;
         for (String child : children) {
-            Objects.requireNonNull(Objects.requireNonNull(dbModel.invisibleRootItem()).child(index.row())).setChild(i, new QStandardItem(child));
+            QStandardItem childItem = new QStandardItem(child);
+            childItem.setEditable(false);
+            Objects.requireNonNull(Objects.requireNonNull(dbModel.invisibleRootItem()).child(index.row())).setChild(i, childItem);
             i++;
         }
         System.out.println(dbModel.data(index) + " Expanded" );
