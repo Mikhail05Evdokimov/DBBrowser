@@ -36,6 +36,17 @@ public class Test {
         System.out.println(connection.isConnected());
         connection.connect();
         System.out.println(connection.isConnected());
+        // my_connection
+        // - tables
+        // connection.getSchema().getTableList();
+        //      - 1
+        //      - 2
+        // - view
+        // - indexes
+
+        // connection.set<smth>();
+        // List<String> names = connection.getSchema().getTableList();
+        // Table table = connection.getSchema().getTable(names.get(2));
 
         connection.setViews(); // click on corresponding tab
 
@@ -80,7 +91,7 @@ public class Test {
         connection.setColumnsFor(table.getName());
         connection.setIndexesFor(table.getName());
 
-        dataTable = connection.insertData("artists", new ArrayList<>(List.of("6", "newName", "1")));
+        connection.insertData("artists", new ArrayList<>(List.of("6", "newName", "1")));
         connection.saveChanges();
 
         connection.deleteData("artists", 5);
