@@ -1,5 +1,6 @@
 package app.widgets.dialogs;
 
+import app.MenuController;
 import app.backend.LocalStorage;
 import io.qt.core.QDir;
 import io.qt.widgets.QFileDialog;
@@ -27,7 +28,15 @@ public class FileDialog extends QFileDialog {
         this.open();
     }
 
-    void fileSelected() throws SQLException, InterruptedException {
+    public FileDialog(MenuController root) {
+        QDir dir = new QDir("C:\\Users\\its\\Desktop\\Project");
+        this.setDirectory(dir);
+        this.fileSelected.connect(this, "fileSelected()");
+        connect(this, "signalWithFilePath(String)", root, "fileChosen(String)");
+        this.open();
+    }
+
+    void fileSelected() {
 
         System.out.println(selectedFiles());
         signalWithFilePath.emit(this.selectedFiles().first());

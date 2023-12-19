@@ -14,7 +14,7 @@ public class ConnectionStorageView extends QPushButton {
 
     private List<String> connectionList;
     private final MainWindow root;
-    private QMenu popMenu;
+    private final QMenu popMenu;
     private final Signal1<String> signal1 = new Signal1<>();
 
     public ConnectionStorageView(MainWindow root) {
@@ -26,17 +26,13 @@ public class ConnectionStorageView extends QPushButton {
     }
 
     public void addConnection(String conName) {
-        QAction action = new QAction(conName);
-        action.triggered.connect(this, "newAction()");
+        MyActionForConnectionStorage action = new MyActionForConnectionStorage(conName, root.menuController, this);
         connectionList.add(conName);
         popMenu.addAction(action);
-        connect(this, "signal1(String)", root.menuController, "newCurrentConnectionName(String)");
         this.setText(conName);
     }
 
-    void newAction() {
-        signal1.emit(connectionList.get(connectionList.size() - 1));
-    }
+
 
 
 

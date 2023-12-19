@@ -2,10 +2,12 @@ package app;
 
 import app.backend.LocalStorage;
 import app.backend.controllers.ConnectionController;
+import app.backend.entities.ConnectionInfo;
 import app.backend.entities.DataTable;
 import app.backend.table.Table;
 import app.widgets.dialogs.CheckBoxChecker;
 import app.widgets.dialogs.CustomCheckBoxDialog;
+import app.widgets.dialogs.FileDialog;
 import app.widgets.dialogs.StartDialog;
 import io.qt.core.QObject;
 import io.qt.gui.QCursor;
@@ -103,10 +105,15 @@ public class MenuController extends QObject {
     }
 
     void connectToDBButtonClicked() {
-        LocalStorage.closeConnection();
+        /*LocalStorage.closeConnection();
         new StartDialog(root.windowIcon());
-        root.close();
+        root.close();*/
+        new FileDialog(this);
         //new FileDialog(root);
+    }
+
+    void fileChosen(String fileName) {
+        ConnectionController.addConnection(ConnectionInfo.ConnectionType.SQLITE, fileName);
     }
 
     void showSchema() throws IOException {
@@ -149,9 +156,10 @@ public class MenuController extends QObject {
         root.tableViewMainTab.setTableView(table);
     }
 
-   void newCurrentConnectionName(String conName) {
+   void newCurrentConnectionName(String conName) throws IOException {
         root.dbName.setText(conName);
         root.treeViewMenu.newCurrentConnectionName(conName);
+        showSchema();
    }
 
 }
