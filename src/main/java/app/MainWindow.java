@@ -1,6 +1,8 @@
 package app;
 
 import app.backend.LocalStorage;
+import app.backend.controllers.ConnectionController;
+import app.widgets.ConnectionStorageView;
 import app.widgets.TableView;
 import app.widgets.TreeMenu;
 import io.qt.core.Qt;
@@ -26,6 +28,7 @@ public class MainWindow extends QWidget {
         setWindowIcon(newIcon);
         LocalStorage.setOutput(output);
         LocalStorage.setMenuController(menuController);
+        ConnectionController.init(menuController);
         initControls();
         this.show();
     }
@@ -35,10 +38,13 @@ public class MainWindow extends QWidget {
     public QLabel label = new QLabel("", this);
     public QMenu popMenu = new QMenu("DropDown", this);//вот эту шляпу в отдельный класс-конструктор вынести огда пэкэджи заработают
     public QLabel output = new QLabel();
-    MenuController menuController = new MenuController(this);
+    public MenuController menuController = new MenuController(this);
     TableView tableView = new TableView();
     TreeMenu treeViewMenu = new TreeMenu();
+    QTextEdit dbName = new QTextEdit();
     QTextEdit dbInfo = new QTextEdit();
+    TableView tableViewMainTab = new TableView();
+    ConnectionStorageView connectionStorageView = new ConnectionStorageView(this);
 
     private void initControls() {
 
@@ -148,14 +154,22 @@ public class MainWindow extends QWidget {
         QToolBar mainTab = new QToolBar();
         mainTab.setOrientation(Qt.Orientation.Vertical);
         //mainTab.addWidget(new QLabel("Hello world"));
-        mainTab.addWidget(new QLabel("Info:"));
+        mainTab.addWidget(new QLabel("DB name:"));
+        dbName.setReadOnly(true);
         dbInfo.setReadOnly(true);
         QSizePolicy textPolicy = new QSizePolicy();
         textPolicy.setVerticalPolicy(QSizePolicy.Policy.Fixed);
         textPolicy.setHorizontalPolicy(QSizePolicy.Policy.Fixed);
+        dbName.setSizePolicy(textPolicy);
+        dbName.setFixedSize(250, 28);
         dbInfo.setSizePolicy(textPolicy);
-        dbInfo.setFixedSize(150, 28);
+        dbInfo.setFixedSize(250, 28);
+        mainTab.addWidget(dbName);
+        mainTab.addWidget(new QLabel(" "));
+        mainTab.addWidget(new QLabel("DB info:"));
         mainTab.addWidget(dbInfo);
+        mainTab.addWidget(new QLabel(" "));
+        mainTab.addWidget(tableViewMainTab);
         tabWidget.addTab(mainTab, "MainTab");
 
         QToolBar sqlTab = new QToolBar();
@@ -167,7 +181,11 @@ public class MainWindow extends QWidget {
 
         QToolBar veryBigBar = new QToolBar();
         veryBigBar.setOrientation(Qt.Orientation.Horizontal);
-        veryBigBar.addWidget(treeViewMenu);
+        QToolBar explorer = new QToolBar();
+        explorer.setOrientation(Qt.Orientation.Vertical);
+        explorer.addWidget(connectionStorageView);
+        explorer.addWidget(treeViewMenu);
+        veryBigBar.addWidget(explorer);
         veryBigBar.addWidget(tabWidget);
 
         layout.addWidget(bottomButtonsBar);

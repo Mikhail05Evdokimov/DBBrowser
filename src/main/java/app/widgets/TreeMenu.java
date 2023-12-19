@@ -2,6 +2,8 @@ package app.widgets;
 
 import app.IconLoader;
 import app.backend.LocalStorage;
+import app.backend.controllers.ConnectionController;
+import app.backend.entities.Connection;
 import io.qt.core.QDir;
 import io.qt.core.QModelIndex;
 import io.qt.core.Qt;
@@ -39,10 +41,11 @@ public class TreeMenu extends QTreeView {
         //connect(this, "signal0", this, "helloWorld()");
     }
 
-    public void setTreeModel(List<String> stringList) throws IOException {
+    public void setTreeModel(List<String> stringList, String conName) throws IOException {
         dbModel = new QStandardItemModel();
         QStandardItem invisibleRootItem = dbModel.invisibleRootItem();
         assert invisibleRootItem != null;
+        invisibleRootItem.setData(conName);
         for (String i : stringList) {
             QStandardItem item = new QStandardItem(i);
             item.setEditable(false);
@@ -53,7 +56,7 @@ public class TreeMenu extends QTreeView {
         //dbModel.dataChanged.connect(this, "renamingInTree(QModelIndex)");
         //dbModel.itemChanged.connect(this, "itemChanged()");
         this.setModel(dbModel);
-        this.doubleClicked.connect(this, "treeClicked()");
+        this.doubleClicked.connect(this, "treeClicked(QModelIndex)");
 
     }
 
@@ -61,20 +64,24 @@ public class TreeMenu extends QTreeView {
         this.setModel(fileModel);
     }
 
+    public void newCurrentConnectionName(String conName) {
+        Objects.requireNonNull(dbModel.invisibleRootItem()).setData(conName);
+    }
+
     public QIcon loadIcon() throws IOException {
         return new IconLoader().loadIcon("../table.png");
     }
 
-    void treeClicked() {
-        //System.out.println(model.filePath(this.currentIndex()));
+    void treeClicked(QModelIndex index) {
+
+        ConnectionController.getContentInTable(Objects.requireNonNull(dbModel.invisibleRootItem()).data().toString(), dbModel.data(index).toString());
+
+        //System.out.println(dbModel.data(index).toString());
+        //System.out.println(index);
         //signal0.emit();
         //System.out.println(this.currentIndex().data());
         //System.out.println(this.currentIndex().row());
         //System.out.println(model1.data(this.currentIndex()));
-    }
-
-    void itemChanged() {
-        System.out.println("iteeeemm!");
     }
 
     void renamingInTree(QModelIndex index) {
@@ -83,9 +90,6 @@ public class TreeMenu extends QTreeView {
         System.out.println("new name: " + dbModel.data(index));
         }
 
-
-
-
     // Закрыть список детей
     void collapse1(QModelIndex index) {
         System.out.println(dbModel.data(index) + " Collapsed" );
@@ -93,7 +97,7 @@ public class TreeMenu extends QTreeView {
 
     // Открыть список детей
     void expanded1(QModelIndex index) throws SQLException {
-        List<String> children = LocalStorage.getChildren(dbModel.data(index).toString());
+        List<String> children = ConnectionController.getColumns((String) Objects.requireNonNull(dbModel.invisibleRootItem()).data(), dbModel.data(index).toString());//LocalStorage.getChildren(dbModel.data(index).toString());
         int i = 0;
         for (String child : children) {
             QStandardItem childItem = new QStandardItem(child);

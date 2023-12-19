@@ -1,6 +1,8 @@
 package app;
 
 import app.backend.LocalStorage;
+import app.backend.controllers.ConnectionController;
+import app.backend.entities.DataTable;
 import app.backend.table.Table;
 import app.widgets.dialogs.CheckBoxChecker;
 import app.widgets.dialogs.CustomCheckBoxDialog;
@@ -33,8 +35,9 @@ public class MenuController extends QObject {
             else {
                 LocalStorage.setQuery(root.edit.toPlainText());
                 Table resultTable = LocalStorage.execQuery();
+                //app.backend.entities.Table rusultTable = ConnectionController.
                 if (resultTable == null) {
-                    root.label.setText("Wrong SQL query");
+                    root.label.setText(" Wrong SQL query");
                 }
                 else {
                     root.tableView.setTable(resultTable);
@@ -106,8 +109,12 @@ public class MenuController extends QObject {
         //new FileDialog(root);
     }
 
-    void showSchema() throws SQLException, IOException {
-        root.treeViewMenu.setTreeModel(LocalStorage.showSchema());
+    void showSchema() throws IOException {
+        //root.treeViewMenu.setTreeModel(LocalStorage.showSchema());
+        String conName = root.dbName.toPlainText();
+        root.treeViewMenu.setTreeModel(ConnectionController.getSchema(conName), conName);
+        System.out.println(ConnectionController.getSchema(conName));
+        System.out.println(root.dbName.toPlainText());
     }
 
     void showFiles() {
@@ -115,18 +122,36 @@ public class MenuController extends QObject {
     }
 
     void closeConnectionButtonClicked() {
-        LocalStorage.closeConnection();
+        ConnectionController.closeConnection(root.dbName.toPlainText());
+        //LocalStorage.closeConnection();
     }
 
     void reconnectToDBClicked() throws SQLException, InterruptedException {
-        LocalStorage.reconnectToDB();
+        ConnectionController.reconnectConnection(root.dbName.toPlainText());
+        //LocalStorage.reconnectToDB();
     }
 
     void showDBInfo() {
-        List<String> list = LocalStorage.getDBName();
-        String type = list.get(0);
-        String ver = list.get(1);
-        root.dbInfo.setText("DB type: " + type + " (v. " + ver + ")");
+        //List<String> list = LocalStorage.getDBName();
+        String list = ConnectionController.getDBInfo(root.dbName.toPlainText());
+        //String type = list.get(0);
+        //String ver = list.get(1);
+        //root.dbName.setText("DB type: " + type + " (v. " + ver + ")");
+        root.dbInfo.setText(list);
     }
+
+    void newConnectionName(String name) {
+        root.dbName.setText(name);
+        root.connectionStorageView.addConnection(name);
+    }
+
+    void setTableDataView(DataTable table) {
+        root.tableViewMainTab.setTableView(table);
+    }
+
+   void newCurrentConnectionName(String conName) {
+        root.dbName.setText(conName);
+        root.treeViewMenu.newCurrentConnectionName(conName);
+   }
 
 }
