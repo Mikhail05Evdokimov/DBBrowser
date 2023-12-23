@@ -2,7 +2,6 @@ package app.backend.controllers;
 
 import app.MenuController;
 import app.backend.Signaller;
-import app.backend.TreeSignals;
 import app.backend.entities.Connection;
 import app.backend.entities.ConnectionInfo;
 
@@ -16,7 +15,6 @@ public class ConnectionController {
 
     public static void init(MenuController controller) {
         signaller = new Signaller(controller);
-
     }
 
     public static void addConnection(ConnectionInfo.ConnectionType type, String filePath) {
@@ -57,6 +55,7 @@ public class ConnectionController {
 
     public static void closeConnection(String conName) {
         StorageController.getConnectionStorage().getConnection(conName).disconnect();
+        StorageController.getConnectionStorage().removeConnection(conName);
         signaller.emitSignalToHideTree();
         signaller.emitSignalToDeleteConnection(conName);
     }

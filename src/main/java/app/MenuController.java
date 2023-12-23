@@ -127,6 +127,10 @@ public class MenuController extends QObject {
 
     void closeConnectionButtonClicked() {
         ConnectionController.closeConnection(root.dbName.toPlainText());
+        //root.connectionStorageView.deleteConnection(root.dbName.toPlainText());
+        root.dbName.clear();
+        root.dbInfo.clear();
+
         //LocalStorage.closeConnection();
     }
 
