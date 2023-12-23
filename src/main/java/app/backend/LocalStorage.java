@@ -2,7 +2,6 @@ package app.backend;
 
 import app.MenuController;
 import app.backend.table.Table;
-import io.qt.core.QObject;
 import io.qt.widgets.QLabel;
 
 import java.sql.SQLException;
@@ -84,7 +83,7 @@ public class LocalStorage {
         LocalStorage.filePath = filePath;
         LocalStorage.dbHandler = SqlConnector.getInstance(getFilePath());
         //signal to tree
-        signaller.emitSignalToTree(TreeSignals.SHOW);
+        //signaller.emitSignalToShowTree(TreeSignals.SHOW);
         signaller.emitSignalToDBInfo();
     }
 
@@ -100,16 +99,16 @@ public class LocalStorage {
         if(LocalStorage.dbHandler != null) {
             LocalStorage.dbHandler.closeConnection();
             output.setText("Connection closed");
-            signaller.emitSignalToTree(TreeSignals.HIDE);
+            //signaller.emitSignalToShowTree(TreeSignals.HIDE);
         }
     }
 
     public static void reconnectToDB() throws SQLException, InterruptedException {
         LocalStorage.dbHandler.closeConnection();
-        signaller.emitSignalToTree(TreeSignals.HIDE);
+        //signaller.emitSignalToShowTree(TreeSignals.HIDE);
         LocalStorage.dbHandler = SqlConnector.getInstance(getFilePath());
         sleep(500);
-        signaller.emitSignalToTree(TreeSignals.SHOW);
+        //signaller.emitSignalToShowTree(TreeSignals.SHOW);
         output.setText("Successful reconnection");
     }
 

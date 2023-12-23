@@ -5,7 +5,6 @@ import app.backend.Signaller;
 import app.backend.TreeSignals;
 import app.backend.entities.Connection;
 import app.backend.entities.ConnectionInfo;
-import app.backend.entities.Table;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +25,7 @@ public class ConnectionController {
         ConnectionInfo connectionInfo = new ConnectionInfo(type, path);
         StorageController.getConnectionStorage().addConnectionToStorage(new Connection(filePath, connectionInfo));
         signaller.emitSignalToAddConnectionName(filePath);
-        signaller.emitSignalToTree(TreeSignals.SHOW);
+        signaller.emitSignalToShowTree(filePath);
         signaller.emitSignalToDBInfo();
     }
 
@@ -40,7 +39,7 @@ public class ConnectionController {
         ConnectionInfo connectionInfo = new ConnectionInfo(type, map);
         StorageController.getConnectionStorage().addConnectionToStorage(new Connection(dbname, connectionInfo));
         signaller.emitSignalToAddConnectionName(dbname);
-        signaller.emitSignalToTree(TreeSignals.SHOW);
+        signaller.emitSignalToShowTree(dbname);
         signaller.emitSignalToDBInfo();
     }
 
@@ -58,11 +57,14 @@ public class ConnectionController {
 
     public static void closeConnection(String conName) {
         StorageController.getConnectionStorage().getConnection(conName).disconnect();
-        signaller.emitSignalToTree(TreeSignals.HIDE);
+        signaller.emitSignalToHideTree();
+        signaller.emitSignalToDeleteConnection(conName);
     }
 
     public static void reconnectConnection(String conName) {
         StorageController.getConnectionStorage().getConnection(conName).reconnect();
+        signaller.emitSignalToHideTree();
+        signaller.emitSignalToShowTree(conName);
     }
 
     public static List<String> getColumns(String conName, String tableName) {

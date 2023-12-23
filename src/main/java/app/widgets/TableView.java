@@ -3,10 +3,8 @@ package app.widgets;
 import app.backend.entities.DataTable;
 import app.backend.table.Row;
 import app.backend.table.Table;
-import io.qt.core.Qt;
 import io.qt.gui.QStandardItem;
 import io.qt.gui.QStandardItemModel;
-import io.qt.widgets.QHeaderView;
 import io.qt.widgets.QTableView;
 
 import java.util.ArrayList;

@@ -2,9 +2,9 @@ package app;
 
 import app.backend.LocalStorage;
 import app.backend.controllers.ConnectionController;
-import app.widgets.ConnectionStorageView;
+import app.widgets.explorer.ConnectionStorageView;
 import app.widgets.TableView;
-import app.widgets.TreeMenu;
+import app.widgets.explorer.TreeMenu;
 import io.qt.core.Qt;
 import io.qt.gui.QAction;
 import io.qt.gui.QColor;
@@ -104,9 +104,9 @@ public class MainWindow extends QWidget {
         QAction callDefaultCheckBox = new QAction("callDefaultCheckBox");
         callDefaultCheckBox.triggered.connect(menuController, "callDefaultCheckBox()");
         popMenu.addAction(callDefaultCheckBox);
-        QAction showSchema = new QAction("showSchema");
-        showSchema.triggered.connect(menuController, "showSchema()");
-        popMenu.addAction(showSchema);
+        //QAction showSchema = new QAction("showSchema");
+        //showSchema.triggered.connect(menuController, "showSchema(String)");
+        //popMenu.addAction(showSchema);
 
         QPushButton hideButton = new QPushButton( "Clear text" );
         QPalette pal = new QPalette();

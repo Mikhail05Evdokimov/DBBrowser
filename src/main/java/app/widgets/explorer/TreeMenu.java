@@ -1,17 +1,16 @@
-package app.widgets;
+package app.widgets.explorer;
 
 import app.IconLoader;
-import app.backend.LocalStorage;
 import app.backend.controllers.ConnectionController;
-import app.backend.entities.Connection;
 import io.qt.core.QDir;
 import io.qt.core.QModelIndex;
-import io.qt.core.Qt;
+import io.qt.core.QStringListModel;
 import io.qt.gui.*;
 import io.qt.widgets.QTreeView;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,13 +23,15 @@ import java.util.Objects;
 public class TreeMenu extends QTreeView {
 
     private QStandardItemModel dbModel;
-    private final QFileSystemModel fileModel;
+    private final QStringListModel emptyModel;
     public final Signal0 signal0 = new Signal0();
 
     public TreeMenu() { //////////// При измеении имени чего-либо в TreeView пусть оно записвает изменения в локальное отображение базы
         this.setMinimumWidth(300);
-        fileModel = new QFileSystemModel();
-        fileModel.setRootPath(QDir.currentPath());
+        emptyModel = new QStringListModel();
+        List<String> emptyTreeMessage = new ArrayList<>();
+        emptyTreeMessage.add("Current connection isn't active");
+        emptyModel.setStringList(emptyTreeMessage);
         dbModel = new QStandardItemModel();
         //this.doubleClicked.connect(this, "treeClicked()");
         //this.setModel(model);
@@ -53,15 +54,13 @@ public class TreeMenu extends QTreeView {
             item.setIcon(loadIcon());
             invisibleRootItem.appendRow(item);
         }
-        //dbModel.dataChanged.connect(this, "renamingInTree(QModelIndex)");
-        //dbModel.itemChanged.connect(this, "itemChanged()");
         this.setModel(dbModel);
         this.doubleClicked.connect(this, "treeClicked(QModelIndex)");
 
     }
 
-    public void setFileModel() {
-        this.setModel(fileModel);
+    public void setEmptyModel() {
+        this.setModel(emptyModel);
     }
 
     public void newCurrentConnectionName(String conName) {
@@ -84,11 +83,7 @@ public class TreeMenu extends QTreeView {
         //System.out.println(model1.data(this.currentIndex()));
     }
 
-    void renamingInTree(QModelIndex index) {
-        //System.out.println(this.currentIndex());
 
-        System.out.println("new name: " + dbModel.data(index));
-        }
 
     // Закрыть список детей
     void collapse1(QModelIndex index) {

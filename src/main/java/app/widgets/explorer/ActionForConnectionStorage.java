@@ -1,15 +1,14 @@
-package app.widgets;
+package app.widgets.explorer;
 
 import app.MenuController;
-import io.qt.QtPrimitiveType;
 import io.qt.gui.QAction;
 
-public class MyActionForConnectionStorage extends QAction {
+public class ActionForConnectionStorage extends QAction {
 
     private final Signal1<String> clickedSignal;
     private final ConnectionStorageView root;
 
-    public MyActionForConnectionStorage(String name, MenuController controller, ConnectionStorageView root) {
+    public ActionForConnectionStorage(String name, MenuController controller, ConnectionStorageView root) {
         this.setText(name);
         this.root = root;
         clickedSignal = new Signal1<>();

@@ -8,7 +8,6 @@ import app.backend.table.Table;
 import app.widgets.dialogs.CheckBoxChecker;
 import app.widgets.dialogs.CustomCheckBoxDialog;
 import app.widgets.dialogs.FileDialog;
-import app.widgets.dialogs.StartDialog;
 import io.qt.core.QObject;
 import io.qt.gui.QCursor;
 import io.qt.widgets.QCheckBox;
@@ -16,7 +15,6 @@ import io.qt.widgets.QMessageBox;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 
 public class MenuController extends QObject {
 
@@ -116,16 +114,15 @@ public class MenuController extends QObject {
         ConnectionController.addConnection(ConnectionInfo.ConnectionType.SQLITE, fileName);
     }
 
-    void showSchema() throws IOException {
+    void showSchema(String conName) throws IOException {
         //root.treeViewMenu.setTreeModel(LocalStorage.showSchema());
-        String conName = root.dbName.toPlainText();
         root.treeViewMenu.setTreeModel(ConnectionController.getSchema(conName), conName);
         System.out.println(ConnectionController.getSchema(conName));
-        System.out.println(root.dbName.toPlainText());
+        //System.out.println(root.dbName.toPlainText());
     }
 
     void showFiles() {
-        root.treeViewMenu.setFileModel();
+        root.treeViewMenu.setEmptyModel();
     }
 
     void closeConnectionButtonClicked() {
@@ -141,9 +138,6 @@ public class MenuController extends QObject {
     void showDBInfo() {
         //List<String> list = LocalStorage.getDBName();
         String list = ConnectionController.getDBInfo(root.dbName.toPlainText());
-        //String type = list.get(0);
-        //String ver = list.get(1);
-        //root.dbName.setText("DB type: " + type + " (v. " + ver + ")");
         root.dbInfo.setText(list);
     }
 
@@ -159,7 +153,11 @@ public class MenuController extends QObject {
    void newCurrentConnectionName(String conName) throws IOException {
         root.dbName.setText(conName);
         root.treeViewMenu.newCurrentConnectionName(conName);
-        showSchema();
+        showSchema(conName);
+   }
+
+   void deleteConnection(String conName) {
+        root.connectionStorageView.deleteConnection(conName);
    }
 
 }
