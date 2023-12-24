@@ -74,20 +74,13 @@ public class TreeMenu extends QTreeView {
     void treeClicked(QModelIndex index) {
 
         ConnectionController.getContentInTable(Objects.requireNonNull(dbModel.invisibleRootItem()).data().toString(), dbModel.data(index).toString());
-
-        //System.out.println(dbModel.data(index).toString());
-        //System.out.println(index);
-        //signal0.emit();
-        //System.out.println(this.currentIndex().data());
-        //System.out.println(this.currentIndex().row());
-        //System.out.println(model1.data(this.currentIndex()));
     }
 
 
 
     // Закрыть список детей
     void collapse1(QModelIndex index) {
-        System.out.println(dbModel.data(index) + " Collapsed" );
+       // System.out.println(dbModel.data(index) + " Collapsed" );
     }
 
     // Открыть список детей
@@ -100,7 +93,7 @@ public class TreeMenu extends QTreeView {
             Objects.requireNonNull(Objects.requireNonNull(dbModel.invisibleRootItem()).child(index.row())).setChild(i, childItem);
             i++;
         }
-        System.out.println(dbModel.data(index) + " Expanded" );
+        //System.out.println(dbModel.data(index) + " Expanded" );
 
     }
 

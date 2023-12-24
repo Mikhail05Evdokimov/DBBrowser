@@ -55,17 +55,13 @@ public class MainWindow extends QWidget {
         QToolBar rightBar = new QToolBar();
         rightBar.setOrientation(Qt.Orientation.Vertical);
 
-        //bigBar.addWidget(treeViewMenu);
-        QPalette barPallet = new QPalette();
-        barPallet.setColor(QPalette.ColorRole.Window, QColor.fromRgb(210, 210, 255));
-        bigBar.setBackgroundRole(QPalette.ColorRole.Window);
+        //QPalette barPallet = new QPalette();
+        //barPallet.setColor(QPalette.ColorRole.Window, QColor.fromRgb(210, 210, 255));
+        //bigBar.setBackgroundRole(QPalette.ColorRole.Window);
         //bigBar.setAutoFillBackground(true);
         //barPallet.setColor(QPalette.ColorRole.Text, QColor.fromRgb(250, 250, 250));
-        bigBar.setPalette(barPallet);
+        //bigBar.setPalette(barPallet);
 
-        //bigBar.addWidget(tableView);
-
-        //output.setReadOnly(true);
         output.setText("Your query results will be here");
 
         QSizePolicy fixedSizePolicy = new QSizePolicy();
@@ -126,34 +122,31 @@ public class MainWindow extends QWidget {
         rightBar.addWidget(output);
         rightBar.addWidget(tableView);
 
-        QToolBar bottomButtonsBar = new QToolBar();
+        QToolBar upButtonsBar = new QToolBar();
         QPushButton selectFileButton = new QPushButton("Connect to DB");
         selectFileButton.clicked.connect(menuController, "connectToDBButtonClicked()");
-        bottomButtonsBar.addSeparator();
-        bottomButtonsBar.addWidget(selectFileButton);
-        bottomButtonsBar.addSeparator();
-        bottomButtonsBar.setOrientation(Qt.Orientation.Horizontal);
+        upButtonsBar.addSeparator();
+        upButtonsBar.addWidget(selectFileButton);
+        upButtonsBar.addSeparator();
+        upButtonsBar.setOrientation(Qt.Orientation.Horizontal);
         QPushButton closeConnectionButton = new QPushButton("Close connection");
         closeConnectionButton.clicked.connect(menuController, "closeConnectionButtonClicked()");
         QPushButton b1 = new QPushButton("PopUp menu");
         b1.setMenu(popMenu);
         QPushButton reconnectToDBButton = new QPushButton("Reconnect to DB");
         reconnectToDBButton.clicked.connect(menuController, "reconnectToDBClicked()");
-        bottomButtonsBar.addWidget(reconnectToDBButton);
-        bottomButtonsBar.addSeparator();
-        bottomButtonsBar.addWidget(closeConnectionButton);
-        bottomButtonsBar.addSeparator();
-        bottomButtonsBar.addWidget(b1);
-        bottomButtonsBar.addSeparator();
+        upButtonsBar.addWidget(reconnectToDBButton);
+        upButtonsBar.addSeparator();
+        upButtonsBar.addWidget(closeConnectionButton);
+        upButtonsBar.addSeparator();
+        upButtonsBar.addWidget(b1);
+        upButtonsBar.addSeparator();
 
         bigBar.addWidget(rightBar);
-        //bigBar.addWidget(output);
-        //layout.addWidget(bigBar);
         QTabWidget tabWidget = new QTabWidget();
 
         QToolBar mainTab = new QToolBar();
         mainTab.setOrientation(Qt.Orientation.Vertical);
-        //mainTab.addWidget(new QLabel("Hello world"));
         mainTab.addWidget(new QLabel("DB name:"));
         dbName.setReadOnly(true);
         dbInfo.setReadOnly(true);
@@ -170,13 +163,15 @@ public class MainWindow extends QWidget {
         mainTab.addWidget(dbInfo);
         mainTab.addWidget(new QLabel(" "));
         mainTab.addWidget(tableViewMainTab);
+
+        QPushButton moreRowsButton = new QPushButton("Load more rows");
+        moreRowsButton.clicked.connect(menuController, "moreRows()");
+        mainTab.addWidget(moreRowsButton);
         tabWidget.addTab(mainTab, "MainTab");
 
         QToolBar sqlTab = new QToolBar();
         sqlTab.setOrientation(Qt.Orientation.Vertical);
         sqlTab.addWidget(bigBar);
-        //sqlTab.addWidget(output);
-        //sqlTab.addWidget(tableView);
         tabWidget.addTab(sqlTab, "SQL");
 
         QToolBar veryBigBar = new QToolBar();
@@ -188,14 +183,13 @@ public class MainWindow extends QWidget {
         veryBigBar.addWidget(explorer);
         veryBigBar.addWidget(tabWidget);
 
-        layout.addWidget(bottomButtonsBar);
+        layout.addWidget(upButtonsBar);
         tabWidget.sizePolicy().setVerticalPolicy(QSizePolicy.Policy.Expanding);
         veryBigBar.setSizePolicy(expandingSizePolicy);
         layout.addWidget(veryBigBar);
-        QSpacerItem midSpacer = new QSpacerItem(10, 10);
-        midSpacer.sizePolicy().setVerticalPolicy(QSizePolicy.Policy.Fixed);
-        //layout.addItem(midSpacer);
-        //layout.addWidget(bottomButtonsBar);
+        //QSpacerItem midSpacer = new QSpacerItem(10, 10);
+        //midSpacer.sizePolicy().setVerticalPolicy(QSizePolicy.Policy.Fixed);
+
 
     }
 

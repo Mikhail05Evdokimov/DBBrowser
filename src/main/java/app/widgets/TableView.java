@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TableView extends QTableView {
+    private DataTable dataTable;
 
     public TableView() {
         this.setShowGrid(true);
@@ -33,6 +34,7 @@ public class TableView extends QTableView {
     }
 
     public void setTableView(DataTable table) {
+        dataTable = table;
         QStandardItemModel data = new QStandardItemModel();
         data.setHorizontalHeaderLabels(table.getColumnNames());
 
@@ -43,8 +45,12 @@ public class TableView extends QTableView {
             }
             data.appendRow(itemList);
         }
-
         this.setModel(data);
+    }
+
+    public void moreRows() {
+        dataTable.getMoreRows(100);
+        setTableView(dataTable);
     }
 
 }

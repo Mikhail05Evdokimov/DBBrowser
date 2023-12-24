@@ -130,8 +130,6 @@ public class MenuController extends QObject {
         //root.connectionStorageView.deleteConnection(root.dbName.toPlainText());
         root.dbName.clear();
         root.dbInfo.clear();
-
-        //LocalStorage.closeConnection();
     }
 
     void reconnectToDBClicked() throws SQLException, InterruptedException {
@@ -162,6 +160,10 @@ public class MenuController extends QObject {
 
    void deleteConnection(String conName) {
         root.connectionStorageView.deleteConnection(conName);
+   }
+
+   void moreRows() {
+        root.tableViewMainTab.moreRows();
    }
 
 }

@@ -76,8 +76,6 @@ public class ConnectionController {
         Connection connection = StorageController.getConnectionStorage().getConnection(conName);
         connection.setSchema();
         connection.setTables();
-        connection.setIndexes();
-        connection.setViews();
         connection.setColumnsFor(tableName);
         signaller.emitSignalToGetTableData(connection.getDataFromTable(tableName));
         //System.out.println(connection.getSchema().getTable(tableName).getDataTable());
