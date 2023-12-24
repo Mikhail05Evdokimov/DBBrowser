@@ -21,7 +21,7 @@ public class ConnectionController {
         Map<String, String> path = new HashMap<>();
         path.put("path", filePath);
         ConnectionInfo connectionInfo = new ConnectionInfo(type, path);
-        StorageController.getConnectionStorage().addConnectionToStorage(new Connection(filePath, connectionInfo));
+        StorageController.connectionStorage.addConnectionToStorage(new Connection(filePath, connectionInfo));
         signaller.emitSignalToAddConnectionName(filePath);
         signaller.emitSignalToShowTree(filePath);
         signaller.emitSignalToDBInfo();
@@ -35,55 +35,53 @@ public class ConnectionController {
         map.put("username", login);
         map.put("password", password);
         ConnectionInfo connectionInfo = new ConnectionInfo(type, map);
-        StorageController.getConnectionStorage().addConnectionToStorage(new Connection(dbname, connectionInfo));
+        StorageController.connectionStorage.addConnectionToStorage(new Connection(dbname, connectionInfo));
         signaller.emitSignalToAddConnectionName(dbname);
         signaller.emitSignalToShowTree(dbname);
         signaller.emitSignalToDBInfo();
     }
 
     public static List<String> getSchema(String conName) {
-        Connection connection = StorageController.getConnectionStorage().getConnection(conName);
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
         connection.setSchema();
         connection.setTables();
-        return StorageController.getConnectionStorage().getConnection(conName).getSchema().getTableList();
+        return StorageController.connectionStorage.getConnection(conName).getSchema().getTableList();
     }
 
     public static String getDBInfo(String conName) {
-        Connection connection = StorageController.getConnectionStorage().getConnection(conName);
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
         return connection.getConnectionInfo().getConnectionType().toString();
     }
 
     public static void closeConnection(String conName) {
-        StorageController.getConnectionStorage().getConnection(conName).disconnect();
-        StorageController.getConnectionStorage().removeConnection(conName);
+        StorageController.connectionStorage.getConnection(conName).disconnect();
+        StorageController.connectionStorage.removeConnection(conName);
         signaller.emitSignalToHideTree();
         signaller.emitSignalToDeleteConnection(conName);
     }
 
     public static void reconnectConnection(String conName) {
-        StorageController.getConnectionStorage().getConnection(conName).reconnect();
+        StorageController.connectionStorage.getConnection(conName).reconnect();
         signaller.emitSignalToHideTree();
         signaller.emitSignalToShowTree(conName);
     }
 
     public static List<String> getColumns(String conName, String tableName) {
-        Connection connection = StorageController.getConnectionStorage().getConnection(conName);
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
         connection.setColumnsFor(tableName);
         return connection.getSchema().getTable(tableName).getColumnList();
     }
 
     public static void getContentInTable(String conName, String tableName) {
-        Connection connection = StorageController.getConnectionStorage().getConnection(conName);
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
         connection.setSchema();
         connection.setTables();
         connection.setColumnsFor(tableName);
         signaller.emitSignalToGetTableData(connection.getDataFromTable(tableName));
-        //System.out.println(connection.getSchema().getTable(tableName).getDataTable());
-        //System.out.println(connection.getDataFromTable(tableName).getRows());
     }
 
     public static void execQuery(String conName, String query) {
-        Connection connection = StorageController.getConnectionStorage().getConnection(conName);
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
         //connection.
     }
 
