@@ -97,15 +97,20 @@ public class ConnectionController {
         Connection connection = StorageController.connectionStorage.getConnection(conName);
         connection.updateData(tableName, row, columns, data);
         //connection.getSchema().getTable(tableName);
-        //connection.
     }
 
     public static void saveChanges(String conName) {
         StorageController.connectionStorage.getConnection(conName).saveChanges();
     }
 
-    public static void discardChanges(String conName) {
-        StorageController.connectionStorage.getConnection(conName).discardChanges();
+    public static void discardChanges(String conName, String tableName) {
+        var connection = StorageController.connectionStorage.getConnection(conName);
+        connection.discardChanges();
+        signaller.emitSignalToGetTableData(connection.getDataFromTable(tableName), tableName);
+    }
+
+    public static void deleteRow(String conName, String tableName, int row) {
+        StorageController.connectionStorage.getConnection(conName).deleteData(tableName, row);
     }
 
 }

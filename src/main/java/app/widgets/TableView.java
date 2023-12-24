@@ -5,8 +5,12 @@ import app.backend.entities.DataTable;
 import app.backend.table.Row;
 import app.backend.table.Table;
 import io.qt.core.QModelIndex;
+import io.qt.core.Qt;
+import io.qt.gui.QAction;
+import io.qt.gui.QCursor;
 import io.qt.gui.QStandardItem;
 import io.qt.gui.QStandardItemModel;
+import io.qt.widgets.QMenu;
 import io.qt.widgets.QTableView;
 
 import java.util.ArrayList;
@@ -16,13 +20,13 @@ import java.util.Objects;
 public class TableView extends QTableView {
     private DataTable dataTable;
     private String tableName;
-    private final MenuController controller;
     private final QStandardItemModel emptyModel;
     private final Signal4<String, Integer, List<Integer>, List<String>> changeDataSignal = new Signal4<>();
+    private final Signal2<String, Integer> deleteRowSignal = new Signal2<>();
 
     public TableView(MenuController menuController) {
-        controller = menuController;
-        changeDataSignal.connect(controller, "changeData(String, Integer, List, List)");
+        changeDataSignal.connect(menuController, "changeData(String, Integer, List, List)");
+        deleteRowSignal.connect(menuController, "deleteRow(String, Integer)");
         emptyModel = new QStandardItemModel();
         this.setShowGrid(true);
     }
@@ -47,6 +51,8 @@ public class TableView extends QTableView {
     public void setTableView(DataTable table, String tableName) {
         dataTable = table;
         this.tableName = tableName;
+        this.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu);
+        this.customContextMenuRequested.connect(this, "contextMenuRequested()");
         QStandardItemModel data = new QStandardItemModel();
         data.dataChanged.connect(this, "dataChanged(QModelIndex)");
         data.setHorizontalHeaderLabels(table.getColumnNames());
@@ -63,7 +69,7 @@ public class TableView extends QTableView {
 
     public void moreRows() {
         dataTable.getMoreRows(100);
-        setTableView(dataTable, tableName);
+        myUpdate();
     }
 
     void dataChanged(QModelIndex index) {
@@ -82,6 +88,27 @@ public class TableView extends QTableView {
         this.setModel(emptyModel);
     }
 
+    void contextMenuRequested() {
+        QMenu contextMenu = new QMenu();
+        QAction deleteRow = new QAction("Delete row");
+        deleteRow.triggered.connect(this, "deleteRow()");
+        contextMenu.addAction(deleteRow);
+        contextMenu.popup(QCursor.pos());
+    }
 
+    void deleteRow() {
+        var index = this.currentIndex();
+        deleteRowSignal.emit(this.tableName, index.row());
+        //dataTable.deleteRow(index.row()-1);
+        myUpdate();
+    }
+
+    public void myUpdate() {
+        setTableView(dataTable, tableName);
+    }
+
+    public String getCurrentTableName() {
+        return tableName;
+    }
 
 }

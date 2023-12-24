@@ -38,11 +38,9 @@ public class FileDialog extends QFileDialog {
 
     void fileSelected() {
 
-        System.out.println(selectedFiles());
+       // System.out.println(selectedFiles());
         signalWithFilePath.emit(this.selectedFiles().first());
         //LocalStorage.createConnection(this.selectedFiles());
-
-        //sleep(800); //имитация думания при подключении к БД, чтобы юзеру жизнь мёдом не казалась
     }
 
 }
