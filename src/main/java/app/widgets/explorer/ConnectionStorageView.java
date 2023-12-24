@@ -22,16 +22,22 @@ public class ConnectionStorageView extends QPushButton {
     }
 
     public void addConnection(String conName) {
-        ActionForConnectionStorage action = new ActionForConnectionStorage(conName, root.menuController, this);
-        connectionList.put(conName, action);
-        popMenu.addAction(connectionList.get(conName));
-        this.setText(conName);
+        if (!(connectionList.containsKey(conName))) {
+            ActionForConnectionStorage action = new ActionForConnectionStorage(conName, root.menuController, this);
+            connectionList.put(conName, action);
+            popMenu.addAction(connectionList.get(conName));
+            this.setText(conName);
+        }
     }
 
     public void deleteConnection(String conName) {
-        popMenu.removeAction(connectionList.get(conName));
-        connectionList.remove(conName);
-        this.setText("");
+        //popMenu.removeAction(connectionList.get(conName));
+        //connectionList.remove(conName);
+        //this.setText("");
+    }
+
+    public String getCurrentConnection() {
+        return this.text();
     }
 
 

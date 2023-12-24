@@ -55,15 +55,23 @@ public class ConnectionController {
 
     public static void closeConnection(String conName) {
         StorageController.connectionStorage.getConnection(conName).disconnect();
-        StorageController.connectionStorage.removeConnection(conName);
+        //StorageController.connectionStorage.removeConnection(conName);
         signaller.emitSignalToHideTree();
         signaller.emitSignalToDeleteConnection(conName);
     }
 
     public static void reconnectConnection(String conName) {
-        StorageController.connectionStorage.getConnection(conName).reconnect();
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        if (connection.isConnected()) {
+            connection.reconnect();
+        }
+        else {
+            connection.connect();
+        }
         signaller.emitSignalToHideTree();
         signaller.emitSignalToShowTree(conName);
+        signaller.emitSignalToAddConnectionName(conName);
+        signaller.emitSignalToDBInfo();
     }
 
     public static List<String> getColumns(String conName, String tableName) {
@@ -77,12 +85,27 @@ public class ConnectionController {
         connection.setSchema();
         connection.setTables();
         connection.setColumnsFor(tableName);
-        signaller.emitSignalToGetTableData(connection.getDataFromTable(tableName));
+        signaller.emitSignalToGetTableData(connection.getDataFromTable(tableName), tableName);
     }
 
     public static void execQuery(String conName, String query) {
         Connection connection = StorageController.connectionStorage.getConnection(conName);
         //connection.
+    }
+
+    public static void changeData(String conName, String tableName, int row, List<Integer> columns, List<String> data) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        connection.updateData(tableName, row, columns, data);
+        //connection.getSchema().getTable(tableName);
+        //connection.
+    }
+
+    public static void saveChanges(String conName) {
+        StorageController.connectionStorage.getConnection(conName).saveChanges();
+    }
+
+    public static void discardChanges(String conName) {
+        StorageController.connectionStorage.getConnection(conName).discardChanges();
     }
 
 }

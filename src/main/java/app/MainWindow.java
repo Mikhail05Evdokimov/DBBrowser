@@ -39,11 +39,11 @@ public class MainWindow extends QWidget {
     public QMenu popMenu = new QMenu("DropDown", this);//вот эту шляпу в отдельный класс-конструктор вынести огда пэкэджи заработают
     public QLabel output = new QLabel();
     public MenuController menuController = new MenuController(this);
-    TableView tableView = new TableView();
+    TableView tableView = new TableView(menuController);
     TreeMenu treeViewMenu = new TreeMenu();
     QTextEdit dbName = new QTextEdit();
     QTextEdit dbInfo = new QTextEdit();
-    TableView tableViewMainTab = new TableView();
+    TableView tableViewMainTab = new TableView(menuController);
     ConnectionStorageView connectionStorageView = new ConnectionStorageView(this);
 
     private void initControls() {
@@ -187,10 +187,22 @@ public class MainWindow extends QWidget {
         tabWidget.sizePolicy().setVerticalPolicy(QSizePolicy.Policy.Expanding);
         veryBigBar.setSizePolicy(expandingSizePolicy);
         layout.addWidget(veryBigBar);
-        //QSpacerItem midSpacer = new QSpacerItem(10, 10);
-        //midSpacer.sizePolicy().setVerticalPolicy(QSizePolicy.Policy.Fixed);
 
+        QSplitter downSplitter = new QSplitter();
+        downSplitter.setFixedSize(5, 5);
+        downSplitter.sizePolicy().setVerticalPolicy(QSizePolicy.Policy.Fixed);
+        layout.addWidget(downSplitter);
 
+        QToolBar footerBar = new QToolBar();
+        footerBar.setOrientation(Qt.Orientation.Horizontal);
+        QPushButton saveChangesButton = new QPushButton("Save changes");
+        QPushButton discardChangesButton = new QPushButton("Discard changes");
+        saveChangesButton.clicked.connect(menuController, "saveChanges()");
+        discardChangesButton.clicked.connect(menuController, "discardChanges()");
+        footerBar.addWidget(saveChangesButton);
+        footerBar.addWidget(discardChangesButton);
+
+        layout.addWidget(footerBar);
     }
 
 }

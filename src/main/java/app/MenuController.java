@@ -15,6 +15,7 @@ import io.qt.widgets.QMessageBox;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class MenuController extends QObject {
 
@@ -35,7 +36,6 @@ public class MenuController extends QObject {
             else {
                 LocalStorage.setQuery(root.edit.toPlainText());
                 Table resultTable = LocalStorage.execQuery();
-                //app.backend.entities.Table rusultTable = ConnectionController.
                 if (resultTable == null) {
                     root.label.setText(" Wrong SQL query");
                 }
@@ -121,19 +121,21 @@ public class MenuController extends QObject {
         //System.out.println(root.dbName.toPlainText());
     }
 
-    void showFiles() {
+    void clearWorkArea() {
         root.treeViewMenu.setEmptyModel();
+        root.dbName.clear();
+        root.tableViewMainTab.clear();
     }
 
     void closeConnectionButtonClicked() {
         ConnectionController.closeConnection(root.dbName.toPlainText());
-        //root.connectionStorageView.deleteConnection(root.dbName.toPlainText());
         root.dbName.clear();
         root.dbInfo.clear();
+        root.tableViewMainTab.clear();
     }
 
     void reconnectToDBClicked() throws SQLException, InterruptedException {
-        ConnectionController.reconnectConnection(root.dbName.toPlainText());
+        ConnectionController.reconnectConnection(root.connectionStorageView.getCurrentConnection());
         //LocalStorage.reconnectToDB();
     }
 
@@ -145,16 +147,18 @@ public class MenuController extends QObject {
 
     void newConnectionName(String name) {
         root.dbName.setText(name);
+        root.tableViewMainTab.clear();
         root.connectionStorageView.addConnection(name);
     }
 
-    void setTableDataView(DataTable table) {
-        root.tableViewMainTab.setTableView(table);
+    void setTableDataView(DataTable table, String tableName) {
+        root.tableViewMainTab.setTableView(table, tableName);
     }
 
    void newCurrentConnectionName(String conName) throws IOException {
         root.dbName.setText(conName);
         root.treeViewMenu.newCurrentConnectionName(conName);
+        root.tableViewMainTab.clear();
         showSchema(conName);
    }
 
@@ -164,6 +168,18 @@ public class MenuController extends QObject {
 
    void moreRows() {
         root.tableViewMainTab.moreRows();
+   }
+
+   void saveChanges() {
+        ConnectionController.saveChanges(root.dbName.toPlainText());
+   }
+
+   void discardChanges() {
+        ConnectionController.discardChanges(root.dbName.toPlainText());
+   }
+
+   void changeData(String tableName, Integer row, List<Integer> columns, List<String> data) {
+        ConnectionController.changeData(root.dbName.toPlainText(), tableName, row, columns, data);
    }
 
 }
