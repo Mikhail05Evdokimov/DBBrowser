@@ -217,15 +217,11 @@ public class MainWindow extends QWidget {
     }
 
     public void hideTableViewButtons () {
-        //moreRowsButton.hide();
-        //addRowButton.hide();
         moreRowsButton.setDisabled(true);
         addRowButton.setDisabled(true);
     }
 
     public void showTableViewButtons () {
-        //moreRowsButton.show();
-        //addRowButton.show();
         moreRowsButton.setDisabled(false);
         addRowButton.setDisabled(false);
     }

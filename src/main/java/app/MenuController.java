@@ -154,7 +154,6 @@ public class MenuController extends QObject {
     void setTableDataView(DataTable table, String tableName) {
         root.tableViewMainTab.setTableView(table, tableName);
         root.showTableViewButtons();
-        //root.showTableViewButtons();
     }
 
    void newCurrentConnectionName(String conName) throws IOException {
@@ -189,7 +188,7 @@ public class MenuController extends QObject {
    }
 
    void addRowButtonClicked() {
-       new AddRowDialog(this, root);
+       new AddRowDialog(root);
    }
 
 }

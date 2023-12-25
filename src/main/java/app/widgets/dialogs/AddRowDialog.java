@@ -13,13 +13,10 @@ import org.apache.commons.lang3.StringUtils;
 
 public class AddRowDialog extends QDialog {
 
-    private final MenuController controller;
     private final MainWindow mainWindow;
-    private final QToolBar inputFields;
     private final List<QTextEdit> inputList;
 
-    public AddRowDialog(MenuController controller, MainWindow mainWindow) {
-        this.controller = controller;
+    public AddRowDialog(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
         inputList = new ArrayList<>();
         this.setWindowTitle("Add row");
@@ -28,7 +25,7 @@ public class AddRowDialog extends QDialog {
         QLayout layout = new QGridLayout(this);
         layout.addWidget(new QLabel("Enter data for a new row"));
         layout.addWidget(new QLabel(""));
-        inputFields = new QToolBar();
+        QToolBar inputFields = new QToolBar();
         inputFields.setOrientation(Qt.Orientation.Horizontal);
 
         List<String> columns = mainWindow.tableViewMainTab.getColumns();
@@ -36,7 +33,6 @@ public class AddRowDialog extends QDialog {
         for (String i : columns) {
             var input = new QTextEdit();
             input.setMaximumHeight(28);
-            //input.textChanged.connect()
             if (j == 0) {
                 input.setText(String.valueOf((Integer.parseInt(mainWindow.tableViewMainTab.getRowsCount()) + 1)));
                 j++;
