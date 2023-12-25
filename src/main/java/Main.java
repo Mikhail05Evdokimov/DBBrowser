@@ -11,9 +11,6 @@ public class Main {
         // Создаём Qt приложение, что бы инициализировать библиотеку
         // и графическую подсистему.
 
-        //app.DBThread dbThread = new app.DBThread(args);
-        //dbThread.start();
-
         QApplication app = QApplication.initialize(args);
 
         IconLoader iconLoader = new IconLoader();
