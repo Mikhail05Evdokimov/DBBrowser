@@ -111,4 +111,13 @@ public class TableView extends QTableView {
         return tableName;
     }
 
+    public List<String> getColumns() {
+        return dataTable.getColumnNames();
+    }
+
+    public String getRowsCount() {
+        while (dataTable.getMoreRows(100)) {}
+        return dataTable.getRows().get(dataTable.getRows().size() - 1).get(0);
+    }
+
 }

@@ -6,7 +6,6 @@ import static io.qt.core.Qt.WindowType.WindowStaysOnTopHint;
 
 public class CustomCheckBoxDialog extends QDialog {
 
-    //CheckBoxChecker check1;
     CheckBoxChecker check2;
     QTextEdit inputText;
     QCheckBox checkBox1;
@@ -43,10 +42,6 @@ public class CustomCheckBoxDialog extends QDialog {
         layout.addWidget(checkBox2);
         layout.addWidget(inputText);
 
-        //QDialogButtonBox box = new QDialogButtonBox(Qt.Orientation.Horizontal);
-        //box.addButton(applyButton, QDialogButtonBox.ButtonRole.AcceptRole);
-        //box.addButton(abortButton, QDialogButtonBox.ButtonRole.RejectRole);
-
         QToolBar buttonsBar = new QToolBar();
         buttonsBar.addWidget(applyButton);
         buttonsBar.addSeparator();
@@ -54,7 +49,7 @@ public class CustomCheckBoxDialog extends QDialog {
 
         layout.addWidget(buttonsBar);
         this.setLayout(layout);
-
+        this.open();
     }
 
     void applyClicked() {

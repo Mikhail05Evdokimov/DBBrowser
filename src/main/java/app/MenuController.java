@@ -5,6 +5,7 @@ import app.backend.controllers.ConnectionController;
 import app.backend.entities.ConnectionInfo;
 import app.backend.entities.DataTable;
 import app.backend.table.Table;
+import app.widgets.dialogs.AddRowDialog;
 import app.widgets.dialogs.CheckBoxChecker;
 import app.widgets.dialogs.CustomCheckBoxDialog;
 import app.widgets.dialogs.FileDialog;
@@ -65,9 +66,8 @@ public class MenuController extends QObject {
     }
 
     void callCustomCheckBox() {
-        CustomCheckBoxDialog messageBox = new CustomCheckBoxDialog(root);
+        new CustomCheckBoxDialog(root);
         root.setEnabled(false);
-        messageBox.open();
     }
 
     //Вот эта штука на фоне моей кастомной вообще юзлес, наверное уберём её.
@@ -153,6 +153,8 @@ public class MenuController extends QObject {
 
     void setTableDataView(DataTable table, String tableName) {
         root.tableViewMainTab.setTableView(table, tableName);
+        root.showTableViewButtons();
+        //root.showTableViewButtons();
     }
 
    void newCurrentConnectionName(String conName) throws IOException {
@@ -184,6 +186,10 @@ public class MenuController extends QObject {
 
    void deleteRow(String tableName, Integer row) {
        ConnectionController.deleteRow(this.root.connectionStorageView.getCurrentConnection(), tableName, row);
+   }
+
+   void addRowButtonClicked() {
+       new AddRowDialog(this, root);
    }
 
 }

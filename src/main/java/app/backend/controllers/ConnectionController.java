@@ -113,4 +113,8 @@ public class ConnectionController {
         StorageController.connectionStorage.getConnection(conName).deleteData(tableName, row);
     }
 
+    public static void addData(String conName, String tableName, List<String> data) {
+        StorageController.connectionStorage.getConnection(conName).insertData(tableName, data);
+    }
+
 }

@@ -41,9 +41,11 @@ public class MainWindow extends QWidget {
     public MenuController menuController = new MenuController(this);
     TableView tableView = new TableView(menuController);
     TreeMenu treeViewMenu = new TreeMenu();
-    QTextEdit dbName = new QTextEdit();
+    public QTextEdit dbName = new QTextEdit();
     QTextEdit dbInfo = new QTextEdit();
-    TableView tableViewMainTab = new TableView(menuController);
+    public QPushButton addRowButton;
+    public QPushButton moreRowsButton;
+    public TableView tableViewMainTab = new TableView(menuController);
     ConnectionStorageView connectionStorageView = new ConnectionStorageView(this);
 
     private void initControls() {
@@ -164,9 +166,16 @@ public class MainWindow extends QWidget {
         mainTab.addWidget(new QLabel(" "));
         mainTab.addWidget(tableViewMainTab);
 
-        QPushButton moreRowsButton = new QPushButton("Load more rows");
+        moreRowsButton = new QPushButton("Load more rows");
         moreRowsButton.clicked.connect(menuController, "moreRows()");
+
+        addRowButton = new QPushButton("Add row");
+        addRowButton.clicked.connect(menuController, "addRowButtonClicked()");
+
+        //hideTableViewButtons();
         mainTab.addWidget(moreRowsButton);
+        mainTab.addWidget(addRowButton);
+
         tabWidget.addTab(mainTab, "MainTab");
 
         QToolBar sqlTab = new QToolBar();
@@ -202,7 +211,23 @@ public class MainWindow extends QWidget {
         footerBar.addWidget(saveChangesButton);
         footerBar.addWidget(discardChangesButton);
 
+        hideTableViewButtons();
+
         layout.addWidget(footerBar);
+    }
+
+    public void hideTableViewButtons () {
+        //moreRowsButton.hide();
+        //addRowButton.hide();
+        moreRowsButton.setDisabled(true);
+        addRowButton.setDisabled(true);
+    }
+
+    public void showTableViewButtons () {
+        //moreRowsButton.show();
+        //addRowButton.show();
+        moreRowsButton.setDisabled(false);
+        addRowButton.setDisabled(false);
     }
 
 }

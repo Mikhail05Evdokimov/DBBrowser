@@ -29,13 +29,13 @@ public class DataTable {
         rows.remove(index);
     }
 
-    public void getMoreRows(int rowsToGet) {
+    public boolean getMoreRows(int rowsToGet) {
         try {
             int rowsGot = 0;
             int columnsNumber = columnNames.size();
 
             long startTime = System.currentTimeMillis();
-
+            int j = 0;
             while (rowsGot < rowsToGet && resultSet.next()) {
                 rowsGot++;
                 List<String> row = new ArrayList<>();
@@ -43,12 +43,15 @@ public class DataTable {
                     row.add(resultSet.getString(i));
                 }
                 rows.add(row);
+                j++;
             }
 
             long executionTime = System.currentTimeMillis() - startTime;
             message = "Rows: " + rowsGot + ", Time: " + executionTime + " millis";
+            return j != 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Can't get more rows");
+            //throw new RuntimeException("Can't get more rows");
+            return false;
         }
     }
 
