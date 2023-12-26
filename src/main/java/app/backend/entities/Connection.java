@@ -1,17 +1,22 @@
 package app.backend.entities;
 
 import javax.xml.crypto.Data;
+import java.io.Serial;
+import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.util.List;
 
-public class Connection {
+public class Connection implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private static int DEFAULT_ROWS_TO_GET = 100;
     private String name;
-    private boolean isConnected;
+    private transient boolean isConnected;
     private ConnectionInfo connectionInfo;
-    private List<Database> databaseList;
-    private Schema schema;
-    private Session session;
+    private transient List<Database> databaseList;
+    private transient Schema schema;
+    private transient Session session;
 
     // в зависимости от этой переменной будем выводить сразу содержимое схемы или список баз данных
     private boolean supportsDatabaseAndSchema;
@@ -87,8 +92,8 @@ public class Connection {
 
     public Database getDatabase(String name) {
         return databaseList.stream()
-            .filter(element -> element.getName().equals(name))
-            .findFirst().orElse(null);
+                .filter(element -> element.getName().equals(name))
+                .findFirst().orElse(null);
     }
 
     public void setDatabaseList() {
@@ -209,5 +214,18 @@ public class Connection {
 
     public boolean isSupportsDatabaseAndSchema() {
         return supportsDatabaseAndSchema;
+    }
+
+    @Override
+    public String toString() {
+        return "Connection{" +
+                "name='" + name + '\'' +
+                ", isConnected=" + isConnected +
+                ", connectionInfo=" + connectionInfo +
+                ", databaseList=" + databaseList +
+                ", schema=" + schema +
+                ", session=" + session +
+                ", supportsDatabaseAndSchema=" + supportsDatabaseAndSchema +
+                '}';
     }
 }

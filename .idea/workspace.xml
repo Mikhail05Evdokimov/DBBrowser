@@ -6,14 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="43a42705-edaa-4f70-93b7-3f013d610055" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/MainWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/MenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/MenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/controllers/ConnectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/controllers/ConnectionController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/Connection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/DataTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/DataTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/Session.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/Session.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/LoadMoreRowsButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/LoadMoreRowsButton.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/TableView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/TableView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/ConnectionInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/ConnectionInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/ConnectionStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/ConnectionStorage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/explorer/TreeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/explorer/TreeMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

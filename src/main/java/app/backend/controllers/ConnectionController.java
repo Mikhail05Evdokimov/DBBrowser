@@ -126,13 +126,15 @@ public class ConnectionController {
         return connection.getSchema().getTable(tableName).getDefinition();
     }
 
-    public static View getView(String conName, String viewName) {
+    public static List<String> getView(String conName) {
         Connection connection = StorageController.connectionStorage.getConnection(conName);
-        return connection.getSchema().getView(viewName);
+        connection.setViews();
+        return connection.getSchema().getViewList();
     }
 
     public static List<String> getIndexes(String conName) {
         Connection connection = StorageController.connectionStorage.getConnection(conName);
+        connection.setIndexes();
         return connection.getSchema().getIndexList();
     }
 

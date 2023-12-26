@@ -1,5 +1,7 @@
 package app.backend.entities;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +10,9 @@ import java.util.Map;
 
 import app.backend.utility.dbSpecificProps;
 
-public class ConnectionInfo {
+public class ConnectionInfo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     public enum ConnectionType {
         SQLITE,
         POSTGRESQL
@@ -68,5 +72,14 @@ public class ConnectionInfo {
 
     public Map<String, String> getProperties() {
         return properties;
+    }
+
+    @Override
+    public String toString() {
+        return "ConnectionInfo{" +
+                "connectionType=" + connectionType +
+                ", propertiesNames=" + propertiesNames +
+                ", properties=" + properties +
+                '}';
     }
 }
