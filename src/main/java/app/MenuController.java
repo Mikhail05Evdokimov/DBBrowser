@@ -5,10 +5,7 @@ import app.backend.controllers.ConnectionController;
 import app.backend.entities.ConnectionInfo;
 import app.backend.entities.DataTable;
 import app.backend.table.Table;
-import app.widgets.dialogs.AddRowDialog;
-import app.widgets.dialogs.CheckBoxChecker;
-import app.widgets.dialogs.CustomCheckBoxDialog;
-import app.widgets.dialogs.FileDialog;
+import app.widgets.dialogs.*;
 import io.qt.core.QObject;
 import io.qt.gui.QCursor;
 import io.qt.widgets.QCheckBox;
@@ -124,14 +121,14 @@ public class MenuController extends QObject {
     void clearWorkArea() {
         root.treeViewMenu.setEmptyModel();
         root.dbName.clear();
+        root.dbInfo.clear();
         root.tableViewMainTab.clear();
+        root.currentTableName.setText("");
     }
 
     void closeConnectionButtonClicked() {
         ConnectionController.closeConnection(root.dbName.toPlainText());
-        root.dbName.clear();
-        root.dbInfo.clear();
-        root.tableViewMainTab.clear();
+        clearWorkArea();
     }
 
     void reconnectToDBClicked() throws SQLException, InterruptedException {
@@ -154,12 +151,14 @@ public class MenuController extends QObject {
     void setTableDataView(DataTable table, String tableName) {
         root.tableViewMainTab.setTableView(table, tableName);
         root.showTableViewButtons();
+        root.currentTableName.setText(tableName);
     }
 
    void newCurrentConnectionName(String conName) throws IOException {
         root.dbName.setText(conName);
         root.treeViewMenu.newCurrentConnectionName(conName);
         root.tableViewMainTab.clear();
+        root.currentTableName.setText("");
         showSchema(conName);
    }
 
@@ -190,5 +189,13 @@ public class MenuController extends QObject {
    void addRowButtonClicked() {
        new AddRowDialog(root);
    }
+
+   void changeLoadRowsNumberClicked() {
+        new ChangeLoadRowsDialog(this);
+   }
+
+    public void changeLoadRowsNumber(int number) {
+        root.tableViewMainTab.changeRowsToLoadNumber(number);
+    }
 
 }

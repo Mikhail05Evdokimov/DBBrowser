@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class TableView extends QTableView {
+    private int rowsToLoad = 100;
     private DataTable dataTable;
     private String tableName;
     private final QStandardItemModel emptyModel;
@@ -68,7 +69,7 @@ public class TableView extends QTableView {
     }
 
     public void moreRows() {
-        dataTable.getMoreRows(100);
+        dataTable.getMoreRows(rowsToLoad);
         myUpdate();
     }
 
@@ -123,6 +124,10 @@ public class TableView extends QTableView {
     public String getLastId() {
         while (dataTable.getMoreRows(100)) {}
         return dataTable.getRows().get(dataTable.getRows().size() - 1).get(0);
+    }
+
+    public void changeRowsToLoadNumber(int number) {
+        rowsToLoad = number;
     }
 
 }

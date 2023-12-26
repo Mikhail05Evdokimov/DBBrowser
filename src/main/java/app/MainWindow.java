@@ -2,6 +2,7 @@ package app;
 
 import app.backend.LocalStorage;
 import app.backend.controllers.ConnectionController;
+import app.widgets.LoadMoreRowsButton;
 import app.widgets.explorer.ConnectionStorageView;
 import app.widgets.TableView;
 import app.widgets.explorer.TreeMenu;
@@ -44,9 +45,10 @@ public class MainWindow extends QWidget {
     public QTextEdit dbName = new QTextEdit();
     QTextEdit dbInfo = new QTextEdit();
     public QPushButton addRowButton;
-    public QPushButton moreRowsButton;
+    public LoadMoreRowsButton moreRowsButton;
     public TableView tableViewMainTab = new TableView(menuController);
     ConnectionStorageView connectionStorageView = new ConnectionStorageView(this);
+    public QLabel currentTableName = new QLabel("");
 
     private void initControls() {
 
@@ -163,11 +165,13 @@ public class MainWindow extends QWidget {
         mainTab.addWidget(new QLabel(" "));
         mainTab.addWidget(new QLabel("DB info:"));
         mainTab.addWidget(dbInfo);
-        mainTab.addWidget(new QLabel(" "));
+        var smallSplitter = new QSplitter();
+        smallSplitter.setFixedSize(5, 5);
+        mainTab.addWidget(smallSplitter);
+        mainTab.addWidget(currentTableName);
         mainTab.addWidget(tableViewMainTab);
 
-        moreRowsButton = new QPushButton("Load more rows");
-        moreRowsButton.clicked.connect(menuController, "moreRows()");
+        moreRowsButton = new LoadMoreRowsButton(menuController);
 
         addRowButton = new QPushButton("Add row");
         addRowButton.clicked.connect(menuController, "addRowButtonClicked()");
