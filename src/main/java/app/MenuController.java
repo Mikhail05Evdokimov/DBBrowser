@@ -108,7 +108,12 @@ public class MenuController extends QObject {
     }
 
     void fileChosen(String fileName) {
-        ConnectionController.addConnection(ConnectionInfo.ConnectionType.SQLITE, fileName);
+        if (fileName.endsWith(".db")) {
+            ConnectionController.addConnection(ConnectionInfo.ConnectionType.SQLITE, fileName);
+        }
+        else {
+            new ErrorDialog("Chosen file is not a database file.");
+        }
     }
 
     void showSchema(String conName) throws IOException {

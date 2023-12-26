@@ -166,7 +166,12 @@ public class StartDialog extends QDialog {
     }
 
     void fileChosen(String filePath) {
-        this.userInput.setText(filePath);
+        if (filePath.endsWith(".db")) {
+            this.userInput.setText(filePath);
+        }
+        else {
+            new ErrorDialog("Chosen file is not a database file.");
+        }
     }
 
 }
