@@ -9,18 +9,29 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class Saver {
-    public static void saveConnectionStorage(ConnectionStorage connectionStorage) throws IOException {
-        FileOutputStream fileOutputStream = new FileOutputStream("saves/save.ser");
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-        objectOutputStream.writeObject(connectionStorage);
-        objectOutputStream.close();
+    public static void saveConnectionStorage(ConnectionStorage connectionStorage){
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream("saves/save.ser");
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(connectionStorage);
+            objectOutputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    public static ConnectionStorage getConnectionStorage() throws IOException, ClassNotFoundException {
-        FileInputStream fileInputStream = new FileInputStream("saves/save.ser");
-        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+    public static ConnectionStorage getConnectionStorage() {
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream("saves/save.ser");
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            return (ConnectionStorage) objectInputStream.readObject();
+        } catch (ClassNotFoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        return (ConnectionStorage) objectInputStream.readObject();
     }
 
 }
