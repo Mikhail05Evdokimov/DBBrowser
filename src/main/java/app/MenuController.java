@@ -162,13 +162,18 @@ public class MenuController extends QObject {
 
         root.infoTab.setOutput(ConnectionController.getDDL(root.dbName.toPlainText(), tableName),
             ConnectionController.getKeys(root.dbName.toPlainText(), tableName).toString(),
-            //"keys", "f keys"
             ConnectionController.getForeignKeys(root.dbName.toPlainText(), tableName).toString()
         );
     }
 
+    private void setInfoTab() {
+
+    }
+
    void newCurrentConnectionName(String conName) throws IOException {
         root.dbName.setText(conName);
+        root.dbInfo.setText("SQLite");
+
         root.treeViewMenu.newCurrentConnectionName(conName);
         root.tableViewMainTab.clear();
         root.currentTableName.setText("");
@@ -176,7 +181,7 @@ public class MenuController extends QObject {
    }
 
    void deleteConnection(String conName) {
-        root.connectionStorageView.deleteConnection(conName);
+
    }
 
    void moreRows() {
