@@ -28,6 +28,8 @@ public class TableView extends QTableView {
         changeDataSignal.connect(menuController, "changeData(String, Integer, List, List)");
         deleteRowSignal.connect(menuController, "deleteRow(String, Integer)");
         emptyModel = new QStandardItemModel();
+        this.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu);
+        this.customContextMenuRequested.connect(this, "contextMenuRequested()");
         this.setShowGrid(true);
     }
 
@@ -51,8 +53,6 @@ public class TableView extends QTableView {
     public void setTableView(DataTable table, String tableName) {
         dataTable = table;
         this.tableName = tableName;
-        this.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu);
-        this.customContextMenuRequested.connect(this, "contextMenuRequested()");
         QStandardItemModel data = new QStandardItemModel();
         data.dataChanged.connect(this, "dataChanged(QModelIndex)");
         data.setHorizontalHeaderLabels(table.getColumnNames());
@@ -73,7 +73,7 @@ public class TableView extends QTableView {
     }
 
     void dataChanged(QModelIndex index) {
-        //System.out.println(Objects.requireNonNull(this.model()).data(index));
+
         List<Integer> list = new ArrayList<>();
         list.add(index.column());
         List<String> list1 = new ArrayList<>();
