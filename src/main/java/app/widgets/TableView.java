@@ -25,29 +25,31 @@ public class TableView extends QTableView {
     private final Signal4<String, Integer, List<Integer>, List<String>> changeDataSignal = new Signal4<>();
     private final Signal2<String, Integer> deleteRowSignal = new Signal2<>();
 
-    public TableView(MenuController menuController) {
-        changeDataSignal.connect(menuController, "changeData(String, Integer, List, List)");
-        deleteRowSignal.connect(menuController, "deleteRow(String, Integer)");
+    public TableView(MenuController menuController, boolean isResult) {
+
+        if (!(isResult)) {
+            changeDataSignal.connect(menuController, "changeData(String, Integer, List, List)");
+            deleteRowSignal.connect(menuController, "deleteRow(String, Integer)");
+            this.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu);
+            this.customContextMenuRequested.connect(this, "contextMenuRequested()");
+        }
         emptyModel = new QStandardItemModel();
-        this.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu);
-        this.customContextMenuRequested.connect(this, "contextMenuRequested()");
         this.setShowGrid(true);
     }
 
-    public void setTable(Table table) {
+    public void setTable(DataTable table) {
 
+        dataTable = table;
         QStandardItemModel data = new QStandardItemModel();
-        data.dataChanged.connect(this, "dataChanged(QModelIndex)");
-        data.setHorizontalHeaderLabels(table.getMetaData().getColumnNames());
+        data.setHorizontalHeaderLabels(table.getColumnNames());
 
-        for (Row row : table.getData().getRowList()) {
+        for (List<String> row : table.getRows()) {
             List<QStandardItem> itemList = new ArrayList<>();
-            for (String cell : row.getRowData()) {
+            for (String cell : row) {
                 itemList.add(new QStandardItem(cell));
             }
             data.appendRow(itemList);
         }
-
         this.setModel(data);
     }
 

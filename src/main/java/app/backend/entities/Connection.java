@@ -1,5 +1,7 @@
 package app.backend.entities;
 
+import javax.xml.crypto.Data;
+import java.sql.DatabaseMetaData;
 import java.util.List;
 
 public class Connection {
@@ -85,8 +87,8 @@ public class Connection {
 
     public Database getDatabase(String name) {
         return databaseList.stream()
-                .filter(element -> element.getName().equals(name))
-                .findFirst().orElse(null);
+            .filter(element -> element.getName().equals(name))
+            .findFirst().orElse(null);
     }
 
     public void setDatabaseList() {
@@ -105,6 +107,10 @@ public class Connection {
         DataTable dataTable = session.getDataFromTable(tableName, DEFAULT_ROWS_TO_GET);
         schema.getTable(tableName).setDataTable(dataTable);
         return dataTable;
+    }
+
+    public DataTable executeQuery(String sql) {
+        return session.executeQuery(sql, DEFAULT_ROWS_TO_GET);
     }
 
     public DataTable insertData(String tableName, List<String> newValues) {

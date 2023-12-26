@@ -3,6 +3,7 @@ package app.backend.entities;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.sqlite.SQLiteDataSource;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -52,7 +53,7 @@ public class Session {
         saveStatement = connection.createStatement();
         meta = connection.getMetaData();
         supportsDatabaseAndSchema = meta.supportsCatalogsInDataManipulation() &&
-                meta.supportsSchemasInDataManipulation();
+            meta.supportsSchemasInDataManipulation();
         return connection;
     }
 
@@ -153,9 +154,8 @@ public class Session {
                 rows.add(row);
             }
             long executionTime = System.currentTimeMillis() - startTime;
-            String message = "Rows: " + rowsGot + ", Time: " + executionTime + " millis";
-            return new DataTable(columnNames, rows, message, rs);
 
+            return new DataTable(columnNames, rows, rs, rowsGot, executionTime);
         } catch (SQLException e) {
             throw new RuntimeException("Can't execute query for some reasons...");
         }
@@ -306,8 +306,8 @@ public class Session {
             List<Table> tableList = new ArrayList<>();
             Statement statement = getStatement();
             ResultSet resultSet = statement.executeQuery(
-                    "SELECT name, sql FROM sqlite_master " +
-                            "WHERE type == \"table\" AND name NOT IN ('sqlite_sequence', 'sqlite_stat1', 'sqlite_master')");
+                "SELECT name, sql FROM sqlite_master " +
+                    "WHERE type == \"table\" AND name NOT IN ('sqlite_sequence', 'sqlite_stat1', 'sqlite_master')");
             while (resultSet.next()) {
                 tableList.add(new Table(resultSet.getString("name"), resultSet.getString("sql")));
             }
@@ -323,8 +323,8 @@ public class Session {
             List<Index> indexList = new ArrayList<>();
             Statement statement = getStatement();
             ResultSet resultSet = statement.executeQuery(
-                    "SELECT name FROM sqlite_master " +
-                            "WHERE type == \"table\" AND name NOT IN ('sqlite_sequence', 'sqlite_stat1', 'sqlite_master')");
+                "SELECT name FROM sqlite_master " +
+                    "WHERE type == \"table\" AND name NOT IN ('sqlite_sequence', 'sqlite_stat1', 'sqlite_master')");
             while (resultSet.next()) {
                 indexList.addAll(getIndexes(resultSet.getString("name")));
             }
@@ -406,7 +406,7 @@ public class Session {
                     index = index + 1;
                 }
                 String name = (rs.getString("FK_NAME") == null || rs.getString("FK_NAME").isEmpty()) ?
-                        ("FK_" + tableName + "_" + parentTable + "_" + index) : rs.getString("FK_NAME");
+                    ("FK_" + tableName + "_" + parentTable + "_" + index) : rs.getString("FK_NAME");
 
                 if (currentKeySeq == 1) {
                     previousKeySeq = 1;
@@ -444,8 +444,8 @@ public class Session {
                     index = index + 1;
                 }
                 String name = (resultSet.getString("PK_NAME") == null ||
-                        resultSet.getString("PK_NAME").isEmpty()) ?
-                        (tableName + "_PK" + "_" + index) : resultSet.getString("PK_NAME");
+                    resultSet.getString("PK_NAME").isEmpty()) ?
+                    (tableName + "_PK" + "_" + index) : resultSet.getString("PK_NAME");
 
                 if (currentKeySeq == 1) {
                     previousKeySeq = 1;
@@ -463,6 +463,35 @@ public class Session {
             return keyList;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public DataTable executeQuery(String sql, int rowsToGet) {
+        Statement statement = getStatement();
+        try {
+            ResultSet rs = statement.executeQuery(sql);
+            ResultSetMetaData resultSetMetaData = rs.getMetaData();
+            List<String> columnNames = new ArrayList<>();
+            List<List<String>> rows = new ArrayList<>();
+            int rowsGot = 0;
+
+            long startTime = System.currentTimeMillis();
+            int columnsNumber = resultSetMetaData.getColumnCount();
+            for (int i = 1; i <= columnsNumber; i++) {
+                columnNames.add(resultSetMetaData.getColumnName(i));
+            }
+            while (rowsGot < rowsToGet && rs.next()) {
+                rowsGot++;
+                List<String> row = new ArrayList<>();
+                for (int i = 1; i <= columnsNumber; i++) {
+                    row.add(rs.getString(i));
+                }
+                rows.add(row);
+            }
+            long executionTime = System.currentTimeMillis() - startTime;
+            return new DataTable(columnNames, rows, rs, rowsGot, executionTime);
+        } catch (SQLException e) {
+            return new DataTable(e.getMessage());
         }
     }
 }

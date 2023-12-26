@@ -39,16 +39,17 @@ public class MainWindow extends QWidget {
     public QMenu popMenu = new QMenu("DropDown", this);//вот эту шляпу в отдельный класс-конструктор вынести огда пэкэджи заработают
     public QLabel output = new QLabel();
     public MenuController menuController = new MenuController(this);
-    TableView tableView = new TableView(menuController);
+    TableView tableView = new TableView(menuController, true);
     TreeMenu treeViewMenu = new TreeMenu();
     public QTextEdit dbName = new QTextEdit();
     QTextEdit dbInfo = new QTextEdit();
     public QPushButton addRowButton;
     public LoadMoreRowsButton moreRowsButton;
-    public TableView tableViewMainTab = new TableView(menuController);
+    public TableView tableViewMainTab = new TableView(menuController, false);
     ConnectionStorageView connectionStorageView = new ConnectionStorageView(this);
     public QLabel currentTableName = new QLabel("");
     public InfoTab infoTab = new InfoTab();
+    public LoadMoreRowsButton moreRowsButtonR;
 
     private void initControls() {
 
@@ -63,6 +64,8 @@ public class MainWindow extends QWidget {
         var font = new QFont();
         font.setPixelSize(12);
         tableMessage.setFont(font);
+
+        moreRowsButtonR = new LoadMoreRowsButton(menuController, 2);
         //barPallet.setColor(QPalette.ColorRole.Window, QColor.fromRgb(210, 210, 255));
         //bigBar.setBackgroundRole(QPalette.ColorRole.Window);
         //bigBar.setAutoFillBackground(true);
@@ -128,6 +131,7 @@ public class MainWindow extends QWidget {
         rightBar.addWidget( runQuery );
         rightBar.addWidget(output);
         rightBar.addWidget(tableView);
+        rightBar.addWidget(moreRowsButtonR);
 
         QToolBar upButtonsBar = new QToolBar();
         QPushButton selectFileButton = new QPushButton("Connect to DB");
@@ -175,7 +179,7 @@ public class MainWindow extends QWidget {
         mainTab.addWidget(tableViewMainTab);
         mainTab.addWidget(tableMessage);
 
-        moreRowsButton = new LoadMoreRowsButton(menuController);
+        moreRowsButton = new LoadMoreRowsButton(menuController, 1);
 
         addRowButton = new QPushButton("Add row");
         addRowButton.clicked.connect(menuController, "addRowButtonClicked()");

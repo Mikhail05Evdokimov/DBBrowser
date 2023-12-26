@@ -28,22 +28,22 @@ public class MenuController extends QObject {
             root.label.setText(" Empty text box. Write something.");
         }
         else {
-            if (LocalStorage.getFilePath() == null) {
+            if (root.dbName.toPlainText().isEmpty() || (!(ConnectionController.isActive(root.dbName.toPlainText())))) {
                 root.label.setText("No connection to database");
             }
             else {
-                LocalStorage.setQuery(root.edit.toPlainText());
-                Table resultTable = LocalStorage.execQuery();
-                if (resultTable == null) {
-                    root.label.setText(" Wrong SQL query");
+
+                DataTable resultTable =
+                    ConnectionController.execQuery(root.dbName.toPlainText(), root.edit.toPlainText());
+                if (resultTable.getRows() == null) {
+                    root.label.setText(resultTable.getMessage());
                 }
                 else {
                     root.tableView.setTable(resultTable);
-                    root.label.setText(" Your query done");
+                    root.label.setText(" Your query done. " + resultTable.getMessage());
                 }
             }
         }
-        //root.edit.clear();
     }
 
     void act1() {
@@ -184,9 +184,16 @@ public class MenuController extends QObject {
 
    }
 
-   void moreRows() {
-        root.tableViewMainTab.moreRows();
-        root.tableMessage.setText(root.tableViewMainTab.getMessage());
+   void moreRows(Integer id) {
+        if (id == 1) {
+            root.tableViewMainTab.moreRows();
+            root.tableMessage.setText(root.tableViewMainTab.getMessage());
+        }
+        else {
+            root.tableView.moreRows();
+            root.label.setText(root.tableView.getMessage());
+        }
+
    }
 
    void saveChanges() {
@@ -220,6 +227,7 @@ public class MenuController extends QObject {
 
     public void changeLoadRowsNumber(int number) {
         root.tableViewMainTab.changeRowsToLoadNumber(number);
+        root.tableView.changeRowsToLoadNumber(number);
     }
 
 }

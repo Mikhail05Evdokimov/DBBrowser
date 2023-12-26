@@ -7,6 +7,7 @@ import app.backend.entities.ConnectionInfo;
 import app.backend.entities.DataTable;
 import app.backend.entities.View;
 
+import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,11 +91,6 @@ public class ConnectionController {
         signaller.emitSignalToGetTableData(connection.getDataFromTable(tableName), tableName);
     }
 
-    public static void execQuery(String conName, String query) {
-        Connection connection = StorageController.connectionStorage.getConnection(conName);
-        //connection.
-    }
-
     public static void changeData(String conName, String tableName, int row, List<Integer> columns, List<String> data) {
         Connection connection = StorageController.connectionStorage.getConnection(conName);
         connection.updateData(tableName, row, columns, data);
@@ -150,6 +146,16 @@ public class ConnectionController {
         Connection connection = StorageController.connectionStorage.getConnection(conName);
         connection.setForeignKeysFor(tableName);
         return connection.getSchema().getTable(tableName).getForeignKeyList();
+    }
+
+    public static DataTable execQuery(String conName, String query) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        return connection.executeQuery(query);
+    }
+
+    public static boolean isActive(String conName) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        return connection.isConnected();
     }
 
 }
