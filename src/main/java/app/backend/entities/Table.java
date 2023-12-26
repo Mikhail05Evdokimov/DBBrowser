@@ -44,6 +44,10 @@ public class Table {
         return columnList.stream().filter(x -> x.getName().equals(columnName)).findFirst().orElse(null);
     }
 
+    public List<Column> getColumns() {
+        return columnList;
+    }
+
     public void setIndexList(List<Index> indexList) {
         this.indexList = indexList;
     }
@@ -54,6 +58,10 @@ public class Table {
 
     public Index getIndex(String indexName) {
         return indexList.stream().filter(x -> x.getName().equals(indexName)).findFirst().orElse(null);
+    }
+
+    public List<Index> getIndexes() {
+        return indexList;
     }
 
     public void setKeyList(List<Key> keyList) {

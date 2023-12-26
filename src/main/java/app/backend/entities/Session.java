@@ -227,6 +227,32 @@ public class Session {
         dataTable.changeRow(rowNumber, columnNumbers, values);
     }
 
+    public void createIndex(String indexName, String tableName, boolean isUnique, List<String> columnsNames) {
+        String sql = "CREATE ";
+        if (isUnique) {
+            sql += "UNIQUE ";
+        }
+        sql += "INDEX IF NOT EXISTS " + indexName + " ON " + tableName;
+        String columns = columnsNames.stream().reduce("", (x, y) -> x + ", " + y).substring(2);
+        sql += " (" + columns + ");";
+        updateSaveStatement(sql);
+    }
+
+    public void deleteIndex(String indexName) {
+        String sql = "DROP INDEX IF EXISTS " + indexName + ";";
+        updateSaveStatement(sql);
+    }
+
+    public void createView(String viewName, String sql) {
+        String query = "CREATE VIEW IF NOT EXISTS " + viewName + " AS " + sql + ";";
+        updateSaveStatement(query);
+    }
+
+    public void deleteView(String viewName) {
+        String sql = "DROP VIEW IF EXISTS " + viewName + ";";
+        updateSaveStatement(sql);
+    }
+
     public void updateSaveStatement(String sql) {
         try {
             saveStatement.addBatch(sql);
@@ -247,8 +273,6 @@ public class Session {
     public void discardChanges() {
         try {
             saveStatement.clearBatch();
-            // тут нужно пройтись по всем элементам ниже схемы у которых стоит флаг,
-            // что их изменения не сохранены, и удалить их
             connection.rollback();
         } catch (SQLException e) {
             throw new RuntimeException("Can't discard changes");

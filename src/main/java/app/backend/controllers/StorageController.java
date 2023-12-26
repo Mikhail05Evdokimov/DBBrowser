@@ -10,12 +10,7 @@ public class StorageController {
     public static ConnectionStorage connectionStorage;
 
     public static void init() {
-        try {
-            connectionStorage = Saver.getConnectionStorage();
-        }
-        catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        connectionStorage = Saver.getConnectionStorage();
     }
 
 }
