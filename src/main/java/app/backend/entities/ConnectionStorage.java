@@ -1,9 +1,13 @@
 package app.backend.entities;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConnectionStorage {
+public class ConnectionStorage implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private final List<Connection> connectionList;
 
     public ConnectionStorage() {
@@ -30,5 +34,12 @@ public class ConnectionStorage {
 
     public void disconnectAll() {
         connectionList.forEach(Connection::disconnect);
+    }
+
+    @Override
+    public String toString() {
+        return "ConnectionStorage{" +
+                "connectionList=" + connectionList +
+                '}';
     }
 }

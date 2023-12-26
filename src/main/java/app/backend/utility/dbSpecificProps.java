@@ -1,4 +1,4 @@
-package ru.nsu.dbb.utility;
+package app.backend.utility;
 
 import java.util.List;
 

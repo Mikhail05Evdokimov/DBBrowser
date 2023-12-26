@@ -1,27 +1,68 @@
 import app.backend.entities.*;
+import app.backend.utility.Saver;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Test {
-    public static void main(String[] args) {
-        ConnectionStorage connectionStorage = new ConnectionStorage();
+import static app.backend.utility.Saver.getConnectionStorage;
+import static app.backend.utility.Saver.saveConnectionStorage;
 
+public class Test {
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        ConnectionStorage connectionStorage = new ConnectionStorage();
+        System.out.println(connectionStorage);
         Map<String, String> info1 = new HashMap<>();
-        info1.put("path", "C:/Users/parnishkka/Downloads/SQL DB's/chinook.db");
+        info1.put("path", "D:/Учеба/DB Browser/DBBrowser/chinook.db");
         ConnectionInfo connectionInfo1 = new ConnectionInfo(ConnectionInfo.ConnectionType.SQLITE, info1);
+        Map<String, String> info2 = new HashMap<>();
+        info2.put("path", "D:/Учеба/DB Browser/DBBrowser/my_db");
+        ConnectionInfo connectionInfo2 = new ConnectionInfo(ConnectionInfo.ConnectionType.SQLITE, info2);
 
         connectionStorage.addConnectionToStorage(new Connection("sqlite1", connectionInfo1));
+        connectionStorage.addConnectionToStorage(new Connection("sqlite2", connectionInfo2));
 
-        Connection connection1 = connectionStorage.getConnection("sqlite1");
-        System.out.println(connection1.isConnected());
-        DataTable dt = connection1.executeQuery("SELECT * FROM a1rtists");
-        System.out.println(dt.getMessage());
-        dt.getMoreRows(1000);
-        System.out.println(dt.getMessage());
+        Connection connection1 = connectionStorage.getConnection("sqlite1"); // click on corresponding tab
+        Connection connection2 = connectionStorage.getConnection("sqlite2"); // click on corresponding tab
+        connection1.connect();
+        connection2.connect();
+        System.out.println("Connection storage before save");
+        System.out.println(connectionStorage);
+
+        saveConnectionStorage(connectionStorage);
+        connectionStorage = getConnectionStorage();
+        System.out.println("Connection storage after save");
+        System.out.println(connectionStorage);
+        Connection connection3 = connectionStorage.getConnection("sqlite1");
+        connection3.connect();
+        System.out.println("Connection storage after save with connect");
+        System.out.println(connectionStorage);
+
     }
+//    public static void main(String[] args) {
+//        ConnectionStorage connectionStorage = new ConnectionStorage();
+//
+//        Map<String, String> info1 = new HashMap<>();
+//        info1.put("path", "D:/Учеба/DB Browser/DBBrowser/chinook.db");
+//        ConnectionInfo connectionInfo1 = new ConnectionInfo(ConnectionInfo.ConnectionType.SQLITE, info1);
+//
+//        connectionStorage.addConnectionToStorage(new Connection("sqlite1", connectionInfo1));
+//
+//        Connection connection1 = connectionStorage.getConnection("sqlite1");
+//        System.out.println(connection1.isConnected());
+//        DataTable dt = connection1.executeQuery("SELECT * FROM a1rtists");
+//        System.out.println(dt.getMessage());
+//        dt.getMoreRows(1000);
+//        System.out.println(dt.getMessage());
+//    }
 //    public static void main(String[] args) {
 //        ConnectionStorage connectionStorage = new ConnectionStorage();
 //
