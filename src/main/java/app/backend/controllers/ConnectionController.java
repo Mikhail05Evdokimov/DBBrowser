@@ -107,7 +107,13 @@ public class ConnectionController {
     public static void discardChanges(String conName, String tableName) {
         var connection = StorageController.connectionStorage.getConnection(conName);
         connection.discardChanges();
+
         signaller.emitSignalToGetTableData(connection.getDataFromTable(tableName), tableName);
+    }
+
+    public static void discardChanges(String conName) {
+        var connection = StorageController.connectionStorage.getConnection(conName);
+        connection.discardChanges();
     }
 
     public static void deleteRow(String conName, String tableName, int row) {

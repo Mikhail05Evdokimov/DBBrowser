@@ -7,10 +7,7 @@ import app.widgets.explorer.ConnectionStorageView;
 import app.widgets.TableView;
 import app.widgets.explorer.TreeMenu;
 import io.qt.core.Qt;
-import io.qt.gui.QAction;
-import io.qt.gui.QColor;
-import io.qt.gui.QIcon;
-import io.qt.gui.QPalette;
+import io.qt.gui.*;
 import io.qt.widgets.*;
 
 import java.io.IOException;
@@ -229,5 +226,6 @@ public class MainWindow extends QWidget {
         moreRowsButton.setDisabled(false);
         addRowButton.setDisabled(false);
     }
+
 
 }

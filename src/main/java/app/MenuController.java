@@ -175,7 +175,12 @@ public class MenuController extends QObject {
    }
 
    void discardChanges() {
-        ConnectionController.discardChanges(root.dbName.toPlainText(), root.tableViewMainTab.getCurrentTableName());
+        if (root.tableViewMainTab.getCurrentTableName() == null) {
+            ConnectionController.discardChanges(root.dbName.toPlainText());
+        }
+        else {
+            ConnectionController.discardChanges(root.dbName.toPlainText(), root.tableViewMainTab.getCurrentTableName());
+        }
    }
 
    void changeData(String tableName, Integer row, List<Integer> columns, List<String> data) {

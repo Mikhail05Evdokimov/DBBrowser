@@ -87,6 +87,7 @@ public class TableView extends QTableView {
     public void clear() {
         dataTable = null;
         this.setModel(emptyModel);
+        tableName = null;
     }
 
     void contextMenuRequested() {
