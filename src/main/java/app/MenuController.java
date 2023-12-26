@@ -2,9 +2,11 @@ package app;
 
 import app.backend.LocalStorage;
 import app.backend.controllers.ConnectionController;
+import app.backend.controllers.StorageController;
 import app.backend.entities.ConnectionInfo;
 import app.backend.entities.DataTable;
 import app.backend.table.Table;
+import app.backend.utility.Saver;
 import app.widgets.dialogs.*;
 import io.qt.core.QObject;
 import io.qt.gui.QCursor;
@@ -148,10 +150,11 @@ public class MenuController extends QObject {
         root.dbInfo.setText(list);
     }
 
-    void newConnectionName(String name) {
+    void newConnectionName(String name) throws IOException {
         root.dbName.setText(name);
         root.tableViewMainTab.clear();
         root.connectionStorageView.addConnection(name);
+        Saver.saveConnectionStorage(StorageController.connectionStorage);
     }
 
     void setTableDataView(DataTable table, String tableName) {

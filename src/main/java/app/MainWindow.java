@@ -2,6 +2,8 @@ package app;
 
 import app.backend.LocalStorage;
 import app.backend.controllers.ConnectionController;
+import app.backend.entities.ConnectionStorage;
+import app.backend.utility.Saver;
 import app.widgets.LoadMoreRowsButton;
 import app.widgets.explorer.ConnectionStorageView;
 import app.widgets.TableView;
@@ -51,7 +53,7 @@ public class MainWindow extends QWidget {
     public InfoTab infoTab = new InfoTab();
     public LoadMoreRowsButton moreRowsButtonR;
 
-    private void initControls() {
+    private void initControls() throws IOException {
 
         // Создаём контейнер для виджетов
         QLayout layout = new QGridLayout( this );
@@ -64,6 +66,10 @@ public class MainWindow extends QWidget {
         var font = new QFont();
         font.setPixelSize(12);
         tableMessage.setFont(font);
+
+        for (String i : ConnectionController.getAllConnections()) {
+            connectionStorageView.addConnection(i);
+        }
 
         moreRowsButtonR = new LoadMoreRowsButton(menuController, 2);
         //barPallet.setColor(QPalette.ColorRole.Window, QColor.fromRgb(210, 210, 255));

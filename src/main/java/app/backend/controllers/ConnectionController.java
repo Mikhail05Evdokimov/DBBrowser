@@ -58,9 +58,12 @@ public class ConnectionController {
 
     public static void closeConnection(String conName) {
         StorageController.connectionStorage.getConnection(conName).disconnect();
-        //StorageController.connectionStorage.removeConnection(conName);
         signaller.emitSignalToHideTree();
         signaller.emitSignalToDeleteConnection(conName);
+    }
+
+    public static void deleteCon(String conName) {
+        StorageController.connectionStorage.removeConnection(conName);
     }
 
     public static void reconnectConnection(String conName) {
@@ -158,6 +161,10 @@ public class ConnectionController {
     public static boolean isActive(String conName) {
         Connection connection = StorageController.connectionStorage.getConnection(conName);
         return connection.isConnected();
+    }
+
+    public static List<String> getAllConnections() {
+        return StorageController.connectionStorage.getConnectionList();
     }
 
 }

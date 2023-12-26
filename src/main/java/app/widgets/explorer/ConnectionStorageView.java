@@ -2,6 +2,8 @@ package app.widgets.explorer;
 
 import app.MainWindow;
 import app.backend.controllers.ConnectionController;
+import app.backend.controllers.StorageController;
+import app.backend.utility.Saver;
 import io.qt.core.QPoint;
 import io.qt.core.Qt;
 import io.qt.gui.QAction;
@@ -9,6 +11,7 @@ import io.qt.gui.QCursor;
 import io.qt.widgets.QMenu;
 import io.qt.widgets.QPushButton;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -39,12 +42,16 @@ public class ConnectionStorageView extends QPushButton {
         }
     }
 
-    public void deleteConnection() {
+    public void deleteConnection() throws IOException {
         var conName = Objects.requireNonNull(popMenu.actionAt(point)).text();
         popMenu.removeAction(connectionList.get(conName));
         connectionList.remove(conName);
         this.setText("");
-        ConnectionController.closeConnection(conName);
+        if (ConnectionController.isActive(conName)) {
+            ConnectionController.closeConnection(conName);
+        }
+        ConnectionController.deleteCon(conName);
+        Saver.saveConnectionStorage(StorageController.connectionStorage);
     }
 
     public String getCurrentConnection() {
