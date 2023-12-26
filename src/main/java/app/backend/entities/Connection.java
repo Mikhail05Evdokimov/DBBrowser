@@ -2,6 +2,7 @@ package app.backend.entities;
 
 import javax.xml.crypto.Data;
 import java.sql.DatabaseMetaData;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Connection {
@@ -109,6 +110,12 @@ public class Connection {
         return dataTable;
     }
 
+    public DataTable getDataFromView(String viewName) {
+        DataTable dataTable = session.getDataFromTable(viewName, DEFAULT_ROWS_TO_GET);
+        schema.getView(viewName).setDataTable(dataTable);
+        return dataTable;
+    }
+
     public DataTable executeQuery(String sql) {
         return session.executeQuery(sql, DEFAULT_ROWS_TO_GET);
     }
@@ -130,15 +137,127 @@ public class Connection {
         return getDataFromTable(tableName);
     }
 
-    public void updateSaveStatement(String sql) {
-        session.updateSaveStatement(sql);
+    public void createIndex(String indexName, String tableName, boolean isUnique, List<String> columnsNames) {
+        session.createIndex(indexName, tableName, isUnique, columnsNames);
+        Table table = schema.getTable(tableName);
+        this.setColumnsFor(tableName);
+        List<Column> columns = table.getColumns().stream().filter(c -> columnsNames.contains(c.getName())).toList();
+        LinkedList<Column> columnLinkedList = new LinkedList<>();
+        for (String name : columnsNames) {
+            columnLinkedList.addLast(columns.stream().filter(c -> c.getName().equals(name)).findFirst().orElse(null));
+        }
+        Index newIndex = new Index(indexName, isUnique, columnLinkedList);
+        newIndex.setStatusDDL(1);
+
+        table.getIndexes().add(newIndex);
+        schema.getIndexes().add(newIndex);
+    }
+
+    public void deleteIndex(String indexName, String tableName) {
+        if (schema.getTable(tableName).getIndex(indexName) == null || schema.getIndex(indexName) == null) {
+            return;
+        }
+        session.deleteIndex(indexName);
+        schema.getTable(tableName).getIndex(indexName).setStatusDDL(-1);
+        schema.getIndex(indexName).setStatusDDL(-1);
+    }
+
+    // Для отката создания и удаления
+    private void rollbackIndexes() {
+        schema.setIndexList(schema.getIndexes().stream().filter(index -> {
+            if (index.getStatusDDL() == 1) {
+                return false;
+            } else if (index.getStatusDDL() == -1) {
+                index.setStatusDDL(0);
+            }
+            return true;
+        }).toList());
+
+        this.getSchema().getTables().forEach(table -> {
+            if (table.getIndexes() != null) {
+                table.setIndexList(table.getIndexes().stream().filter(index -> {
+                    if (index.getStatusDDL() == 1) {
+                        return false;
+                    } else if (index.getStatusDDL() == -1) {
+                        index.setStatusDDL(0);
+                    }
+                    return true;
+                }).toList());
+            }
+        });
+    }
+
+    // Для подтверждения сохранения и удаления
+    private void commitIndexes() {
+        schema.setIndexList(schema.getIndexes().stream().filter(index -> {
+            if (index.getStatusDDL() == -1) {
+                return false;
+            } else if (index.getStatusDDL() == 1) {
+                index.setStatusDDL(0);
+            }
+            return true;
+        }).toList());
+
+        this.getSchema().getTables().forEach(table -> {
+            if (table.getIndexes() != null) {
+                table.setIndexList(table.getIndexes().stream().filter(index -> {
+                    if (index.getStatusDDL() == -1) {
+                        return false;
+                    } else if (index.getStatusDDL() == 1) {
+                        index.setStatusDDL(0);
+                    }
+                    return true;
+                }).toList());
+            }
+        });
+    }
+
+    public void createView(String viewName, String sql) {
+        session.createView(viewName, sql);
+        View view = new View(viewName, sql);
+        view.setStatusDDL(1);
+        schema.getViews().add(view);
+    }
+
+    public void deleteView(String viewName) {
+        if (schema.getView(viewName) == null) {
+            return;
+        }
+        session.deleteView(viewName);
+        schema.getView(viewName).setStatusDDL(-1);
+    }
+
+    private void rollbackViews() {
+        schema.setViewList(schema.getViews().stream().filter(view -> {
+            if (view.getStatusDDL() == 1) {
+                return false;
+            } else if (view.getStatusDDL() == -1) {
+                view.setStatusDDL(0);
+            }
+            return true;
+        }).toList());
+    }
+
+    private void commitViews() {
+        schema.setViewList(schema.getViews().stream().filter(view -> {
+            if (view.getStatusDDL() == -1) {
+                return false;
+            } else if (view.getStatusDDL() == 1) {
+                view.setStatusDDL(0);
+            }
+            return true;
+        }).toList());
     }
 
     public void saveChanges() {
+        commitIndexes();
+        commitViews();
         session.saveChanges();
     }
 
     public void discardChanges() {
+        rollbackIndexes();
+        rollbackViews();
         session.discardChanges();
     }
 

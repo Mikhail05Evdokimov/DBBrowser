@@ -6,22 +6,62 @@ import java.util.List;
 import java.util.Map;
 
 public class Test {
+//    public static void main(String[] args) {
+//        // Вот так подключаемся
+//        ConnectionStorage connectionStorage = new ConnectionStorage();
+//        Map<String, String> info1 = new HashMap<>();
+//        info1.put("path", "C:/Users/parnishkka/Downloads/SQL DB's/chinook.db");
+//        ConnectionInfo connectionInfo1 = new ConnectionInfo(ConnectionInfo.ConnectionType.SQLITE, info1);
+//        connectionStorage.addConnectionToStorage(new Connection("sqlite1", connectionInfo1));
+//        Connection connection1 = connectionStorage.getConnection("sqlite1");
+//
+//        // Гайд как добавлять удалять индексы
+//        // логично, что сначала мы должны добраться до вкладки с индексами таблицы
+//        connection1.setTables();
+//        connection1.setIndexesFor("NewTable");
+//        // смотрим что там до
+//        connection1.getSchema().getTable("NewTable").getIndexList().forEach(System.out::println);
+//        System.out.println();
+//        // при создании надо указать: название_индекса, название_таблицы, будет ли он Unique, Список названий колонок (порядок важен)
+//        connection1.createIndex("new_index", "NewTable", true, List.of("Column2", "Column3"));
+//        // смотрим, что обновилось локально
+//        connection1.getSchema().getTable("NewTable").getIndexList().forEach(System.out::println);
+//        System.out.println();
+//
+//        // вот так всё локально останется так же, а в бд обновится
+//        connection1.saveChanges();
+//        // а так удалиться локально и сбросится запрос сохранения
+//        connection1.discardChanges();
+//        // глядим
+//        connection1.getSchema().getTable("NewTable").getIndexList().forEach(System.out::println);
+//        System.out.println();
+//    }
+
+//    public static void main(String[] args) {
+//        ConnectionStorage connectionStorage = new ConnectionStorage();
+//        Map<String, String> info1 = new HashMap<>();
+//        info1.put("path", "C:/Users/parnishkka/Downloads/SQL DB's/chinook.db");
+//        ConnectionInfo connectionInfo1 = new ConnectionInfo(ConnectionInfo.ConnectionType.SQLITE, info1);
+//        connectionStorage.addConnectionToStorage(new Connection("sqlite1", connectionInfo1));
+//        Connection connection1 = connectionStorage.getConnection("sqlite1");
+//
+//        connection1.setViews();
+//        System.out.println(connection1.getSchema().getViewList());
+//        connection1.createView("NewView", "SELECT * FROM artists");
+//        System.out.println(connection1.getSchema().getViewList());
+//        connection1.saveChanges();
+//        System.out.println(connection1.getSchema().getViewList());
+//    }
+
     public static void main(String[] args) {
         ConnectionStorage connectionStorage = new ConnectionStorage();
-
         Map<String, String> info1 = new HashMap<>();
         info1.put("path", "C:/Users/parnishkka/Downloads/SQL DB's/chinook.db");
         ConnectionInfo connectionInfo1 = new ConnectionInfo(ConnectionInfo.ConnectionType.SQLITE, info1);
-
         connectionStorage.addConnectionToStorage(new Connection("sqlite1", connectionInfo1));
-
         Connection connection1 = connectionStorage.getConnection("sqlite1");
-        System.out.println(connection1.isConnected());
-        DataTable dt = connection1.executeQuery("SELECT * FROM a1rtists");
-        System.out.println(dt.getMessage());
-        dt.getMoreRows(1000);
-        System.out.println(dt.getMessage());
     }
+
 //    public static void main(String[] args) {
 //        ConnectionStorage connectionStorage = new ConnectionStorage();
 //
