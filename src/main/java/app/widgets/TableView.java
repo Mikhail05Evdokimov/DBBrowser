@@ -131,4 +131,8 @@ public class TableView extends QTableView {
         rowsToLoad = number;
     }
 
+    public String getMessage() {
+        return dataTable.getMessage();
+    }
+
 }

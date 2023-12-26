@@ -129,6 +129,7 @@ public class MenuController extends QObject {
         root.dbInfo.clear();
         root.tableViewMainTab.clear();
         root.currentTableName.setText("");
+        root.tableMessage.clear();
     }
 
     void closeConnectionButtonClicked() {
@@ -157,6 +158,7 @@ public class MenuController extends QObject {
         root.tableViewMainTab.setTableView(table, tableName);
         root.showTableViewButtons();
         root.currentTableName.setText(tableName);
+        root.tableMessage.setText(table.getMessage());
     }
 
    void newCurrentConnectionName(String conName) throws IOException {
@@ -173,6 +175,7 @@ public class MenuController extends QObject {
 
    void moreRows() {
         root.tableViewMainTab.moreRows();
+        root.tableMessage.setText(root.tableViewMainTab.getMessage());
    }
 
    void saveChanges() {

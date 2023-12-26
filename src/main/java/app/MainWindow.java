@@ -33,6 +33,7 @@ public class MainWindow extends QWidget {
 
     // Текстовое поле, от куда будем брать текст для вывода в консоль
     public final QTextEdit edit = new QTextEdit();
+    public final QLabel tableMessage = new QLabel("");
     public QLabel label = new QLabel("", this);
     public QMenu popMenu = new QMenu("DropDown", this);//вот эту шляпу в отдельный класс-конструктор вынести огда пэкэджи заработают
     public QLabel output = new QLabel();
@@ -57,6 +58,9 @@ public class MainWindow extends QWidget {
         rightBar.setOrientation(Qt.Orientation.Vertical);
 
         //QPalette barPallet = new QPalette();
+        var font = new QFont();
+        font.setPixelSize(12);
+        tableMessage.setFont(font);
         //barPallet.setColor(QPalette.ColorRole.Window, QColor.fromRgb(210, 210, 255));
         //bigBar.setBackgroundRole(QPalette.ColorRole.Window);
         //bigBar.setAutoFillBackground(true);
@@ -167,6 +171,7 @@ public class MainWindow extends QWidget {
         mainTab.addWidget(smallSplitter);
         mainTab.addWidget(currentTableName);
         mainTab.addWidget(tableViewMainTab);
+        mainTab.addWidget(tableMessage);
 
         moreRowsButton = new LoadMoreRowsButton(menuController);
 

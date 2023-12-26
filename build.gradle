@@ -21,7 +21,7 @@ task copyQtJambiLibs(type: Copy) {
 
 jar {
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-    dependsOn copyQtJambiLibs
+    //dependsOn copyQtJambiLibs
     manifest {
         attributes 'Main-Class': application.mainClass
     }

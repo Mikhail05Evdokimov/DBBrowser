@@ -124,4 +124,10 @@ public class ConnectionController {
         return StorageController.connectionStorage.getConnection(conName).insertData(tableName, data);
     }
 
+    public static List<String> ss(String conName, String tableName) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        //connection.getSchema().getTable().g
+        return connection.getSchema().getTable(tableName).getColumnList();
+    }
+
 }
