@@ -1,5 +1,7 @@
-package ru.nsu.dbb.entities;
+package app.backend.entities;
 
+import javax.xml.crypto.Data;
+import java.sql.DatabaseMetaData;
 import java.util.List;
 
 public class Connection {
@@ -105,6 +107,10 @@ public class Connection {
         DataTable dataTable = session.getDataFromTable(tableName, DEFAULT_ROWS_TO_GET);
         schema.getTable(tableName).setDataTable(dataTable);
         return dataTable;
+    }
+
+    public DataTable executeQuery(String sql) {
+        return session.executeQuery(sql, DEFAULT_ROWS_TO_GET);
     }
 
     public DataTable insertData(String tableName, List<String> newValues) {

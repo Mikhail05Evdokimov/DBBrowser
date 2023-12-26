@@ -1,4 +1,4 @@
-package ru.nsu.dbb.entities;
+package app.backend.entities;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class ConnectionInfo {
             case POSTGRESQL -> {
                 propertiesNames.addAll(dbSpecificProps.getPostgreSQLProps());
                 if (info.containsKey("host") && info.containsKey("dbname")) {
-                    info.put("url", ConnectionInfo.postgreSQLDataToUrl(
+                    info.put("url", ConnectionInfo.postgresSQLDataToUrl(
                             info.get("host"), info.get("port"), info.get("dbname")));
                 }
             }
@@ -50,7 +50,7 @@ public class ConnectionInfo {
         return "jdbc:sqlite:" + path;
     }
 
-    public static String postgreSQLDataToUrl(String host, String port, String dbName) {
+    public static String postgresSQLDataToUrl(String host, String port, String dbName) {
         if (port != null) {
             return "jdbc:postgresql://" + host + ":" + port + "/" + dbName;
         } else {
