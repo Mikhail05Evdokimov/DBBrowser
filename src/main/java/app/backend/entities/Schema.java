@@ -53,7 +53,7 @@ public class Schema {
         this.viewList = viewList;
     }
 
-    // Индексы
+    // ндексы
     public Index getIndex(String name) {
         return indexList.stream().filter(x -> x.getName().equals(name)).findFirst().orElse(null);
     }

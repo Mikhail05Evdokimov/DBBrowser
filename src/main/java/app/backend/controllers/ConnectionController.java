@@ -5,7 +5,9 @@ import app.backend.Signaller;
 import app.backend.entities.Connection;
 import app.backend.entities.ConnectionInfo;
 import app.backend.entities.DataTable;
+import app.backend.entities.View;
 
+import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,9 +58,12 @@ public class ConnectionController {
 
     public static void closeConnection(String conName) {
         StorageController.connectionStorage.getConnection(conName).disconnect();
-        //StorageController.connectionStorage.removeConnection(conName);
         signaller.emitSignalToHideTree();
         signaller.emitSignalToDeleteConnection(conName);
+    }
+
+    public static void deleteCon(String conName) {
+        StorageController.connectionStorage.removeConnection(conName);
     }
 
     public static void reconnectConnection(String conName) {
@@ -89,11 +94,6 @@ public class ConnectionController {
         signaller.emitSignalToGetTableData(connection.getDataFromTable(tableName), tableName);
     }
 
-    public static void execQuery(String conName, String query) {
-        Connection connection = StorageController.connectionStorage.getConnection(conName);
-        //connection.
-    }
-
     public static void changeData(String conName, String tableName, int row, List<Integer> columns, List<String> data) {
         Connection connection = StorageController.connectionStorage.getConnection(conName);
         connection.updateData(tableName, row, columns, data);
@@ -122,6 +122,49 @@ public class ConnectionController {
 
     public static DataTable addData(String conName, String tableName, List<String> data) {
         return StorageController.connectionStorage.getConnection(conName).insertData(tableName, data);
+    }
+
+    public static String getDDL(String conName, String tableName) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        return connection.getSchema().getTable(tableName).getDefinition();
+    }
+
+    public static List<String> getView(String conName) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        connection.setViews();
+        return connection.getSchema().getViewList();
+    }
+
+    public static List<String> getIndexes(String conName) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        connection.setIndexes();
+        return connection.getSchema().getIndexList();
+    }
+
+    public static List<String> getKeys(String conName, String tableName) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        connection.setKeysFor(tableName);
+        return connection.getSchema().getTable(tableName).getKeyList();
+    }
+
+    public static List<String> getForeignKeys(String conName, String tableName) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        connection.setForeignKeysFor(tableName);
+        return connection.getSchema().getTable(tableName).getForeignKeyList();
+    }
+
+    public static DataTable execQuery(String conName, String query) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        return connection.executeQuery(query);
+    }
+
+    public static boolean isActive(String conName) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        return connection.isConnected();
+    }
+
+    public static List<String> getAllConnections() {
+        return StorageController.connectionStorage.getConnectionList();
     }
 
 }

@@ -53,7 +53,7 @@ public class Session {
         saveStatement = connection.createStatement();
         meta = connection.getMetaData();
         supportsDatabaseAndSchema = meta.supportsCatalogsInDataManipulation() &&
-                meta.supportsSchemasInDataManipulation();
+            meta.supportsSchemasInDataManipulation();
         return connection;
     }
 
@@ -330,8 +330,8 @@ public class Session {
             List<Table> tableList = new ArrayList<>();
             Statement statement = getStatement();
             ResultSet resultSet = statement.executeQuery(
-                    "SELECT name, sql FROM sqlite_master " +
-                            "WHERE type == \"table\" AND name NOT IN ('sqlite_sequence', 'sqlite_stat1', 'sqlite_master')");
+                "SELECT name, sql FROM sqlite_master " +
+                    "WHERE type == \"table\" AND name NOT IN ('sqlite_sequence', 'sqlite_stat1', 'sqlite_master')");
             while (resultSet.next()) {
                 tableList.add(new Table(resultSet.getString("name"), resultSet.getString("sql")));
             }
@@ -347,8 +347,8 @@ public class Session {
             List<Index> indexList = new ArrayList<>();
             Statement statement = getStatement();
             ResultSet resultSet = statement.executeQuery(
-                    "SELECT name FROM sqlite_master " +
-                            "WHERE type == \"table\" AND name NOT IN ('sqlite_sequence', 'sqlite_stat1', 'sqlite_master')");
+                "SELECT name FROM sqlite_master " +
+                    "WHERE type == \"table\" AND name NOT IN ('sqlite_sequence', 'sqlite_stat1', 'sqlite_master')");
             while (resultSet.next()) {
                 indexList.addAll(getIndexes(resultSet.getString("name")));
             }
@@ -430,7 +430,7 @@ public class Session {
                     index = index + 1;
                 }
                 String name = (rs.getString("FK_NAME") == null || rs.getString("FK_NAME").isEmpty()) ?
-                        ("FK_" + tableName + "_" + parentTable + "_" + index) : rs.getString("FK_NAME");
+                    ("FK_" + tableName + "_" + parentTable + "_" + index) : rs.getString("FK_NAME");
 
                 if (currentKeySeq == 1) {
                     previousKeySeq = 1;
@@ -468,8 +468,8 @@ public class Session {
                     index = index + 1;
                 }
                 String name = (resultSet.getString("PK_NAME") == null ||
-                        resultSet.getString("PK_NAME").isEmpty()) ?
-                        (tableName + "_PK" + "_" + index) : resultSet.getString("PK_NAME");
+                    resultSet.getString("PK_NAME").isEmpty()) ?
+                    (tableName + "_PK" + "_" + index) : resultSet.getString("PK_NAME");
 
                 if (currentKeySeq == 1) {
                     previousKeySeq = 1;

@@ -1,12 +1,9 @@
 package app.widgets.dialogs;
 
 import app.MenuController;
-import app.backend.LocalStorage;
 import io.qt.core.QDir;
 import io.qt.widgets.QFileDialog;
 import io.qt.widgets.QWidget;
-
-import java.sql.SQLException;
 
 import static java.lang.Thread.sleep;
 
