@@ -2,8 +2,6 @@ package app.widgets;
 
 import app.MenuController;
 import app.backend.entities.DataTable;
-import app.backend.table.Row;
-import app.backend.table.Table;
 import io.qt.core.QModelIndex;
 import io.qt.core.Qt;
 import io.qt.gui.QAction;

@@ -1,11 +1,9 @@
 package app;
 
-import app.backend.LocalStorage;
 import app.backend.controllers.ConnectionController;
 import app.backend.controllers.StorageController;
 import app.backend.entities.ConnectionInfo;
 import app.backend.entities.DataTable;
-import app.backend.table.Table;
 import app.backend.utility.Saver;
 import app.widgets.dialogs.*;
 import io.qt.core.QObject;

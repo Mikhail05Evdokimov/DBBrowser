@@ -1,9 +1,6 @@
 package app;
 
-import app.backend.LocalStorage;
 import app.backend.controllers.ConnectionController;
-import app.backend.entities.ConnectionStorage;
-import app.backend.utility.Saver;
 import app.widgets.LoadMoreRowsButton;
 import app.widgets.explorer.ConnectionStorageView;
 import app.widgets.TableView;
@@ -27,8 +24,6 @@ public class MainWindow extends QWidget {
     public MainWindow(QIcon newIcon) throws IOException {
         setWindowTitle( "DB browser" );
         setWindowIcon(newIcon);
-        LocalStorage.setOutput(output);
-        LocalStorage.setMenuController(menuController);
         ConnectionController.init(menuController);
         initControls();
         this.show();
