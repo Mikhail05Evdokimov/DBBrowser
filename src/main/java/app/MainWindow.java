@@ -6,6 +6,7 @@ import app.widgets.LoadMoreRowsButton;
 import app.widgets.explorer.ConnectionStorageView;
 import app.widgets.TableView;
 import app.widgets.explorer.TreeMenu;
+import app.widgets.tabs.InfoTab;
 import io.qt.core.Qt;
 import io.qt.gui.*;
 import io.qt.widgets.*;
@@ -47,6 +48,7 @@ public class MainWindow extends QWidget {
     public TableView tableViewMainTab = new TableView(menuController);
     ConnectionStorageView connectionStorageView = new ConnectionStorageView(this);
     public QLabel currentTableName = new QLabel("");
+    public InfoTab infoTab = new InfoTab();
 
     private void initControls() {
 
@@ -178,11 +180,11 @@ public class MainWindow extends QWidget {
         addRowButton = new QPushButton("Add row");
         addRowButton.clicked.connect(menuController, "addRowButtonClicked()");
 
-        //hideTableViewButtons();
         mainTab.addWidget(moreRowsButton);
         mainTab.addWidget(addRowButton);
 
         tabWidget.addTab(mainTab, "MainTab");
+        tabWidget.addTab(infoTab, "Info");
 
         QToolBar sqlTab = new QToolBar();
         sqlTab.setOrientation(Qt.Orientation.Vertical);

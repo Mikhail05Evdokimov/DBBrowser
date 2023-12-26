@@ -5,6 +5,7 @@ import app.backend.Signaller;
 import app.backend.entities.Connection;
 import app.backend.entities.ConnectionInfo;
 import app.backend.entities.DataTable;
+import app.backend.entities.View;
 
 import java.util.HashMap;
 import java.util.List;
@@ -124,10 +125,31 @@ public class ConnectionController {
         return StorageController.connectionStorage.getConnection(conName).insertData(tableName, data);
     }
 
-    public static List<String> ss(String conName, String tableName) {
+    public static String getDDL(String conName, String tableName) {
         Connection connection = StorageController.connectionStorage.getConnection(conName);
-        //connection.getSchema().getTable().g
-        return connection.getSchema().getTable(tableName).getColumnList();
+        return connection.getSchema().getTable(tableName).getDefinition();
+    }
+
+    public static View getView(String conName, String viewName) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        return connection.getSchema().getView(viewName);
+    }
+
+    public static List<String> getIndexes(String conName) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        return connection.getSchema().getIndexList();
+    }
+
+    public static List<String> getKeys(String conName, String tableName) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        connection.setKeysFor(tableName);
+        return connection.getSchema().getTable(tableName).getKeyList();
+    }
+
+    public static List<String> getForeignKeys(String conName, String tableName) {
+        Connection connection = StorageController.connectionStorage.getConnection(conName);
+        connection.setForeignKeysFor(tableName);
+        return connection.getSchema().getTable(tableName).getForeignKeyList();
     }
 
 }

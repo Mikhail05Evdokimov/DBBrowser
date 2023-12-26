@@ -159,6 +159,12 @@ public class MenuController extends QObject {
         root.showTableViewButtons();
         root.currentTableName.setText(tableName);
         root.tableMessage.setText(table.getMessage());
+
+        root.infoTab.setOutput(ConnectionController.getDDL(root.dbName.toPlainText(), tableName),
+            ConnectionController.getKeys(root.dbName.toPlainText(), tableName).toString(),
+            //"keys", "f keys"
+            ConnectionController.getForeignKeys(root.dbName.toPlainText(), tableName).toString()
+        );
     }
 
    void newCurrentConnectionName(String conName) throws IOException {
