@@ -2,6 +2,7 @@ package app.widgets.explorer;
 
 import app.MenuController;
 import app.backend.controllers.StorageController;
+import io.qt.core.Qt;
 import io.qt.gui.QAction;
 
 public class ActionForConnectionStorage extends QAction {

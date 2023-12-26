@@ -2,7 +2,6 @@ package app.widgets.explorer;
 
 import app.IconLoader;
 import app.backend.controllers.ConnectionController;
-import io.qt.core.QDir;
 import io.qt.core.QModelIndex;
 import io.qt.core.QStringListModel;
 import io.qt.gui.*;
@@ -26,7 +25,7 @@ public class TreeMenu extends QTreeView {
     private final QStringListModel emptyModel;
     public final Signal0 signal0 = new Signal0();
 
-    public TreeMenu() { //////////// При измеении имени чего-либо в TreeView пусть оно записвает изменения в локальное отображение базы
+    public TreeMenu() {
         this.setMinimumWidth(300);
         emptyModel = new QStringListModel();
         List<String> emptyTreeMessage = new ArrayList<>();
@@ -47,13 +46,39 @@ public class TreeMenu extends QTreeView {
         QStandardItem invisibleRootItem = dbModel.invisibleRootItem();
         assert invisibleRootItem != null;
         invisibleRootItem.setData(conName);
+
+        QStandardItem tables = new QStandardItem("Tables");
+        tables.setEditable(false);
+        QStandardItem indexes = new QStandardItem("Indexes");
+        indexes.setEditable(false);
+        QStandardItem views = new QStandardItem("Views");
+        views.setEditable(false);
+
+        invisibleRootItem.appendRow(tables);
+        invisibleRootItem.appendRow(indexes);
+        invisibleRootItem.appendRow(views);
+
         for (String i : stringList) {
             QStandardItem item = new QStandardItem(i);
             item.setEditable(false);
             item.setChild(0, new QStandardItem());
             item.setIcon(loadIcon());
-            invisibleRootItem.appendRow(item);
+            tables.appendRow(item);
         }
+
+        var ind = ConnectionController.getIndexes(conName);
+        for (String i : ind) {
+            QStandardItem item = new QStandardItem(i);
+            item.setEditable(false);
+            indexes.appendRow(item);
+        }
+        ind = ConnectionController.getView(conName);
+        for (String i : ind) {
+            QStandardItem item = new QStandardItem(i);
+            item.setEditable(false);
+            indexes.appendRow(item);
+        }
+
         this.setModel(dbModel);
         this.doubleClicked.connect(this, "treeClicked(QModelIndex)");
 
@@ -76,8 +101,6 @@ public class TreeMenu extends QTreeView {
         ConnectionController.getContentInTable(Objects.requireNonNull(dbModel.invisibleRootItem()).data().toString(), dbModel.data(index).toString());
     }
 
-
-
     // Закрыть список детей
     void collapse1(QModelIndex index) {
        // System.out.println(dbModel.data(index) + " Collapsed" );
@@ -85,16 +108,26 @@ public class TreeMenu extends QTreeView {
 
     // Открыть список детей
     void expanded1(QModelIndex index) throws SQLException {
+
+        if (!(index.equals(Objects.requireNonNull(Objects.requireNonNull(dbModel.invisibleRootItem()).child(0)).index()))) {
+            if (!(index.equals(Objects.requireNonNull(Objects.requireNonNull(dbModel.invisibleRootItem()).child(1)).index()))) {
+                if (!(index.equals(Objects.requireNonNull(Objects.requireNonNull(dbModel.invisibleRootItem()).child(2)).index()))) {
+                    loadContent(index);
+                }
+            }
+        }
+
+    }
+
+    private void loadContent(QModelIndex index) {
         List<String> children = ConnectionController.getColumns((String) Objects.requireNonNull(dbModel.invisibleRootItem()).data(), dbModel.data(index).toString());//LocalStorage.getChildren(dbModel.data(index).toString());
         int i = 0;
         for (String child : children) {
             QStandardItem childItem = new QStandardItem(child);
             childItem.setEditable(false);
-            Objects.requireNonNull(Objects.requireNonNull(dbModel.invisibleRootItem()).child(index.row())).setChild(i, childItem);
+            Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(dbModel.invisibleRootItem()).child(0)).child(index.row())).setChild(i, childItem);
             i++;
         }
-        //System.out.println(dbModel.data(index) + " Expanded" );
-
     }
 
 }

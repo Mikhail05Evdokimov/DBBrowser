@@ -24,6 +24,10 @@ public class Schema {
         return tableList.stream().filter(x -> x.getName().equals(name)).findFirst().orElse(null);
     }
 
+    public List<Table> getTables() {
+        return tableList;
+    }
+
     public List<String> getTableList() {
         return tableList.stream().map(Table::getName).toList();
     }
@@ -32,8 +36,13 @@ public class Schema {
         this.tableList = tableList;
     }
 
+    // Views
     public View getView(String name) {
         return viewList.stream().filter(x -> x.getName().equals(name)).findFirst().orElse(null);
+    }
+
+    public List<View> getViews() {
+        return viewList;
     }
 
     public List<String> getViewList() {
@@ -44,8 +53,13 @@ public class Schema {
         this.viewList = viewList;
     }
 
+    // ндексы
     public Index getIndex(String name) {
         return indexList.stream().filter(x -> x.getName().equals(name)).findFirst().orElse(null);
+    }
+
+    public List<Index> getIndexes() {
+        return indexList;
     }
 
     public List<String> getIndexList() {

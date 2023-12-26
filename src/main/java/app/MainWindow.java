@@ -1,11 +1,11 @@
 package app;
 
-import app.backend.LocalStorage;
 import app.backend.controllers.ConnectionController;
 import app.widgets.LoadMoreRowsButton;
 import app.widgets.explorer.ConnectionStorageView;
 import app.widgets.TableView;
 import app.widgets.explorer.TreeMenu;
+import app.widgets.tabs.InfoTab;
 import io.qt.core.Qt;
 import io.qt.gui.*;
 import io.qt.widgets.*;
@@ -24,8 +24,6 @@ public class MainWindow extends QWidget {
     public MainWindow(QIcon newIcon) throws IOException {
         setWindowTitle( "DB browser" );
         setWindowIcon(newIcon);
-        LocalStorage.setOutput(output);
-        LocalStorage.setMenuController(menuController);
         ConnectionController.init(menuController);
         initControls();
         this.show();
@@ -33,21 +31,24 @@ public class MainWindow extends QWidget {
 
     // Текстовое поле, от куда будем брать текст для вывода в консоль
     public final QTextEdit edit = new QTextEdit();
+    public final QLabel tableMessage = new QLabel("");
     public QLabel label = new QLabel("", this);
     public QMenu popMenu = new QMenu("DropDown", this);//вот эту шляпу в отдельный класс-конструктор вынести огда пэкэджи заработают
     public QLabel output = new QLabel();
     public MenuController menuController = new MenuController(this);
-    TableView tableView = new TableView(menuController);
+    TableView tableView = new TableView(menuController, true);
     TreeMenu treeViewMenu = new TreeMenu();
     public QTextEdit dbName = new QTextEdit();
     QTextEdit dbInfo = new QTextEdit();
     public QPushButton addRowButton;
     public LoadMoreRowsButton moreRowsButton;
-    public TableView tableViewMainTab = new TableView(menuController);
+    public TableView tableViewMainTab = new TableView(menuController, false);
     ConnectionStorageView connectionStorageView = new ConnectionStorageView(this);
     public QLabel currentTableName = new QLabel("");
+    public InfoTab infoTab = new InfoTab();
+    public LoadMoreRowsButton moreRowsButtonR;
 
-    private void initControls() {
+    private void initControls() throws IOException {
 
         // Создаём контейнер для виджетов
         QLayout layout = new QGridLayout( this );
@@ -57,6 +58,15 @@ public class MainWindow extends QWidget {
         rightBar.setOrientation(Qt.Orientation.Vertical);
 
         //QPalette barPallet = new QPalette();
+        var font = new QFont();
+        font.setPixelSize(12);
+        tableMessage.setFont(font);
+
+        for (String i : ConnectionController.getAllConnections()) {
+            connectionStorageView.addConnection(i);
+        }
+
+        moreRowsButtonR = new LoadMoreRowsButton(menuController, 2);
         //barPallet.setColor(QPalette.ColorRole.Window, QColor.fromRgb(210, 210, 255));
         //bigBar.setBackgroundRole(QPalette.ColorRole.Window);
         //bigBar.setAutoFillBackground(true);
@@ -122,6 +132,7 @@ public class MainWindow extends QWidget {
         rightBar.addWidget( runQuery );
         rightBar.addWidget(output);
         rightBar.addWidget(tableView);
+        rightBar.addWidget(moreRowsButtonR);
 
         QToolBar upButtonsBar = new QToolBar();
         QPushButton selectFileButton = new QPushButton("Connect to DB");
@@ -167,17 +178,18 @@ public class MainWindow extends QWidget {
         mainTab.addWidget(smallSplitter);
         mainTab.addWidget(currentTableName);
         mainTab.addWidget(tableViewMainTab);
+        mainTab.addWidget(tableMessage);
 
-        moreRowsButton = new LoadMoreRowsButton(menuController);
+        moreRowsButton = new LoadMoreRowsButton(menuController, 1);
 
         addRowButton = new QPushButton("Add row");
         addRowButton.clicked.connect(menuController, "addRowButtonClicked()");
 
-        //hideTableViewButtons();
         mainTab.addWidget(moreRowsButton);
         mainTab.addWidget(addRowButton);
 
         tabWidget.addTab(mainTab, "MainTab");
+        tabWidget.addTab(infoTab, "Info");
 
         QToolBar sqlTab = new QToolBar();
         sqlTab.setOrientation(Qt.Orientation.Vertical);

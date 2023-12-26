@@ -1,10 +1,10 @@
 package app;
 
-import app.backend.LocalStorage;
 import app.backend.controllers.ConnectionController;
+import app.backend.controllers.StorageController;
 import app.backend.entities.ConnectionInfo;
 import app.backend.entities.DataTable;
-import app.backend.table.Table;
+import app.backend.utility.Saver;
 import app.widgets.dialogs.*;
 import io.qt.core.QObject;
 import io.qt.gui.QCursor;
@@ -28,22 +28,22 @@ public class MenuController extends QObject {
             root.label.setText(" Empty text box. Write something.");
         }
         else {
-            if (LocalStorage.getFilePath() == null) {
+            if (root.dbName.toPlainText().isEmpty() || (!(ConnectionController.isActive(root.dbName.toPlainText())))) {
                 root.label.setText("No connection to database");
             }
             else {
-                LocalStorage.setQuery(root.edit.toPlainText());
-                Table resultTable = LocalStorage.execQuery();
-                if (resultTable == null) {
-                    root.label.setText(" Wrong SQL query");
+
+                DataTable resultTable =
+                    ConnectionController.execQuery(root.dbName.toPlainText(), root.edit.toPlainText());
+                if (resultTable.getRows() == null) {
+                    root.label.setText(resultTable.getMessage());
                 }
                 else {
                     root.tableView.setTable(resultTable);
-                    root.label.setText(" Your query done");
+                    root.label.setText(" Your query done. " + resultTable.getMessage());
                 }
             }
         }
-        //root.edit.clear();
     }
 
     void act1() {
@@ -108,7 +108,12 @@ public class MenuController extends QObject {
     }
 
     void fileChosen(String fileName) {
-        ConnectionController.addConnection(ConnectionInfo.ConnectionType.SQLITE, fileName);
+        if (fileName.endsWith(".db")) {
+            ConnectionController.addConnection(ConnectionInfo.ConnectionType.SQLITE, fileName);
+        }
+        else {
+            new ErrorDialog("Chosen file is not a database file.");
+        }
     }
 
     void showSchema(String conName) throws IOException {
@@ -124,6 +129,7 @@ public class MenuController extends QObject {
         root.dbInfo.clear();
         root.tableViewMainTab.clear();
         root.currentTableName.setText("");
+        root.tableMessage.clear();
     }
 
     void closeConnectionButtonClicked() {
@@ -142,20 +148,33 @@ public class MenuController extends QObject {
         root.dbInfo.setText(list);
     }
 
-    void newConnectionName(String name) {
+    void newConnectionName(String name) throws IOException {
         root.dbName.setText(name);
         root.tableViewMainTab.clear();
         root.connectionStorageView.addConnection(name);
+        Saver.saveConnectionStorage(StorageController.connectionStorage);
     }
 
     void setTableDataView(DataTable table, String tableName) {
         root.tableViewMainTab.setTableView(table, tableName);
         root.showTableViewButtons();
         root.currentTableName.setText(tableName);
+        root.tableMessage.setText(table.getMessage());
+
+        root.infoTab.setOutput(ConnectionController.getDDL(root.dbName.toPlainText(), tableName),
+            ConnectionController.getKeys(root.dbName.toPlainText(), tableName).toString(),
+            ConnectionController.getForeignKeys(root.dbName.toPlainText(), tableName).toString()
+        );
+    }
+
+    private void setInfoTab() {
+
     }
 
    void newCurrentConnectionName(String conName) throws IOException {
         root.dbName.setText(conName);
+        root.dbInfo.setText("SQLite");
+
         root.treeViewMenu.newCurrentConnectionName(conName);
         root.tableViewMainTab.clear();
         root.currentTableName.setText("");
@@ -163,11 +182,19 @@ public class MenuController extends QObject {
    }
 
    void deleteConnection(String conName) {
-        root.connectionStorageView.deleteConnection(conName);
+
    }
 
-   void moreRows() {
-        root.tableViewMainTab.moreRows();
+   void moreRows(Integer id) {
+        if (id == 1) {
+            root.tableViewMainTab.moreRows();
+            root.tableMessage.setText(root.tableViewMainTab.getMessage());
+        }
+        else {
+            root.tableView.moreRows();
+            root.label.setText(root.tableView.getMessage());
+        }
+
    }
 
    void saveChanges() {
@@ -201,6 +228,7 @@ public class MenuController extends QObject {
 
     public void changeLoadRowsNumber(int number) {
         root.tableViewMainTab.changeRowsToLoadNumber(number);
+        root.tableView.changeRowsToLoadNumber(number);
     }
 
 }

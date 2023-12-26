@@ -1,7 +1,6 @@
 package app.widgets.dialogs;
 
 import app.MainWindow;
-import app.backend.LocalStorage;
 import app.backend.controllers.ConnectionController;
 import app.backend.controllers.StorageController;
 import app.backend.entities.ConnectionInfo;
@@ -54,7 +53,11 @@ public class StartDialog extends QDialog {
         QPushButton cancelButton = new QPushButton("Cancel");
         connectButton.clicked.connect(this, "connectClicked()");
         cancelButton.clicked.connect(this, "cancelClicked()");
+        QPushButton continueButton = new QPushButton("Skip and continue");
+        continueButton.clicked.connect(this, "skip()");
 
+        buttonsBar.addWidget(continueButton);
+        buttonsBar.addWidget(new QSplitter());
         buttonsBar.addWidget(connectButton);
         buttonsBar.addWidget(new QSplitter());
         buttonsBar.addWidget(cancelButton);
@@ -166,7 +169,16 @@ public class StartDialog extends QDialog {
     }
 
     void fileChosen(String filePath) {
-        this.userInput.setText(filePath);
+        if (filePath.endsWith(".db")) {
+            this.userInput.setText(filePath);
+        }
+        else {
+            new ErrorDialog("Chosen file is not a database file.");
+        }
+    }
+
+    void skip() {
+        comeToMain();
     }
 
 }
