@@ -4,6 +4,7 @@ import app.MenuController;
 import app.backend.Signaller;
 import app.backend.entities.Connection;
 import app.backend.entities.ConnectionInfo;
+import app.backend.entities.DataTable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -113,8 +114,8 @@ public class ConnectionController {
         StorageController.connectionStorage.getConnection(conName).deleteData(tableName, row);
     }
 
-    public static void addData(String conName, String tableName, List<String> data) {
-        StorageController.connectionStorage.getConnection(conName).insertData(tableName, data);
+    public static DataTable addData(String conName, String tableName, List<String> data) {
+        return StorageController.connectionStorage.getConnection(conName).insertData(tableName, data);
     }
 
 }

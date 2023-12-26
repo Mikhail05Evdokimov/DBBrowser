@@ -25,6 +25,10 @@ public class DataTable {
         }
     }
 
+    public void addRow(List<String> values) {
+        rows.add(values);
+    }
+
     public void deleteRow(int index) {
         rows.remove(index);
     }

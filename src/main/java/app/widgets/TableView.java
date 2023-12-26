@@ -99,12 +99,17 @@ public class TableView extends QTableView {
     void deleteRow() {
         var index = this.currentIndex();
         deleteRowSignal.emit(this.tableName, index.row());
-        //dataTable.deleteRow(index.row()-1);
+        dataTable.deleteRow(index.row());
         myUpdate();
     }
 
     public void myUpdate() {
         setTableView(dataTable, tableName);
+    }
+
+    public void addRow(List<String> row) {
+        dataTable.addRow(row);
+        myUpdate();
     }
 
     public String getCurrentTableName() {
@@ -115,7 +120,7 @@ public class TableView extends QTableView {
         return dataTable.getColumnNames();
     }
 
-    public String getRowsCount() {
+    public String getLastId() {
         while (dataTable.getMoreRows(100)) {}
         return dataTable.getRows().get(dataTable.getRows().size() - 1).get(0);
     }

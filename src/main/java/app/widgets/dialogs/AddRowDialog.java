@@ -1,8 +1,6 @@
 package app.widgets.dialogs;
 
-import app.IconLoader;
 import app.MainWindow;
-import app.MenuController;
 import app.backend.controllers.ConnectionController;
 import io.qt.core.Qt;
 import io.qt.widgets.*;
@@ -34,7 +32,7 @@ public class AddRowDialog extends QDialog {
             var input = new QTextEdit();
             input.setMaximumHeight(28);
             if (j == 0) {
-                input.setText(String.valueOf((Integer.parseInt(mainWindow.tableViewMainTab.getRowsCount()) + 1)));
+                input.setText(String.valueOf((Integer.parseInt(mainWindow.tableViewMainTab.getLastId()) + 1)));
                 j++;
             }
             var miniBar = new QToolBar();
@@ -78,7 +76,8 @@ public class AddRowDialog extends QDialog {
                 for (QTextEdit i : inputList) {
                     resultList.add(i.toPlainText());
                 }
-                ConnectionController.addData(mainWindow.dbName.toPlainText(), mainWindow.tableViewMainTab.getCurrentTableName(), resultList);
+                var dt = ConnectionController.addData(mainWindow.dbName.toPlainText(), mainWindow.tableViewMainTab.getCurrentTableName(), resultList);
+                mainWindow.tableViewMainTab.addRow(resultList);
                 this.close();
             }
         }
