@@ -100,15 +100,14 @@ public class MenuController extends QObject {
     }
 
     void connectToDBButtonClicked() {
-        /*LocalStorage.closeConnection();
-        new StartDialog(root.windowIcon());
-        root.close();*/
+
         new FileDialog(this);
-        //new FileDialog(root);
+
     }
 
     void fileChosen(String fileName) {
         if (fileName.endsWith(".db")) {
+            StorageController.connectionStorage.removeConnection(fileName);
             ConnectionController.addConnection(ConnectionInfo.ConnectionType.SQLITE, fileName);
         }
         else {
@@ -120,7 +119,6 @@ public class MenuController extends QObject {
         //root.treeViewMenu.setTreeModel(LocalStorage.showSchema());
         root.treeViewMenu.setTreeModel(ConnectionController.getSchema(conName), conName);
         System.out.println(ConnectionController.getSchema(conName));
-        //System.out.println(root.dbName.toPlainText());
     }
 
     void clearWorkArea() {
@@ -139,11 +137,11 @@ public class MenuController extends QObject {
 
     void reconnectToDBClicked() throws SQLException, InterruptedException {
         ConnectionController.reconnectConnection(root.connectionStorageView.getCurrentConnection());
-        //LocalStorage.reconnectToDB();
+
     }
 
     void showDBInfo() {
-        //List<String> list = LocalStorage.getDBName();
+
         String list = ConnectionController.getDBInfo(root.dbName.toPlainText());
         root.dbInfo.setText(list);
     }
