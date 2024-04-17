@@ -127,6 +127,7 @@ public class StartDialog extends QDialog {
     }
 
     void connectClicked() throws IOException, SQLException {
+        StorageController.connectionStorage.removeConnection(this.userInput.toPlainText());
 
         if (tabBar.currentIndex() == 0) {
             connectToSQLite();

@@ -5,17 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="43a42705-edaa-4f70-93b7-3f013d610055" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/MainWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/MenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/MenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/LocalStorage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/SqlConnector.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/controllers/StorageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/controllers/StorageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/table/Row.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/table/Table.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/table/TableData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/table/TableMetaData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/TableView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/TableView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/FileDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/FileDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/save.ser" beforeDir="false" afterPath="$PROJECT_DIR$/saves/save.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/backend/entities/DataTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/backend/entities/DataTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/StartDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/StartDialog.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,20 +71,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "last_opened_file_path": "C:/Users/its/Desktop/software/UI/DBBrowser",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/its/Desktop/software/UI/DBBrowser&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
@@ -141,6 +134,27 @@
       <setting name="focusEditor" value="false" />
       <method v="2" />
     </configuration>
+    <configuration name="DBBrowser [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="dependencies" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="DBBrowser [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -173,6 +187,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.DBBrowser [dependencies]" />
         <item itemvalue="Gradle.DBBrowser [jar]" />
       </list>
     </recent_temporary>
