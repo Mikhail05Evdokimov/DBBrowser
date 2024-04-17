@@ -1,18 +1,13 @@
 package app.widgets.dialogs;
 
 import app.MenuController;
-import app.backend.controllers.ConnectionController;
-import io.qt.core.Qt;
 import io.qt.widgets.*;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 public class ChangeLoadRowsDialog extends QDialog {
 
     private final MenuController menuController;
-    private QTextEdit input;
+    private final QTextEdit input;
 
     public ChangeLoadRowsDialog(MenuController controller) {
         menuController = controller;

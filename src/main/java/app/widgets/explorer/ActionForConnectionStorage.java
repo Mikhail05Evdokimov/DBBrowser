@@ -2,22 +2,21 @@ package app.widgets.explorer;
 
 import app.MenuController;
 import app.backend.controllers.StorageController;
-import io.qt.core.Qt;
 import io.qt.gui.QAction;
 
 public class ActionForConnectionStorage extends QAction {
 
     private final Signal1<String> clickedSignal;
-    private final Signal0 clickedOnDisconnectedSignsl;
+    private final Signal0 clickedOnDisconnectedSignal;
     private final ConnectionStorageView root;
 
     public ActionForConnectionStorage(String name, MenuController controller, ConnectionStorageView root) {
         this.setText(name);
         this.root = root;
         clickedSignal = new Signal1<>();
-        clickedOnDisconnectedSignsl = new Signal0();
+        clickedOnDisconnectedSignal = new Signal0();
         clickedSignal.connect(controller, "newCurrentConnectionName(String)");
-        clickedOnDisconnectedSignsl.connect(controller, "clearWorkArea()");
+        clickedOnDisconnectedSignal.connect(controller, "clearWorkArea()");
         this.triggered.connect(this, "triggered()");
     }
 
@@ -28,7 +27,7 @@ public class ActionForConnectionStorage extends QAction {
             clickedSignal.emit(conName);
         }
         else {
-            clickedOnDisconnectedSignsl.emit();
+            clickedOnDisconnectedSignal.emit();
         }
     }
 

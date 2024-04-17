@@ -25,8 +25,6 @@ public class CustomCheckBoxDialog extends QDialog {
 
         inputText = new QTextEdit();
 
-        //check1 = new CheckBoxChecker();
-        //checkBox1.stateChanged.connect(check1, "inverse()");
         check2 = new CheckBoxChecker();
         checkBox2.stateChanged.connect(check2, "inverse()");
 

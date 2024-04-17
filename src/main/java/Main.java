@@ -15,9 +15,6 @@ public class Main {
 
         IconLoader iconLoader = new IconLoader();
         StartDialog startDialog = new StartDialog(iconLoader.loadIcon("../icon.ico"));
-        //QWidget window = new MainWindow(iconLoader.loadIcon("../icon.ico"));
-
-        //window.show();
 
         QApplication.exec();
 

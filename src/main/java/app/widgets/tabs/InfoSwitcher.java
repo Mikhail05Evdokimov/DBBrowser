@@ -1,6 +1,5 @@
 package app.widgets.tabs;
 
-import app.MainWindow;
 import io.qt.gui.QAction;
 import io.qt.widgets.QMenu;
 import io.qt.widgets.QPushButton;

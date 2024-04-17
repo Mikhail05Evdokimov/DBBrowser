@@ -79,7 +79,6 @@ public class TableView extends QTableView {
         list.add(index.column());
         List<String> list1 = new ArrayList<>();
         list1.add(Objects.requireNonNull(this.model()).data(index).toString());
-        //this.dataTable.changeRow(index.row(), list, list1);
         changeDataSignal.emit(tableName, index.row(), list, list1);
 
     }

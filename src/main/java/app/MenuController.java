@@ -116,7 +116,6 @@ public class MenuController extends QObject {
     }
 
     void showSchema(String conName) throws IOException {
-        //root.treeViewMenu.setTreeModel(LocalStorage.showSchema());
         root.treeViewMenu.setTreeModel(ConnectionController.getSchema(conName), conName);
         System.out.println(ConnectionController.getSchema(conName));
     }
@@ -135,7 +134,7 @@ public class MenuController extends QObject {
         clearWorkArea();
     }
 
-    void reconnectToDBClicked() throws SQLException, InterruptedException {
+    void reconnectToDBClicked() {
         ConnectionController.reconnectConnection(root.connectionStorageView.getCurrentConnection());
 
     }
@@ -146,7 +145,7 @@ public class MenuController extends QObject {
         root.dbInfo.setText(list);
     }
 
-    void newConnectionName(String name) throws IOException {
+    void newConnectionName(String name) {
         root.dbName.setText(name);
         root.tableViewMainTab.clear();
         root.connectionStorageView.addConnection(name);

@@ -101,7 +101,6 @@ public class StartDialog extends QDialog {
         tabBar.addTab(SQLiteTab, "SQLite");
         tabBar.addTab(postgresTab, "Postgres");
         layout.addWidget(tabBar);
-        //layout.addWidget(userInputBar);
         layout.addWidget(buttonsBar);
 
         this.show();
