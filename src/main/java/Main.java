@@ -1,5 +1,6 @@
 import app.IconLoader;
-import app.widgets.dialogs.StartDialog;
+import app.widgets.dialogs.OfflineStartDialog;
+import app.widgets.dialogs.OnlineStartDialog;
 import io.qt.widgets.QApplication;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ public class Main {
         QApplication app = QApplication.initialize(args);
 
         IconLoader iconLoader = new IconLoader();
-        StartDialog startDialog = new StartDialog(iconLoader.loadIcon("../icon.ico"));
+        OnlineStartDialog onlineStartDialog = new OnlineStartDialog(iconLoader.loadIcon("../icon.ico"));
 
         QApplication.exec();
 
