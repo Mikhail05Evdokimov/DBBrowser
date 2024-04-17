@@ -9,7 +9,6 @@ import io.qt.gui.QIcon;
 import io.qt.widgets.*;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class StartDialog extends QDialog {
 
@@ -126,7 +125,7 @@ public class StartDialog extends QDialog {
         new FileDialog(this);
     }
 
-    void connectClicked() throws IOException, SQLException {
+    void connectClicked() {
         StorageController.connectionStorage.removeConnection(this.userInput.toPlainText());
 
         if (tabBar.currentIndex() == 0) {
