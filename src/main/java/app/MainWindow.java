@@ -58,8 +58,7 @@ public class MainWindow extends QWidget {
         QToolBar rightBar = new QToolBar();
         rightBar.setOrientation(Qt.Orientation.Vertical);
 
-        //QPalette barPallet = new QPalette();
-        var font = new QFont();
+        QFont font = new QFont();
         font.setPixelSize(12);
         tableMessage.setFont(font);
 
@@ -87,17 +86,15 @@ public class MainWindow extends QWidget {
         bigBar.setSizePolicy(expandingSizePolicy);
 
         //Просто кнопка.
-        QPushButton runQuery = new QPushButton( "Run query" );
+        QPushButton runQuery = newButton("Run query", "run_clicked()");
         runQuery.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu);
 
         addAllActionsToPopUpMenu();
 
-        QPushButton hideButton = new QPushButton( "Clear text" );
+        QPushButton hideButton = newButton("Clear text", "clear_button_clicked()");
         QPalette pal = newPallet(254, 20, 20);
         hideButton.setPalette(pal);
 
-        runQuery.clicked.connect(menuController, "run_clicked()" );
-        hideButton.clicked.connect(menuController, "clear_button_clicked()" );
         runQuery.customContextMenuRequested.connect(menuController, "rightClick()");
 
         rightBar.addWidget(hideButton);
@@ -111,14 +108,14 @@ public class MainWindow extends QWidget {
         rightBar.addWidget(moreRowsButtonSQL);
 
         MyToolBar upButtonsBar = new MyToolBar();
-        QPushButton selectFileButton = addButton("Connect to DB", "connectToDBButtonClicked()");
+        QPushButton selectFileButton = newButton("Connect to DB", "connectToDBButtonClicked()");
         upButtonsBar.addSeparator();
         upButtonsBar.addWidgetAndSeparator(selectFileButton);
         upButtonsBar.setOrientation(Qt.Orientation.Horizontal);
-        QPushButton closeConnectionButton = addButton("Close connection", "closeConnectionButtonClicked()");
+        QPushButton closeConnectionButton = newButton("Close connection", "closeConnectionButtonClicked()");
         QPushButton b1 = new QPushButton("PopUp menu");
         b1.setMenu(popMenu);
-        QPushButton reconnectToDBButton = addButton("Reconnect to DB", "reconnectToDBClicked()");
+        QPushButton reconnectToDBButton = newButton("Reconnect to DB", "reconnectToDBClicked()");
         upButtonsBar.addWidgetAndSeparator(reconnectToDBButton);
         upButtonsBar.addWidgetAndSeparator(closeConnectionButton);
         upButtonsBar.addWidgetAndSeparator(b1);
@@ -126,31 +123,11 @@ public class MainWindow extends QWidget {
         bigBar.addWidget(rightBar);
         QTabWidget tabWidget = new QTabWidget();
 
-        QToolBar mainTab = new QToolBar();
-        mainTab.setOrientation(Qt.Orientation.Vertical);
-        mainTab.addWidget(new QLabel("DB name:"));
-        dbName.setReadOnly(true);
-        dbInfo.setReadOnly(true);
-        QSizePolicy textPolicy = textSizePolicyFixed();
-        dbName.setSizePolicy(textPolicy);
-        dbName.setFixedSize(250, 28);
-        dbInfo.setSizePolicy(textPolicy);
-        dbInfo.setFixedSize(250, 28);
-        mainTab.addWidget(dbName);
-        mainTab.addWidget(new QLabel(" "));
-        mainTab.addWidget(new QLabel("DB info:"));
-        mainTab.addWidget(dbInfo);
-        mainTab.addWidget(new QLabel(" "));
-        mainTab.addWidget(currentTableName);
-        mainTab.addWidget(tableViewMainTab);
-        mainTab.addWidget(tableMessage);
-
+        setDbNameAndDBInfo();
         moreRowsButton = new LoadMoreRowsButton(menuController, 1);
+        addRowButton = newButton("Add row", "addRowButtonClicked()");
 
-        addRowButton = addButton("Add row", "addRowButtonClicked()");
-
-        mainTab.addWidget(moreRowsButton);
-        mainTab.addWidget(addRowButton);
+        QToolBar mainTab = mainTabInit();
 
         tabWidget.addTab(mainTab, "MainTab");
         tabWidget.addTab(infoTab, "Info");
@@ -178,8 +155,8 @@ public class MainWindow extends QWidget {
 
         QToolBar footerBar = new QToolBar();
         footerBar.setOrientation(Qt.Orientation.Horizontal);
-        QPushButton saveChangesButton = addButton("Save changes", "saveChanges()");
-        QPushButton discardChangesButton = addButton("Discard changes", "discardChanges()");
+        QPushButton saveChangesButton = newButton("Save changes", "saveChanges()");
+        QPushButton discardChangesButton = newButton("Discard changes", "discardChanges()");
         footerBar.addWidget(saveChangesButton);
         footerBar.addWidget(discardChangesButton);
 
@@ -241,7 +218,7 @@ public class MainWindow extends QWidget {
         return pal;
     }
 
-    private QPushButton addButton(String text, String signal) {
+    private QPushButton newButton(String text, String signal) {
         QPushButton button = new QPushButton(text);
         button.clicked.connect(menuController, signal);
         return button;
@@ -254,5 +231,31 @@ public class MainWindow extends QWidget {
         return textPolicy;
     }
 
+    private void setDbNameAndDBInfo() {
+        dbName.setReadOnly(true);
+        dbInfo.setReadOnly(true);
+        QSizePolicy textPolicy = textSizePolicyFixed();
+        dbName.setSizePolicy(textPolicy);
+        dbName.setFixedSize(250, 28);
+        dbInfo.setSizePolicy(textPolicy);
+        dbInfo.setFixedSize(250, 28);
+    }
+
+    private QToolBar mainTabInit() {
+        QToolBar mainTab = new QToolBar();
+        mainTab.setOrientation(Qt.Orientation.Vertical);
+        mainTab.addWidget(new QLabel("DB name:"));
+        mainTab.addWidget(dbName);
+        mainTab.addWidget(new QLabel(" "));
+        mainTab.addWidget(new QLabel("DB info:"));
+        mainTab.addWidget(dbInfo);
+        mainTab.addWidget(new QLabel(" "));
+        mainTab.addWidget(currentTableName);
+        mainTab.addWidget(tableViewMainTab);
+        mainTab.addWidget(tableMessage);
+        mainTab.addWidget(moreRowsButton);
+        mainTab.addWidget(addRowButton);
+        return mainTab;
+    }
 
 }
