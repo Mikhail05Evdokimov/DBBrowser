@@ -1,9 +1,12 @@
 package app.widgets.dialogs;
 
+import app.MainWindow;
+import app.api.ApiCalls;
 import io.qt.core.Qt;
 import io.qt.gui.QIcon;
 import io.qt.widgets.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +41,7 @@ public class OnlineStartDialog extends StartDialog {
 
     }
 
-    private void initLogin() {
+    private void initInputs() {
         login = new QTextEdit();
         login.setMaximumHeight(27);
         password = new QTextEdit();
@@ -47,7 +50,7 @@ public class OnlineStartDialog extends StartDialog {
 
     private QToolBar logInTab() {
 
-        initLogin();
+        initInputs();
 
         List<QToolBar> toolBars = new ArrayList<>(4);
         toolBars.add(new InputItem("login:  ", login));
@@ -65,11 +68,30 @@ public class OnlineStartDialog extends StartDialog {
 
     void connectClicked() {
 
+        if (!login.toPlainText().equals("") && !password.toPlainText().equals("")) {
+            if(ApiCalls.signIn(login.toPlainText(), password.toPlainText())) {
+                comeToMain();
+            }
+            else { //TODO wrong login/password
+                System.out.println("wrong login/password");
+            }
+        }
+
     }
 
     void skip() {
         this.close();
         new OfflineStartDialog(this.icon);
+    }
+
+    private void comeToMain() {
+        this.close();
+        try {
+            new MainWindow(this.icon);
+        }
+        catch (IOException e1) {
+            throw new RuntimeException(e1);
+        }
     }
 
 }
