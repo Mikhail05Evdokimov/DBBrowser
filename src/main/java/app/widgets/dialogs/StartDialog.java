@@ -19,7 +19,7 @@ public class StartDialog extends QDialog {
     private QTextEdit dbName;
     private QTextEdit login;
     private QTextEdit password;
-    QTabWidget tabBar;
+    private final QTabWidget tabBar;
 
     public StartDialog(QIcon icon) {
         this.icon = icon;
@@ -35,12 +35,10 @@ public class StartDialog extends QDialog {
 
         userInput = new QTextEdit();
         userInput.setMaximumHeight(27);
-        QToolBar userInputBar = new QToolBar();
-        userInputBar.setOrientation(Qt.Orientation.Horizontal);
-        QPushButton chooseFileButton = new QPushButton("Choose file");
-        chooseFileButton.clicked.connect(this, "chooseFileClicked()");
-        userInputBar.addWidget(new QLabel("file path  "));
-        userInputBar.addWidget(userInput);
+        QToolBar userInputBar = newInputItem("file path  ", userInput);
+
+        QPushButton chooseFileButton = newButton("Choose file", "chooseFileClicked()");
+
         QSplitter splitter = new QSplitter();
         splitter.setFixedSize(5, 5);
         userInputBar.addWidget(splitter);
@@ -48,12 +46,9 @@ public class StartDialog extends QDialog {
 
         QToolBar buttonsBar = new QToolBar();
         buttonsBar.setOrientation(Qt.Orientation.Horizontal);
-        QPushButton connectButton = new QPushButton("Connect to DB");
-        QPushButton cancelButton = new QPushButton("Cancel");
-        connectButton.clicked.connect(this, "connectClicked()");
-        cancelButton.clicked.connect(this, "cancelClicked()");
-        QPushButton continueButton = new QPushButton("Skip and continue");
-        continueButton.clicked.connect(this, "skip()");
+        QPushButton connectButton = newButton("Connect to DB", "connectClicked()");
+        QPushButton cancelButton = newButton("Cancel", "cancelClicked()");
+        QPushButton continueButton = newButton("Skip and continue", "skip()");
 
         buttonsBar.addWidget(continueButton);
         buttonsBar.addWidget(new QSplitter());
@@ -62,30 +57,16 @@ public class StartDialog extends QDialog {
         buttonsBar.addWidget(cancelButton);
 
         initPostgres();
-        QToolBar hostInputBar = new QToolBar();
-        hostInputBar.setOrientation(Qt.Orientation.Horizontal);
-        hostInputBar.addWidget(new QLabel("host:  "));
-        hostInputBar.addWidget(host);
 
-        QToolBar portInputBar = new QToolBar();
-        portInputBar.setOrientation(Qt.Orientation.Horizontal);
-        portInputBar.addWidget(new QLabel("port:  "));
-        portInputBar.addWidget(port);
+        QToolBar hostInputBar = newInputItem("host:  ", host);
 
-        QToolBar dbNameInputBar = new QToolBar();
-        dbNameInputBar.setOrientation(Qt.Orientation.Horizontal);
-        dbNameInputBar.addWidget(new QLabel("dbName:  "));
-        dbNameInputBar.addWidget(dbName);
+        QToolBar portInputBar = newInputItem("port:  ", port);
 
-        QToolBar loginInputBar = new QToolBar();
-        loginInputBar.setOrientation(Qt.Orientation.Horizontal);
-        loginInputBar.addWidget(new QLabel("login:  "));
-        loginInputBar.addWidget(login);
+        QToolBar dbNameInputBar = newInputItem("dbName:  ", dbName);
 
-        QToolBar passwordInputBar = new QToolBar();
-        passwordInputBar.setOrientation(Qt.Orientation.Horizontal);
-        passwordInputBar.addWidget(new QLabel("password:  "));
-        passwordInputBar.addWidget(password);
+        QToolBar loginInputBar = newInputItem("login:  ", login);
+
+        QToolBar passwordInputBar = newInputItem("password:  ", password);
 
         QToolBar postgresBar = new QToolBar();
         postgresBar.setOrientation(Qt.Orientation.Vertical);
@@ -178,6 +159,20 @@ public class StartDialog extends QDialog {
 
     void skip() {
         comeToMain();
+    }
+
+    private QPushButton newButton(String text, String signal) {
+        QPushButton button = new QPushButton(text);
+        button.clicked.connect(this, signal);
+        return button;
+    }
+
+    private QToolBar newInputItem(String text, QWidget widget) {
+        QToolBar toolBar = new QToolBar();
+        toolBar.setOrientation(Qt.Orientation.Horizontal);
+        toolBar.addWidget(new QLabel(text));
+        toolBar.addWidget(widget);
+        return toolBar;
     }
 
 }
