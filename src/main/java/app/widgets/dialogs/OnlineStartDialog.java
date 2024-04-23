@@ -2,6 +2,7 @@ package app.widgets.dialogs;
 
 import app.MainWindow;
 import app.api.ApiCalls;
+import app.backend.controllers.StorageController;
 import io.qt.core.Qt;
 import io.qt.gui.QIcon;
 import io.qt.widgets.*;
@@ -9,10 +10,13 @@ import io.qt.widgets.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class OnlineStartDialog extends StartDialog {
 
     public OnlineStartDialog(QIcon icon) {
+        StorageController.init();
+
         this.icon = icon;
         this.setWindowIcon(icon);
         QLayout layout = new QGridLayout( this );
@@ -69,12 +73,7 @@ public class OnlineStartDialog extends StartDialog {
     void connectClicked() {
 
         if (!login.toPlainText().equals("") && !password.toPlainText().equals("")) {
-            if(ApiCalls.signIn(login.toPlainText(), password.toPlainText())) {
-                comeToMain();
-            }
-            else { //TODO wrong login/password
-                System.out.println("wrong login/password");
-            }
+            ApiCalls.signIn(this, login.toPlainText(), password.toPlainText());
         }
 
     }
@@ -91,6 +90,20 @@ public class OnlineStartDialog extends StartDialog {
         }
         catch (IOException e1) {
             throw new RuntimeException(e1);
+        }
+    }
+
+    void result(String res) {
+        if(Objects.equals(res, "0")) {
+            comeToMain();
+        }
+        else {
+            if(Objects.equals(res, "1")) {
+                new ErrorDialog("Wrong login/password");
+            }
+            else {
+                new ErrorDialog("Cannot connect to server");
+            }
         }
     }
 

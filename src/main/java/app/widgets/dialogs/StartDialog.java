@@ -5,6 +5,8 @@ import io.qt.widgets.QDialog;
 import io.qt.widgets.QPushButton;
 import io.qt.widgets.QTextEdit;
 
+import static javafx.application.Platform.exit;
+
 public abstract class StartDialog extends QDialog {
 
     public QIcon icon;
@@ -19,6 +21,7 @@ public abstract class StartDialog extends QDialog {
 
     void cancelClicked() {
         this.close();
+        exit();
     }
 
     void skip() {}

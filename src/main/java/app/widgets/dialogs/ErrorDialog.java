@@ -5,6 +5,7 @@ import io.qt.widgets.*;
 public class ErrorDialog extends QDialog {
 
     public ErrorDialog(String text) {
+        this.setWindowTitle("Error");
         QLayout layout = new QGridLayout();
         QLabel label = new QLabel(text);
         layout.addWidget(label);

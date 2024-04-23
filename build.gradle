@@ -42,6 +42,8 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
     implementation group: 'org.json', name: 'json', version: '20231013'
+    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
 }
 /*
 task qtJambi {

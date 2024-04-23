@@ -1,39 +1,49 @@
 package app.api;
 
+import app.api.data.LogInData;
+import app.widgets.dialogs.OnlineStartDialog;
+import io.qt.core.QObject;
+import okhttp3.ResponseBody;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.Callback;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiCalls {
+    private static final Signaller signaller = new Signaller();
 
-    public static boolean signIn(String login, String password) {
+    private static final String backendUrl = "http://127.0.0.0:8080";
 
-        try {
+    public static void signIn(OnlineStartDialog controller, String login, String password) {
 
-            JSONObject rowBody = new JSONObject();
-            rowBody.put("login", login);
-            rowBody.put("password", password);
+        var service = new Retrofit.Builder()
+            .baseUrl(backendUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(UserInterface.class);
 
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://www.example.com/page.php"))
-                .POST(HttpRequest.BodyPublishers.ofString(rowBody.toString()))
-                .build();
+        LogInData data = new LogInData(login, password);
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            JSONObject responseBody = new JSONObject(response.body());
-            System.out.println(responseBody);
+        service.login(data).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                System.out.println(response.body().toString());
+                if(response.code() == 200) {
+                    signaller.emitSignal(controller, "0");
+                }
+                else {
+                    signaller.emitSignal(controller, "1");
+                }
+            }
 
-        } catch (InterruptedException | IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return true;
-
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                System.out.println(t.toString());
+                signaller.emitSignal(controller, "2");
+            }
+        });
     }
 
 }

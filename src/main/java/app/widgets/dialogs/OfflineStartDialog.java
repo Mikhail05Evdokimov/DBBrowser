@@ -21,12 +21,13 @@ public class OfflineStartDialog extends StartDialog {
     private final QTabWidget tabBar;
 
     public OfflineStartDialog(QIcon icon) {
+        StorageController.init();
+
         this.icon = icon;
         this.setWindowIcon(icon);
         QLayout layout = new QGridLayout( this );
         QLabel label = new QLabel("Please choose the Database file");
         this.setWindowTitle("Welcome to DB browser");
-        StorageController.init();
 
         tabBar = new QTabWidget();
         QToolBar SQLiteTab = new QToolBar();
