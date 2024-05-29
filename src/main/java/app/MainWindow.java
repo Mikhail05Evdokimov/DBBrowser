@@ -3,6 +3,7 @@ package app;
 import app.backend.controllers.ConnectionController;
 import app.widgets.LoadMoreRowsButton;
 import app.widgets.MyToolBar;
+import app.widgets.dialogs.settings.SettingsDialog;
 import app.widgets.explorer.ConnectionStorageView;
 import app.widgets.TableView;
 import app.widgets.explorer.TreeMenu;
@@ -34,7 +35,7 @@ public class MainWindow extends QWidget {
     public final QTextEdit edit = new QTextEdit();
     public final QLabel tableMessage = new QLabel("");
     public QLabel label = new QLabel("", this);
-    public QMenu popMenu = new QMenu("DropDown", this);//вот эту шляпу в отдельный класс-конструктор вынести огда пэкэджи заработают
+    public QMenu popMenu = new QMenu("DropDown", this);
     private final QLabel output = new QLabel();
     public MenuController menuController = new MenuController(this);
     public TableView tableView = new TableView(menuController, true);
@@ -67,11 +68,6 @@ public class MainWindow extends QWidget {
         }
 
         LoadMoreRowsButton moreRowsButtonSQL = new LoadMoreRowsButton(menuController, 2);
-        //barPallet.setColor(QPalette.ColorRole.Window, QColor.fromRgb(210, 210, 255));
-        //bigBar.setBackgroundRole(QPalette.ColorRole.Window);
-        //bigBar.setAutoFillBackground(true);
-        //barPallet.setColor(QPalette.ColorRole.Text, QColor.fromRgb(250, 250, 250));
-        //bigBar.setPalette(barPallet);
 
         output.setText("Your query results will be here");
 
@@ -119,6 +115,8 @@ public class MainWindow extends QWidget {
         upButtonsBar.addWidgetAndSeparator(reconnectToDBButton);
         upButtonsBar.addWidgetAndSeparator(closeConnectionButton);
         upButtonsBar.addWidgetAndSeparator(b1);
+        QPushButton settings = newButton("Settings", "settingsClicked()");
+        upButtonsBar.addWidgetAndSeparator(settings);
 
         bigBar.addWidget(rightBar);
         QTabWidget tabWidget = new QTabWidget();

@@ -1,8 +1,12 @@
-package app.widgets.dialogs;
+package app.widgets.dialogs.start;
 
 import app.MainWindow;
 import app.api.ApiCalls;
 import app.backend.controllers.StorageController;
+import app.styles.WoodPallet;
+import app.widgets.dialogs.ErrorDialog;
+import app.widgets.dialogs.InputItem;
+import io.qt.core.QRect;
 import io.qt.core.Qt;
 import io.qt.gui.QIcon;
 import io.qt.widgets.*;
@@ -19,6 +23,8 @@ public class OnlineStartDialog extends StartDialog {
 
         this.icon = icon;
         this.setWindowIcon(icon);
+        //this.setStyle(new QCommonStyle());
+        //this.setPalette(new WoodPallet());
         QLayout layout = new QGridLayout( this );
         QLabel label = new QLabel("Please sign-in or switch to offline mode");
         this.setWindowTitle("Welcome to DB browser");
@@ -28,6 +34,7 @@ public class OnlineStartDialog extends StartDialog {
         QPushButton connectButton = newButton("Log in", "connectClicked()");
         QPushButton cancelButton = newButton("Cancel", "cancelClicked()");
         QPushButton continueButton = newButton("Work offline", "skip()");
+        //cancelButton.setPalette(new WoodPallet());
 
         buttonsBar.addWidget(continueButton);
         buttonsBar.addWidget(new QSplitter());

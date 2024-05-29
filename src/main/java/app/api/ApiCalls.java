@@ -1,10 +1,8 @@
 package app.api;
 
 import app.api.data.LogInData;
-import app.widgets.dialogs.OnlineStartDialog;
-import io.qt.core.QObject;
+import app.widgets.dialogs.start.OnlineStartDialog;
 import okhttp3.ResponseBody;
-import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -31,6 +29,7 @@ public class ApiCalls {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 System.out.println(response.body().toString());
                 if(response.code() == 200) {
+                    UserDataRepository.userData = data;
                     signaller.emitSignal(controller, "0");
                 }
                 else {

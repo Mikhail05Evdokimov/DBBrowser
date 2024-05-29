@@ -6,6 +6,7 @@ import app.backend.entities.ConnectionInfo;
 import app.backend.entities.DataTable;
 import app.backend.utility.Saver;
 import app.widgets.dialogs.*;
+import app.widgets.dialogs.settings.SettingsDialog;
 import io.qt.core.QObject;
 import io.qt.gui.QCursor;
 import io.qt.widgets.QCheckBox;
@@ -226,6 +227,11 @@ public class MenuController extends QObject {
     public void changeLoadRowsNumber(int number) {
         root.tableViewMainTab.changeRowsToLoadNumber(number);
         root.tableView.changeRowsToLoadNumber(number);
+    }
+
+    void settingsClicked() {
+        //this.setDisabled(true);
+        new SettingsDialog(root.windowIcon());
     }
 
 }

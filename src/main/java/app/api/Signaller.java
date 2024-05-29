@@ -1,8 +1,9 @@
 package app.api;
 
-import app.MenuController;
-import app.widgets.dialogs.OnlineStartDialog;
+import app.widgets.dialogs.start.OnlineStartDialog;
 import io.qt.core.QObject;
+
+import java.lang.reflect.Method;
 
 public class Signaller extends QObject {
 
@@ -10,7 +11,7 @@ public class Signaller extends QObject {
 
 
     public void emitSignal(OnlineStartDialog controller, String res) {
-        connect(this, "signal1(String)", controller, "result(String)");
+        connect(this, String.valueOf(signal1), controller, "result(String)");
         signal1.emit(res);
     }
 

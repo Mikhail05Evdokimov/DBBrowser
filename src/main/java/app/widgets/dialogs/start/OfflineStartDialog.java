@@ -1,9 +1,13 @@
-package app.widgets.dialogs;
+package app.widgets.dialogs.start;
 
 import app.MainWindow;
 import app.backend.controllers.ConnectionController;
 import app.backend.controllers.StorageController;
 import app.backend.entities.ConnectionInfo;
+import app.widgets.dialogs.ErrorDialog;
+import app.widgets.dialogs.FileDialog;
+import app.widgets.dialogs.InputItem;
+import app.widgets.dialogs.start.StartDialog;
 import io.qt.core.Qt;
 import io.qt.gui.QIcon;
 import io.qt.widgets.*;

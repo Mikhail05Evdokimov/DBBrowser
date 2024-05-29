@@ -1,6 +1,6 @@
 package app;
 
-public class FilePath {
+public record FilePath() {
 
     public static String filePath = "C:\\Users\\its\\Desktop\\Project";
 
