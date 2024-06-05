@@ -13,7 +13,7 @@ public class SettingsDialog extends QDialog {
         setWindowIcon(icon);
         QTabWidget tabs = new QTabWidget();
         QToolBar accountTab = new AccountSettings();
-        QToolBar managementTab = new MyToolBar();
+        Management managementTab = new Management();
         tabs.addTab(accountTab, "Account");
         tabs.addTab(managementTab, "Management");
         QGridLayout layout = new QGridLayout();

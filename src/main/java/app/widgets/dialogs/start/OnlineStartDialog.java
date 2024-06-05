@@ -18,6 +18,8 @@ import java.util.Objects;
 
 public class OnlineStartDialog extends StartDialog {
 
+    private final Signal1<String> signal1 = new Signal1<>();
+
     public OnlineStartDialog(QIcon icon) {
         StorageController.init();
 
@@ -80,7 +82,10 @@ public class OnlineStartDialog extends StartDialog {
     void connectClicked() {
 
         if (!login.toPlainText().equals("") && !password.toPlainText().equals("")) {
-            ApiCalls.signIn(this, login.toPlainText(), password.toPlainText());
+
+            signal1.connect(this, "result(String)");
+            //ApiCalls.signIn(signal1, login.toPlainText(), password.toPlainText());
+            ApiCalls.getItems(signal1);
         }
 
     }
@@ -101,6 +106,10 @@ public class OnlineStartDialog extends StartDialog {
     }
 
     void result(String res) {
+        new ErrorDialog(res);
+    }
+
+    void result1(String res) {
         if(Objects.equals(res, "0")) {
             comeToMain();
         }

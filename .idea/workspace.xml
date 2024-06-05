@@ -6,18 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="43a42705-edaa-4f70-93b7-3f013d610055" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hs_err_pid5920.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hs_err_pid7604.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/FilePath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/FilePath.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/MainWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/MenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/MenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saves/save.ser" beforeDir="false" afterPath="$PROJECT_DIR$/saves/save.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/api/ApiCalls.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/api/ApiCalls.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/app/api/Signaller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/api/Signaller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/api/data/LogInData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/api/data/LogInData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/OfflineStartDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/start/OfflineStartDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/OnlineStartDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/start/OnlineStartDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/StartDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/start/StartDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/api/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/api/UserInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/settings/SettingsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/settings/SettingsDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/start/OnlineStartDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/widgets/dialogs/start/OnlineStartDialog.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
