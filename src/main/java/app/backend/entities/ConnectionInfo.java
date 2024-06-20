@@ -15,7 +15,8 @@ public class ConnectionInfo implements Serializable {
     private static final long serialVersionUID = 1L;
     public enum ConnectionType {
         SQLITE,
-        POSTGRESQL
+        POSTGRESQL,
+        H2
     }
 
     private final ConnectionType connectionType;
@@ -40,6 +41,13 @@ public class ConnectionInfo implements Serializable {
                             info.get("host"), info.get("port"), info.get("dbname")));
                 }
             }
+            case H2 -> {
+                propertiesNames.addAll(dbSpecificProps.getH2SQLProps());
+                if (info.containsKey("host") && info.containsKey("dbname")) {
+                    info.put("url", ConnectionInfo.h2SQLDataToUrl(
+                            info.get("host"), info.get("port"), info.get("dbname")));
+                }
+            }
             default -> throw new InvalidParameterException("Invalid DB type");
         }
         for (String p : propertiesNames) {
@@ -59,6 +67,15 @@ public class ConnectionInfo implements Serializable {
             return "jdbc:postgresql://" + host + ":" + port + "/" + dbName;
         } else {
             return "jdbc:postgresql://" + host + "/" + dbName;
+        }
+    }
+
+    public static String h2SQLDataToUrl(String host, String port, String dbName) {
+        if (port != null) {
+            return "jdbc:h2:tcp://" + host + ":" + port + "/" + dbName;
+        } else {
+            System.out.println("jdbc:h2:" + host + ":" + dbName);
+            return "jdbc:h2:" + host + ":" + dbName;
         }
     }
 

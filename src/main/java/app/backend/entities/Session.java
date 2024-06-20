@@ -2,6 +2,7 @@ package app.backend.entities;
 
 import org.postgresql.ds.PGSimpleDataSource;
 import org.sqlite.SQLiteDataSource;
+import org.h2.jdbcx.JdbcDataSource;
 
 import javax.swing.plaf.nimbus.State;
 import java.sql.Connection;
@@ -16,6 +17,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static app.backend.entities.ConnectionInfo.ConnectionType.H2;
+import static app.backend.entities.ConnectionInfo.ConnectionType.SQLITE;
+
 public class Session {
     private Connection connection;
     private ConnectionInfo connectionInfo;
@@ -27,7 +31,8 @@ public class Session {
         try {
             connection = connect(info);
         } catch (SQLException e) {
-            throw new RuntimeException("Problems with connection");
+            System.err.println("SQLException: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -39,6 +44,7 @@ public class Session {
                 SQLiteDataSource sqLiteDataSource = new SQLiteDataSource();
                 sqLiteDataSource.setUrl(connectionInfo.getProperties().get("url"));
                 connection = sqLiteDataSource.getConnection();
+                supportsDatabaseAndSchema = false;
             }
             case POSTGRESQL -> {
                 PGSimpleDataSource pgSimpleDataSource = new PGSimpleDataSource();
@@ -47,13 +53,24 @@ public class Session {
                 pgSimpleDataSource.setUser(props.get("username"));
                 pgSimpleDataSource.setPassword(props.get("password"));
                 connection = pgSimpleDataSource.getConnection();
+                supportsDatabaseAndSchema = true;
+            }
+            case H2 -> {
+                JdbcDataSource jdbcDataSource = new JdbcDataSource();
+                Map<String, String> props = connectionInfo.getProperties();
+                jdbcDataSource.setURL(props.get("url"));
+                jdbcDataSource.setUser(props.get("username"));
+                jdbcDataSource.setPassword(props.get("password"));
+                System.out.println(jdbcDataSource.getURL());
+                connection = jdbcDataSource.getConnection();
+                System.out.println("Connection to H2 database successful!");
+                supportsDatabaseAndSchema = true;
             }
         }
         connection.setAutoCommit(false);
         saveStatement = connection.createStatement();
         meta = connection.getMetaData();
-        supportsDatabaseAndSchema = meta.supportsCatalogsInDataManipulation() &&
-            meta.supportsSchemasInDataManipulation();
+        System.out.println(supportsDatabaseAndSchema);
         return connection;
     }
 
@@ -157,13 +174,15 @@ public class Session {
 
             return new DataTable(columnNames, rows, rs, rowsGot, executionTime);
         } catch (SQLException e) {
-            throw new RuntimeException("Can't execute query for some reasons...");
+            System.err.println("SQLException: " + e.getMessage());
+            e.printStackTrace();
         }
+        return null;
     }
 
     public void insertData(String tableName, List<String> newValues, List<String> columnNames) {
         String columns = columnNames.stream().reduce("", (x, y) -> x + ", " + y).substring(2);
-        String values = newValues.stream().reduce("", (x, y) ->  x + "\'"  + ", " + "\'" + y ).substring(3) + "\'";
+        String values = newValues.stream().reduce("", (x, y) -> x + "\'" + ", " + "\'" + y).substring(3) + "\'";
         String sql = "INSERT INTO " + tableName + " (" + columns + ") " + "VALUES (" + values + ");";
         Statement statement = getStatement();
         try {
@@ -325,15 +344,29 @@ public class Session {
         }
     }
 
-    public List<Table> getTables() {
+    public List<Table> getTables(Schema schema) {
         try {
             List<Table> tableList = new ArrayList<>();
             Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery(
-                "SELECT name, sql FROM sqlite_master " +
-                    "WHERE type == \"table\" AND name NOT IN ('sqlite_sequence', 'sqlite_stat1', 'sqlite_master')");
-            while (resultSet.next()) {
-                tableList.add(new Table(resultSet.getString("name"), resultSet.getString("sql")));
+            if (!supportsDatabaseAndSchema){
+
+                ResultSet resultSet = statement.executeQuery(
+                        "SELECT name, sql FROM sqlite_master " +
+                                "WHERE type == \"table\" AND name NOT IN ('sqlite_sequence', 'sqlite_stat1', 'sqlite_master')");
+                while (resultSet.next()) {
+                    tableList.add(new Table(resultSet.getString("name"), resultSet.getString("sql")));
+                }
+            }
+            else {
+                ResultSet resultSet = statement.executeQuery(
+                        "SELECT table_name\n" +
+                                "FROM information_schema.tables\n" +
+                                "WHERE table_schema = '" + schema.getName()+ "'\n" +
+                                "  AND table_type = 'BASE TABLE';"
+                );
+                while (resultSet.next()) {
+                    tableList.add(new Table(resultSet.getString("TABLE_NAME"), ""));
+                }
             }
             statement.close();
             return tableList;
@@ -346,11 +379,42 @@ public class Session {
         try {
             List<Index> indexList = new ArrayList<>();
             Statement statement = getStatement();
-            ResultSet resultSet = statement.executeQuery(
-                "SELECT name FROM sqlite_master " +
-                    "WHERE type == \"table\" AND name NOT IN ('sqlite_sequence', 'sqlite_stat1', 'sqlite_master')");
-            while (resultSet.next()) {
-                indexList.addAll(getIndexes(resultSet.getString("name")));
+            if(connectionInfo.getConnectionType() == SQLITE){
+                ResultSet resultSet = statement.executeQuery(
+                        "SELECT name FROM sqlite_master " +
+                                "WHERE type == \"table\" AND name NOT IN ('sqlite_sequence', 'sqlite_stat1', 'sqlite_master')");
+                while (resultSet.next()) {
+                    indexList.addAll(getIndexes(resultSet.getString("name")));
+                }
+            }
+            else if (connectionInfo.getConnectionType() == H2){
+                ResultSet resultSet = statement.executeQuery(
+                        "SELECT TABLE_NAME, COLUMN_NAME, IS_UNIQUE FROM INFORMATION_SCHEMA.INDEX_COLUMNS"
+                );
+
+
+                while (resultSet.next()) {
+                    LinkedList<Column> columnLinkedList = new LinkedList<>();
+                    String table = resultSet.getString("TABLE_NAME");
+                    Statement colStatement = getStatement();
+                    ResultSet columnsNamesResultSet = colStatement.executeQuery("SELECT i.TABLE_SCHEMA, i.TABLE_NAME, i.INDEX_NAME, ic.COLUMN_NAME, i.INDEX_TYPE_NAME, ic.IS_UNIQUE, COALESCE(c.IDENTITY_INCREMENT, 0) AS IDENTITY_INCREMENT, i.REMARKS, c.ORDINAL_POSITION, c.IS_NULLABLE\n" +
+                            "FROM INFORMATION_SCHEMA.INDEXES i\n" +
+                            "        JOIN INFORMATION_SCHEMA.INDEX_COLUMNS ic ON i.TABLE_NAME = ic.TABLE_NAME AND i.INDEX_NAME = ic.INDEX_NAME\n" +
+                            "    JOIN INFORMATION_SCHEMA.COLUMNS c ON c.COLUMN_NAME = ic.COLUMN_NAME AND c.TABLE_NAME = ic.TABLE_NAME\n" +
+                            "WHERE c.TABLE_NAME = '" + table + "'\n" +
+                            "ORDER BY ORDINAL_POSITION");
+                    while (columnsNamesResultSet.next()) {
+                        String columnName = columnsNamesResultSet.getString("COLUMN_NAME");
+//                        ResultSet columnsResultSet = meta.getColumns(null, null, table, columnName);
+                        String dataType = columnsNamesResultSet.getString("INDEX_TYPE_NAME");
+                        boolean notNull = columnsNamesResultSet.getString("IS_NULLABLE").equals("YES");
+                        boolean autoInc = !columnsNamesResultSet.getString("IDENTITY_INCREMENT").equals("0");
+                        String defaultDefinition = columnsNamesResultSet.getString("REMARKS");
+                        columnLinkedList.addLast(new Column(columnName, dataType, notNull, autoInc, defaultDefinition));
+                    }
+                    indexList.add(new Index(resultSet.getString("COLUMN_NAME"), resultSet.getString("IS_UNIQUE").equals("true"), columnLinkedList));
+                }
+
             }
             statement.close();
             return indexList;
@@ -358,6 +422,7 @@ public class Session {
             throw new RuntimeException(e);
         }
     }
+
 
     public List<Index> getIndexes(String tableName) {
         try {
@@ -395,6 +460,7 @@ public class Session {
         }
     }
 
+
     public List<Column> getColumns(String tableName) {
         try {
             List<Column> columnList = new ArrayList<>();
@@ -430,7 +496,7 @@ public class Session {
                     index = index + 1;
                 }
                 String name = (rs.getString("FK_NAME") == null || rs.getString("FK_NAME").isEmpty()) ?
-                    ("FK_" + tableName + "_" + parentTable + "_" + index) : rs.getString("FK_NAME");
+                        ("FK_" + tableName + "_" + parentTable + "_" + index) : rs.getString("FK_NAME");
 
                 if (currentKeySeq == 1) {
                     previousKeySeq = 1;
@@ -468,8 +534,8 @@ public class Session {
                     index = index + 1;
                 }
                 String name = (resultSet.getString("PK_NAME") == null ||
-                    resultSet.getString("PK_NAME").isEmpty()) ?
-                    (tableName + "_PK" + "_" + index) : resultSet.getString("PK_NAME");
+                        resultSet.getString("PK_NAME").isEmpty()) ?
+                        (tableName + "_PK" + "_" + index) : resultSet.getString("PK_NAME");
 
                 if (currentKeySeq == 1) {
                     previousKeySeq = 1;

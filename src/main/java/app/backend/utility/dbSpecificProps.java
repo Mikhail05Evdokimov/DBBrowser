@@ -19,6 +19,14 @@ public class dbSpecificProps {
         return List.of("url", "username", "password");
     }
 
+    public static List<String> getH2SQLProps() {
+        // maybe will be needed:
+        // .setServerName
+        // .setPortNumber
+        // .setDatabaseName
+        return List.of("url", "username", "password");
+    }
+
     public static List<String> getExtraPostgreSQLProps() {
         return List.of("host", "port", "dbname");
     }

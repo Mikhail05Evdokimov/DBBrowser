@@ -93,8 +93,8 @@ public class Connection implements Serializable {
 
     public Database getDatabase(String name) {
         return databaseList.stream()
-            .filter(element -> element.getName().equals(name))
-            .findFirst().orElse(null);
+                .filter(element -> element.getName().equals(name))
+                .findFirst().orElse(null);
     }
 
     public void setDatabaseList() {
@@ -108,6 +108,11 @@ public class Connection implements Serializable {
     public void setSchema() {
         this.schema = new Schema("schema");
     }
+
+    public void setSchema(Schema schema) {
+        this.schema = schema;
+    }
+
 
     public DataTable getDataFromTable(String tableName) {
         DataTable dataTable = session.getDataFromTable(tableName, DEFAULT_ROWS_TO_GET);
@@ -278,9 +283,10 @@ public class Connection implements Serializable {
     }
 
     public void setTables() {
-        List<Table> tableList = session.getTables();
+        List<Table> tableList = session.getTables(schema);
         schema.setTableList(tableList);
     }
+
 
     public void setIndexes() {
         List<Index> indexList = session.getIndexes();
@@ -306,6 +312,15 @@ public class Connection implements Serializable {
     }
 
     public void setForeignKeysFor(String tableName) {
+        List<ForeignKey> foreignKeyList = session.getForeignKeys(tableName);
+        Table table = schema.getTable(tableName);
+        if (table == null) {
+            throw new RuntimeException("No such table in schema. Possible solution: use setTables()");
+        }
+        table.setForeignKeyList(foreignKeyList);
+    }
+
+    public void setForeignKeysFor(Schema schema, String tableName) {
         List<ForeignKey> foreignKeyList = session.getForeignKeys(tableName);
         Table table = schema.getTable(tableName);
         if (table == null) {

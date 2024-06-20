@@ -10,48 +10,53 @@ import java.util.Map;
 public class Test {
     public static void main(String[] args) {
         ConnectionStorage connectionStorage = new ConnectionStorage();
-
         Map<String, String> info = new HashMap<>();
-        info.put("path", "C:/Users/parnishkka/Downloads/SQL DB's/chinook.db");
-        ConnectionInfo connectionInfo = new ConnectionInfo(ConnectionInfo.ConnectionType.SQLITE, info);
-
-        connectionStorage.addConnectionToStorage(new Connection("sqlite", connectionInfo));
-
-        Connection connection = connectionStorage.getConnection("sqlite"); // click on corresponding tab
-
-        connection.disconnect();
+        info.put("username", "postgres");
+        info.put("password", "652385");
+        info.put("host", "localhost");
+        info.put("port", "5432");
+        info.put("dbname", "demo");
+        ConnectionInfo connectionInfo = new ConnectionInfo(ConnectionInfo.ConnectionType.POSTGRESQL, info);
+        connectionStorage.addConnectionToStorage(new Connection("postgres", connectionInfo));
+        Connection connection = connectionStorage.getConnection("postgres");
         System.out.println(connection.isConnected());
-        connection.connect();
-        System.out.println(connection.isConnected());
-        // my_connection
-        // - tables
-        // connection.getSchema().getTableList();
-        //      - 1
-        //      - 2
-        // - view
-        // - indexes
 
-        // connection.set<smth>();
-        // List<String> names = connection.getSchema().getTableList();
-        // Table table = connection.getSchema().getTable(names.get(2));
+        // Добавляем базы данных из конекшена
+        connection.setDatabaseList();
+        List<String> databaseList = connection.getDatabaseList();
+        System.out.println(connection.getDatabaseList());
 
-        connection.setViews(); // click on corresponding tab
+        // Добавляем схемы для для первой базы данных и далее работаем с ней
+        connection.setSchemasFor(databaseList.get(0));
+        List<Schema> schemas = connection.getDatabase(databaseList.get(0)).getSchemaList();
+        System.out.println("Schemas: " + schemas.get(0).getName());// первая это INFORMATION_SCHEMA это нам не надо, нам надо PUBLIC она вторая
+        Schema actualSchema = schemas.get(0); // Схема, с котороый мы работаем
+        connection.setSchema(actualSchema);
 
-        // For example for View: how to open certain view
-        Schema schema = connection.getSchema();
-        // Get all views names as string list
-        List<String> viewsNamesList = schema.getViewList();
-        // This way we choose one view and then get exactly View object (not String)
-        View view = schema.getView(viewsNamesList.get(0));
-        // Each schema unit have own methods to get required data
-        System.out.println(view.getName());
-        System.out.println(view.getDefinition());
+        // Добавляем и получаем таблицы для PUBLIC
+        System.out.println("Таблицы: ");
+        connection.setTables();
+        List<String> tables = actualSchema.getTableList();
+        System.out.println(tables);
 
-        connection.setIndexes(); // click on corresponding tab
-        connection.setTables(); // click on corresponding tab
+        // колонки для таблиц
+        System.out.println("Колонки:");
+        for (String table : tables){
+            connection.setColumnsFor(table);
+            System.out.println(table + ": " + actualSchema.getTable(table).getColumnList());
+        }
+        // Записываем внешние ключи
+        for (String table : tables){
+            connection.setForeignKeysFor(table);
+            System.out.println(table + ": " + actualSchema.getTable(table).getForeignKeyList());
+        }
+        // Записываем ключи
+        for (String table : tables){
+            connection.setKeysFor(table);
+            System.out.println(table + ": " + actualSchema.getTable(table).getKeyList());
+        }
 
-        DataTable dataTable = connection.getDataFromTable("artists");
-
+        DataTable dataTable = connection.getDataFromTable("flights");
         System.out.println(dataTable.getMessage());
         System.out.println(dataTable.getColumnNames());
         for (List<String> row : dataTable.getRows()) {
@@ -60,9 +65,7 @@ public class Test {
             }
             System.out.println();
         }
-
         dataTable.getMoreRows(20);
-
         System.out.println(dataTable.getMessage());
         System.out.println(dataTable.getColumnNames());
         for (List<String> row : dataTable.getRows()) {
@@ -71,26 +74,40 @@ public class Test {
             }
             System.out.println();
         }
-
-        Table table = schema.getTable(schema.getTableList().get(0));
-        connection.setForeignKeysFor(table.getName());
-        connection.setKeysFor(table.getName());
-        connection.setColumnsFor(table.getName());
-        connection.setIndexesFor(table.getName());
-
-        connection.insertData("artists", new ArrayList<>(List.of("6", "newName", "1")));
-        connection.saveChanges();
-
-        connection.deleteData("artists", 5);
-        connection.saveChanges();
-
-        connection.updateData("artists", 5, new ArrayList<>(List.of(1, 2)), new ArrayList<>(List.of("new1", "12")));
-        connection.saveChanges();
-
-//        for (String s : dataTable.getRows().get(5)) {
-//            System.out.println(s);
+//
+//        dataTable = connection.insertData("flights", new ArrayList<>(List.of("3", "Alice", "Johnson", "alice.johnson@example.com", "2345678901")));
+//        System.out.println(dataTable.getMessage());
+//        System.out.println(dataTable.getColumnNames());
+//        for (List<String> row : dataTable.getRows()) {
+//            for (int i = 0; i < dataTable.getColumnNames().size(); i++) {
+//                System.out.print(row.get(i) + " ");
+//            }
+//            System.out.println();
 //        }
 
-        // Таким образом мы получили схему всей бд, как брать конкретные элементы описано выше
+//        dataTable = connection.updateData("flights", 0, new ArrayList<>(List.of(6)), new ArrayList<>(List.of("Scheduled")));
+//        System.out.println(dataTable.getMessage());
+//        System.out.println(dataTable.getColumnNames());
+//        for (List<String> row : dataTable.getRows()) {
+//            for (int i = 0; i < dataTable.getColumnNames().size(); i++) {
+//                System.out.print(" " + row.get(i) + " ");
+//            }
+//            System.out.println();
+//        }
+//
+//
+//        DataTable dataTableBooking = connection.getDataFromTable("booking");
+//        dataTableBooking = connection.deleteData("booking", 0);
+//        System.out.println(dataTableBooking.getMessage());
+//        System.out.println(dataTableBooking.getColumnNames());
+//        for (List<String> row : dataTableBooking.getRows()) {
+//            for (int i = 0; i < dataTableBooking.getColumnNames().size(); i++) {
+//                System.out.print(row.get(i) + " ");
+//            }
+//            System.out.println();
+//        }
+//
+//        connection.setIndexes();
+//        System.out.println(actualSchema.getIndexes());
     }
 }
