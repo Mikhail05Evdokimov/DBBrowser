@@ -5,17 +5,10 @@ import org.sqlite.SQLiteDataSource;
 import org.h2.jdbcx.JdbcDataSource;
 
 import javax.swing.plaf.nimbus.State;
+import java.sql.*;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.sql.Date;
+import java.util.*;
 
 import static app.backend.entities.ConnectionInfo.ConnectionType.H2;
 import static app.backend.entities.ConnectionInfo.ConnectionType.SQLITE;
@@ -26,6 +19,7 @@ public class Session {
     private Statement saveStatement;
     private DatabaseMetaData meta;
     private boolean supportsDatabaseAndSchema;
+    private Stack<Savepoint> savepoints;
 
     public Session(ConnectionInfo info) {
         try {
@@ -67,6 +61,7 @@ public class Session {
                 supportsDatabaseAndSchema = true;
             }
         }
+        savepoints = new Stack<>();
         connection.setAutoCommit(false);
         saveStatement = connection.createStatement();
         meta = connection.getMetaData();
@@ -223,27 +218,74 @@ public class Session {
         }
         List<String> allColumns = dataTable.getColumnNames();
 
+        // Найти фактический ключ из имен столбцов
         String actualKey = allColumns.stream().filter(keyColumns::contains).findFirst().orElse(null);
+        if (actualKey == null) {
+            throw new IllegalArgumentException("No matching key column found in the table.");
+        }
         int colIndex = allColumns.indexOf(actualKey);
+        System.out.println(colIndex);
         String id = dataTable.getRows().get(rowNumber).get(colIndex);
 
-        String sql = "UPDATE " + tableName + " SET ";
+        // Получить типы столбцов из базы данных
+        List<Integer> columnTypes = getColumnTypes(tableName, columnNumbers);
+
+        // Построить SQL UPDATE запрос
+        StringBuilder sql = new StringBuilder("UPDATE " + tableName + " SET ");
         for (int col : columnNumbers) {
-            sql += allColumns.get(col) + " = ?, ";
+            sql.append(allColumns.get(col)).append(" = ?, ");
         }
-        sql = sql.substring(0, sql.length() - 2) + " WHERE " + actualKey + " = " + "\'" + id + "\'" + ";";
+        sql.setLength(sql.length() - 2); // Удалить последнюю запятую и пробел
+        sql.append(" WHERE ").append(actualKey).append(" = ?;");
 
-        PreparedStatement preparedStatement = getPreparedStatement(sql);
-        try {
+        try (PreparedStatement preparedStatement = getPreparedStatement(sql.toString())) {
             for (int i = 0; i < values.size(); i++) {
-                preparedStatement.setString(i + 1, values.get(i));
+                String value = values.get(i);
+                int columnType = columnTypes.get(i);
+                setPreparedStatementValue(preparedStatement, i + 1, value, columnType);
             }
+            preparedStatement.setString(values.size() + 1, id); // Установить значение ключа
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
-        dataTable.changeRow(rowNumber, columnNumbers, values);
+            // Обновить DataTable
+            dataTable.changeRow(rowNumber, columnNumbers, values);
+        } catch (SQLException e) {
+            throw new RuntimeException("Error executing SQL update", e);
+        }
+    }
+
+    private List<Integer> getColumnTypes(String tableName, List<Integer> columnNumbers) {
+        List<Integer> columnTypes = new ArrayList<>();
+        String query = "SELECT * FROM " + tableName + " LIMIT 1";
+        try (Statement stmt = getStatement(); ResultSet rs = stmt.executeQuery(query)) {
+            ResultSetMetaData metaData = rs.getMetaData();
+            for (int col : columnNumbers) {
+                columnTypes.add(metaData.getColumnType(col + 1)); // ResultSetMetaData columns are 1-based
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving column types", e);
+        }
+        return columnTypes;
+    }
+
+    private void setPreparedStatementValue(PreparedStatement preparedStatement, int parameterIndex, String value, int columnType) throws SQLException {
+        switch (columnType) {
+            case Types.INTEGER, Types.NUMERIC:
+                preparedStatement.setInt(parameterIndex, Integer.parseInt(value));
+                break;
+            case Types.DOUBLE:
+                preparedStatement.setDouble(parameterIndex, Double.parseDouble(value));
+                break;
+            case Types.BOOLEAN:
+                preparedStatement.setBoolean(parameterIndex, Boolean.parseBoolean(value));
+                break;
+            case Types.DATE:
+                preparedStatement.setDate(parameterIndex, Date.valueOf(value));
+                break;
+            default:
+                preparedStatement.setString(parameterIndex, value);
+                break;
+        }
     }
 
     public void createIndex(String indexName, String tableName, boolean isUnique, List<String> columnsNames) {

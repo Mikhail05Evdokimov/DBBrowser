@@ -56,7 +56,7 @@ public class Test {
             System.out.println(table + ": " + actualSchema.getTable(table).getKeyList());
         }
 
-        DataTable dataTable = connection.getDataFromTable("flights");
+        DataTable dataTable = connection.getDataFromTable("bookings");
         System.out.println(dataTable.getMessage());
         System.out.println(dataTable.getColumnNames());
         for (List<String> row : dataTable.getRows()) {
@@ -74,16 +74,9 @@ public class Test {
             }
             System.out.println();
         }
-//
-//        dataTable = connection.insertData("flights", new ArrayList<>(List.of("3", "Alice", "Johnson", "alice.johnson@example.com", "2345678901")));
-//        System.out.println(dataTable.getMessage());
-//        System.out.println(dataTable.getColumnNames());
-//        for (List<String> row : dataTable.getRows()) {
-//            for (int i = 0; i < dataTable.getColumnNames().size(); i++) {
-//                System.out.print(row.get(i) + " ");
-//            }
-//            System.out.println();
-//        }
+
+        connection.insertData("bookings", new ArrayList<>(List.of("_jlikg", "2017-07-05 00:12:00.000000 +00:00", "23489.01")));
+        System.out.println(connection.executeQuery("select * from bookings where book_ref = '_jlikg'").getRows());
 
 //        dataTable = connection.updateData("flights", 0, new ArrayList<>(List.of(6)), new ArrayList<>(List.of("Scheduled")));
 //        System.out.println(dataTable.getMessage());
@@ -94,14 +87,34 @@ public class Test {
 //            }
 //            System.out.println();
 //        }
+
+        dataTable = connection.getDataFromTable("bookings");
+        System.out.println(dataTable.getMessage());
+        System.out.println(dataTable.getColumnNames());
+        for (List<String> row : dataTable.getRows()) {
+            for (int i = 0; i < dataTable.getColumnNames().size(); i++) {
+                System.out.print(row.get(i) + " ");
+            }
+            System.out.println();
+        }
+
+        dataTable = connection.updateData("bookings", 3, new ArrayList<>(List.of(2)), new ArrayList<>(List.of("0")));
+        System.out.println(connection.executeQuery("select * from bookings where book_ref = '000068'").getRows());
+        System.out.println(dataTable.getMessage());
+        System.out.println(dataTable.getColumnNames());
+        for (List<String> row : dataTable.getRows()) {
+            for (int i = 0; i < dataTable.getColumnNames().size(); i++) {
+                System.out.print(row.get(i) + " ");
+            }
+            System.out.println();
+        }
 //
-//
-//        DataTable dataTableBooking = connection.getDataFromTable("booking");
-//        dataTableBooking = connection.deleteData("booking", 0);
-//        System.out.println(dataTableBooking.getMessage());
-//        System.out.println(dataTableBooking.getColumnNames());
-//        for (List<String> row : dataTableBooking.getRows()) {
-//            for (int i = 0; i < dataTableBooking.getColumnNames().size(); i++) {
+
+//        dataTable = connection.deleteData("booking", 0);
+//        System.out.println(dataTable.getMessage());
+//        System.out.println(dataTable.getColumnNames());
+//        for (List<String> row : dataTable.getRows()) {
+//            for (int i = 0; i < dataTable.getColumnNames().size(); i++) {
 //                System.out.print(row.get(i) + " ");
 //            }
 //            System.out.println();

@@ -19,6 +19,7 @@ public class Connection implements Serializable {
     private transient Schema schema;
     private transient Session session;
 
+
     // в зависимости от этой переменной будем выводить сразу содержимое схемы или список баз данных
     private boolean supportsDatabaseAndSchema;
 
